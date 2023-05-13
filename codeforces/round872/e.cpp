@@ -130,6 +130,7 @@ void dfs(int node) {
     if (!has_children) {
         values[node].push_back(a[node]);
         best_score[node] = 0;
+        return;
     }
 
 

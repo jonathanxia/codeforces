@@ -77,6 +77,7 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec) {
     return os;
 }
 
+// List manipulation
 template<typename T>
 vector<T> vslice(const vector<T>& v, int start=0, int end=-1) {
     int n = v.size();
@@ -89,4 +90,17 @@ vector<T> vslice(const vector<T>& v, int start=0, int end=-1) {
         result[i] = v[start + i];
     }
     return result;
+}
+
+template<typename Container, typename T>
+bool contains(const Container& c, const T& value) {
+    return std::find(c.begin(), c.end(), value) != c.end();
+}
+
+bool all(std::vector<bool> v) {
+    return std::all_of(v.begin(), v.end(), [](bool b){ return b; });
+}
+
+bool any(std::vector<bool> v) {
+    return std::any_of(v.begin(), v.end(), [](bool b){ return b; });
 }
