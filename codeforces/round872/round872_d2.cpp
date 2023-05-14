@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include <sstream>
 
+
 //  Definition of the macro.
 #define min(x, y) (((x) < (y)) ? (x) : (y))
 #define max(x, y) (((x) > (y)) ? (x) : (y))
@@ -168,7 +169,7 @@ ll solve(ll k, ll n) {
 
     // print(vslice(graph, 0, n));
 
-    return 1 + mdiv(exp, choose2k);
+    return mod(1 + mdiv(exp, choose2k));
 }
 
 
