@@ -77,6 +77,27 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec) {
     return os;
 }
 
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const std::set<T>& s) {
+    os << "{ ";
+    for (const auto& item : s) {
+        os << item << " ";
+    }
+    os << "}";
+    return os;
+}
+
+template<typename K, typename V>
+std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
+{
+    os << "{ ";
+    for (const auto& p : mp) {
+        os << "{" << p.first << ": " << p.second << "} ";
+    }
+    os << "}";
+    return os;
+}
+
 // List manipulation
 template<typename T>
 vector<T> vslice(const vector<T>& v, int start=0, int end=-1) {
@@ -104,3 +125,22 @@ bool all(std::vector<bool> v) {
 bool any(std::vector<bool> v) {
     return std::any_of(v.begin(), v.end(), [](bool b){ return b; });
 }
+
+template <typename T, typename F>
+void sort_vec(vector<T>& v, F key) {
+    sort(v.begin(), v.end(), [&](const T& a, const T& b) {
+        return key(a) < key(b);
+    });
+}
+
+// Graphs
+void display_tree(int node, int parent, vector<vector<ll>>& adj_list,
+                  vector<ll>& labels, int depth = 0) {
+    cout << string(depth, ' ') << "Node " << node << " (" << labels[node] << ")" << endl;
+    for (int child : adj_list[node]) {
+        if (child != parent) {
+            display_tree(child, node, adj_list, labels, depth + 1);
+        }
+    }
+}
+
