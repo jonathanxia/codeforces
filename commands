@@ -1,0 +1,9 @@
+
+How to profile stuff:
+
+valgrind --tool=callgrind ./a.out < inpute3
+kcachegrind callgrind.out.28723
+
+How to set stack limit:
+
+sudo prlimit --stack=unlimited --pid $$; ulimit -s unlimited
