@@ -111,11 +111,11 @@ vl a(pow(10, 5));
 vvl graph(pow(10, 5));
 
 vl best_score(pow(10, 5));
-vvl values(pow(10, 5));
+set<ll> achieved[100000];
 vb visited(pow(10, 5));
 
 
-void dfs(int node) {
+void dfs(int node, ll prefix_sum) {
     visited[node]  = true;
 
     // Check if I am leaf
@@ -128,7 +128,7 @@ void dfs(int node) {
     }
 
     if (!has_children) {
-        values[node].push_back(a[node]);
+        achieved[node].insert(prefix_sum ^ a[node]);
         best_score[node] = 0;
         return;
     }
@@ -143,15 +143,15 @@ void dfs(int node) {
             continue;
         }
 
-        dfs(child);
+        dfs(child, prefix_sum ^ a[node]);
         num_child += 1;
         child_best_score += best_score[child];
         
-        for (auto value: values[child]) {
+        for (auto value: achieved[child]) {
             counts[value] += 1;
         }
 
-        values[child].clear(); // Free up memory
+        achieved[child].clear(); // Free up memory
     }
 
     // We have collected what is possible from our children.
@@ -168,16 +168,16 @@ void dfs(int node) {
             continue;
         }
 
-        ll new_value = value.first ^ a[node];
+        ll new_value = value.first;
         
-        values[node].push_back(new_value);
+        achieved[node].insert(new_value);
     }
 }
 
 ll solve(int n) {
-    dfs(0);
+    dfs(0, 0);
 
-    return contains(values[0], 0) ? best_score[0] : best_score[0] + 1;
+    return contains(achieved[0], 0) ? best_score[0] : best_score[0] + 1;
 }
 
 int main() {
