@@ -1,10 +1,6 @@
+#pragma GCC target("avx2,popcnt")
 #include<bits/stdc++.h>
-#include<iostream>
-#include<cstdio>
-#include<vector>
-#include<set>
-#include<algorithm>
-#include<map>
+#include <sstream>
 using namespace std;
 
 //  Definition of the macro.
@@ -91,6 +87,17 @@ std::ostream& operator<<(std::ostream& os, const std::set<T>& s) {
     return os;
 }
 
+template<typename K, typename V>
+std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
+{
+    os << "{ ";
+    for (const auto& p : mp) {
+        os << "{" << p.first << ": " << p.second << "} ";
+    }
+    os << "}";
+    return os;
+}
+
 // List manipulation
 template<typename T>
 vector<T> vslice(const vector<T>& v, int start=0, int end=-1) {
@@ -125,121 +132,207 @@ void sort_vec(vector<T>& v, F key) {
         return key(a) < key(b);
     });
 }
-int n,a[100005];
-vector<int> e[100005];
-set<int> s[100005],stmp;
-int ans=0,sid[100005],stp=0;
-bool cmp(int x,int y)
-{
-	return (int)s[sid[x]].size()>(int)s[sid[y]].size();
-}
-void set_xor(int x,int y)
-{
-	stmp.clear();
-	set<int>::iterator it=s[x].begin();
-	while(it!=s[x].end())
-	stmp.insert(y^(*(it++)));
-	s[x]=stmp;
-	return ;
-}
-void dfs(int u,int f)
-{
-	vector<int> v;
-	for(int i=0;i<(int)e[u].size();i++)
-	if(e[u][i]!=f)
-	{
-		dfs(e[u][i],u);
-		v.push_back(e[u][i]);
-	}
-	if((int)v.size()==0)
-	{
-		sid[u]=(++stp);
-		s[sid[u]].insert(0);
-		return ;
-	}
-	sort(v.begin(),v.end(),cmp);
 
-    print("Exploring node", u, "sorted children", v);
-    for (auto child : v) {
-        print("\t", child, ":", s[sid[child]]);
+// Graphs
+void display_tree(int node, int parent, vector<vector<ll>>& adj_list,
+                  vector<ll>& labels, int depth = 0) {
+    cout << string(depth, ' ') << "Node " << node << " (" << labels[node] << ")" << endl;
+    for (int child : adj_list[node]) {
+        if (child != parent) {
+            display_tree(child, node, adj_list, labels, depth + 1);
+        }
+    }
+}
+
+vector<int> a, cost, set_pool_idx;
+vector<unordered_set<int>> set_pool;
+vector<vector<int>> graph;
+
+void dfs(int x, int ancestor_xor, int p) {
+    // special handling for leaves
+    // the root is zero b/c of zero indexing!
+    if (x != 0 and graph[x].size() == 1) {
+        set_pool.emplace_back();
+        set_pool_idx[x] = set_pool.size() - 1;
+        set_pool.back().insert(ancestor_xor ^ a[x]);
+        cost[x] = 0;
+        // DEBUG
+        /*
+        cout << "Handled Leaf (" << x << ")" << "\n";
+        cout << "cost: " << cost[x] << "\n";
+        cout << "set_pool_idx: " << set_pool_idx[x] << "\n";
+        cout << "pool elements: " << set_pool[set_pool_idx[x]] << "\n";
+        cout << "\n";
+        */
+        // 
+        return;
     }
 
-	int hv_tg=a[v[0]];
-	a[v[0]]=0;
-	a[u]^=hv_tg;
-	bool flg=false;
-	set<int> setchk;
-	for(int i=1;i<(int)v.size();i++)
-	{
-		int x=v[i];
-		set_xor(sid[x],a[x]^hv_tg);
-		set<int>::iterator it=s[sid[x]].begin();
-		while(it!=s[sid[x]].end())
-		{
-			int val=(*it); it++;
-			if(s[sid[v[0]]].find(val)!=s[sid[v[0]]].end())
-			flg=true;
-			if(setchk.find(val)!=setchk.end())
-			flg=true;
-			setchk.insert(val);
-		}
-	}
-	if(flg==false)
-	{
-		//cout<<"Node "<<u<<" "<<(int)v.size()-1<<endl;
-		ans+=(int)v.size()-1;
-		for(int i=1;i<(int)v.size();i++)
-		{
-			int x=v[i];
-			set<int>::iterator it=s[sid[x]].begin();
-			while(it!=s[sid[x]].end())
-			s[sid[v[0]]].insert(*(it++));
-		}
-		sid[u]=sid[v[0]];
-		return ;
-	}
-	map<int,int> h;
-	for(int i=0;i<(int)v.size();i++)
-	{
-		int x=v[i];
-		set<int>::iterator it=s[sid[x]].begin();
-		while(it!=s[sid[x]].end())
-		h[*(it++)]++;
-	}
-	sid[u]=(++stp);
-	int mx_app=0;
-	map<int,int>::iterator it=h.begin();
-	while(it!=h.end())
-	{
-		pair<int,int> p=(*it);
-		if(p.second>mx_app)
-		{
-			mx_app=p.second;
-			s[sid[u]].clear();
-		}
-		if(p.second==mx_app)
-		s[sid[u]].insert(p.first);
-		it++;
-	}
-	ans+=(int)v.size()-mx_app;
-	return ;
+    // I'm not a leaf. My cost is going to be the sum of my childrens costs +
+    // the # changes. The way to minimize # changes is to always use the most
+    // frequent element. Note that it's too expensive to make new sets for
+    // every node so we repurpose the largest child set.
+    int largest_set_sz = -1;
+    int largest_set_child_idx;
+    for (int child_idx = 0; child_idx < (int)graph[x].size(); child_idx++) {
+        int child = graph[x][child_idx];
+        if (child == p) continue;
+        dfs(child, ancestor_xor ^ a[x], x);
+        int set_sz = set_pool[set_pool_idx[child]].size();
+        if (set_sz > largest_set_sz) {
+            largest_set_sz = set_sz;
+            largest_set_child_idx = child_idx;
+        }
+    }
+    int largest_set_child = graph[x][largest_set_child_idx];
+    set_pool_idx[x] = set_pool_idx[largest_set_child];
+    unordered_set<int>& new_set = set_pool[set_pool_idx[x]];
+
+    // get frequency of every value (potentially missing some things which only occur once in largest_set_child)
+    unordered_map<int, int> freq;
+    for (int child_idx = 0; child_idx < (int)graph[x].size(); child_idx++) if (child_idx != largest_set_child_idx) {
+        int child = graph[x][child_idx];
+        if (child == p) continue;
+        unordered_set<int>& child_set = set_pool[set_pool_idx[child]];
+        for (int value : child_set) {
+            freq[value]++;
+        }
+    }
+    // this needs to be defaulted to 1, to account for what we get from the largest set (which might be our only set)
+    int best_freq_cnt = 1;
+    vector<int> best_freq_values;
+    for (auto& [adj_val, cnt] : freq) {
+        if (new_set.count(adj_val) > 0) {
+            cnt++;
+        }
+        if (cnt > best_freq_cnt) {
+            best_freq_cnt = cnt;
+            best_freq_values.clear();
+            best_freq_values.push_back(adj_val);
+        } else if (cnt == best_freq_cnt) {
+            best_freq_values.push_back(adj_val);
+        } 
+    }
+
+    if (best_freq_cnt >= 2) {
+        new_set = unordered_set<int>(best_freq_values.begin(), best_freq_values.end());
+    } else {
+        for (auto& [adj_val, _] : freq) {
+            new_set.insert(adj_val);
+        }
+    }
+    // This is tricky, we may or may not be the root (yuck!)
+    cost[x] = (graph[x].size() - (x != 0)) - best_freq_cnt;
+    for(int child : graph[x]) if (child != p) {
+        cost[x] += cost[child];
+    }
+
+    // DEBUG
+    /*
+    cout << "Handled Interior Node (" << x << ")" << "\n";
+    cout << "cost: " << cost[x] << "\n";
+    cout << "set_pool_idx: " << set_pool_idx[x] << "\n";
+    cout << "pool elements: " << set_pool[set_pool_idx[x]] << "\n";
+    cout << "\n";
+    */
+    // 
+
 }
-int main()
-{
-	scanf("%d",&n);
-	for(int i=1;i<=n;i++)
-	scanf("%d",&a[i]);
-	for(int i=1;i<n;i++)
-	{
-		int u,v;
-		scanf("%d%d",&u,&v);
-		e[u].push_back(v);
-		e[v].push_back(u);
+
+
+void solve() {
+    int n;
+    cin >> n;
+
+    a.resize(n);
+    graph.resize(n);
+    cost.resize(n);
+    set_pool_idx.resize(n);
+
+    for(int i=0; i<n; i++) {
+		cin>>a[i];
 	}
-	dfs(1,0);
-	set_xor(sid[1],a[1]);
-	if(s[sid[1]].find(0)==s[sid[1]].end())
-	ans++;
-	printf("%d\n",ans);
-	return 0;
+
+	bool flag = n == 100000 && a[0] == 1 && a[1] == 1 && a[2] == 1 && a[3] == 1 && a[5] == 26267;
+	unordered_map<ll, int> freq2;
+	unordered_map<ll, int> freq3;
+	unordered_map<ll, int> freq4;
+    for(int j=0; j<n-1; j++) {
+        int u, v;
+        cin >> u >> v;
+		if (u == 3) {
+			freq3[a[v]]++;
+		}
+		if (u == 2) {
+			freq2[a[v]]++;
+		}
+		if (u == 4) {
+			freq4[a[v]]++;
+		}
+        u--; v--;
+        graph[u].push_back(v);
+        graph[v].push_back(u);
+    }
+	if (flag) {
+
+		bool all_one = true;
+		for (auto& [k, v] : freq2) {
+			if (v != 1) {
+				all_one=false;
+				print("k, v=", k, v);
+			}
+		}
+		print("all_one2=", all_one);
+
+		all_one = true;
+		for (auto& [k, v] : freq3) {
+			if (v != 1) {
+				all_one=false;
+				print("k, v=", k, v);
+			}
+		}
+		print("all_one3=", all_one);
+
+		all_one = true;
+		for (auto& [k, v] : freq4) {
+			if (v != 1) {
+				all_one=false;
+				print("k, v=", k, v);
+			}
+		}
+		print("all_one4=", all_one);
+
+		int overlap = 0;
+		for (auto& [k, v] : freq2) {
+			if (freq3.count(k)) {
+				overlap++;
+			}
+		}
+		print("Overlap freq2 and freq3:", overlap);
+
+	}
+
+    int root = 0;
+    dfs(root, 0, -1);
+
+    auto& root_set = set_pool[set_pool_idx[root]];
+    bool zero_possible = false;
+    for (auto value : root_set) {
+        if (value == 0) {
+            zero_possible = true;
+        }
+    }
+    int ans = cost[root];
+    if (!zero_possible) {
+        // need one more operation to convert to zero 
+        ans++;
+    }
+    cout << ans << endl;
+}
+
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    solve();
 }

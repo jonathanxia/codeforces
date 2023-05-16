@@ -20,16 +20,6 @@ typedef vector<bool> vb;
 typedef string str;
 
 // Number Theory
-
-int sum_digits(int n, int b) {
-    int sum = 0;
-    while (n > 0) {
-        sum += n % b;
-        n /= b;
-    }
-    return sum;
-}
-
 ll mod(ll a, ll p) {
     return (a % p + p) % p;
 }
@@ -84,8 +74,8 @@ bool is_pow_of_2(ll n) {
 
 
 // Looping
-#define rep(i, d, u) for(ll i = d; i <= u; ++i)
-#define dep(i, u, d) for(ll i = u; i >= d; --i)
+#define rep(i, d, u) for(int i = d; i <= u; ++i)
+#define dep(i, u, d) for(int i = u; i >= d; --i)
 #define foreach(i, c) for(auto i : c)
 
 // Input
@@ -147,15 +137,6 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
     return os;
 }
 
-template <typename T>
-std::vector<T> arange(T start, T end, T step = 1) {
-    std::vector<T> result;
-    for (T value = start; value < end; value += step) {
-        result.push_back(value);
-    }
-    return result;
-}
-
 // List manipulation
 template<typename T>
 vector<T> vslice(const vector<T>& v, int start=0, int end=-1) {
@@ -202,14 +183,6 @@ bool any(std::vector<bool> v) {
     return std::any_of(v.begin(), v.end(), [](bool b){ return b; });
 }
 
-#define RC(typ, expr, x, lo, hi) ({ \
-    typ lcret; \
-    rep(x, lo, hi) {\
-        lcret.push_back(expr); \
-    } \
-    lcret; \
-})
-
 template <typename T, typename F>
 void sort_vec(vector<T>& v, F key) {
     sort(v.begin(), v.end(), [&](const T& a, const T& b) {
@@ -221,12 +194,6 @@ void reset_graph(vvi& g) {
     rep(i, 0, g.size() - 1)
     {
         g[i].clear();
-    }
-}
-
-void cumsum(vl& arr) {
-    rep(i, 1, arr.size() - 1) {
-        arr[i] += arr[i - 1];
     }
 }
 
@@ -268,130 +235,49 @@ void display_tree(int node, int parent, vector<vector<ll>>& adj_list,
 }
 
 // Binary Search
-#define bisect_left(bbbmid, cond, lo, hi) ({ \
-    ll bbbl = (lo), bbbr = (hi), bbbans = (hi); \
-    ll bbbmid; \
-    while (bbbl <= bbbr) { \
-        bbbmid = (bbbl + bbbr) / 2; \
+#define bisect_left(mid, cond, lo, hi) ({ \
+    ll l = (lo), r = (hi), ans = (hi); \
+    ll mid; \
+    while (l <= r) { \
+        mid = (l + r) / 2; \
         if ((cond)) { \
-            bbbans = bbbmid; \
-            bbbl = bbbmid + 1; \
+            ans = mid; \
+            l = mid + 1; \
         } else { \
-            bbbr = bbbmid - 1; \
+            r = mid - 1; \
         } \
     } \
-    bbbmid = bbbans; \
+    mid = ans; \
     if (!((cond))) { \
-        bbbans = -1; \
+        ans = -1; \
     } \
-    bbbans; \
+    ans; \
 })
 
 #define bisect_right(mid, cond, lo, hi) ({ \
-    ll bbbl = (lo), bbbr = (hi), bbbans = (hi); \
+    ll l = (lo), r = (hi), ans = (hi); \
     ll mid; \
-    while (bbbl <= bbbr) { \
-        mid = (bbbl + bbbr) / 2; \
+    while (l <= r) { \
+        mid = (l + r) / 2; \
         if ((cond)) { \
-            bbbans = mid; \
-            bbbr = mid - 1; \
+            ans = mid; \
+            r = mid - 1; \
         } else { \
-            bbbl = mid + 1; \
+            l = mid + 1; \
         } \
     } \
-    mid = bbbans; \
+    mid = ans; \
     if (!((cond))) { \
-        bbbans = hi + 1; \
+        ans = hi + 1; \
     } \
-    bbbans; \
+    ans; \
 })
 
-// Numpy
 
-template<typename T>
-class ndarray {
-public:
-    int n_rows; // number of rows
-    int n_cols; // number of columns
-    std::vector<T> data; // vector to store the data
 
-    // Constructor to initialize the 2D array with given shape
-    ndarray(int n_rows_, int n_cols_) : n_rows(n_rows_), n_cols(n_cols_) {
-        data = std::vector<T>(n_rows * n_cols);
-    }
-    
-    // Accessor function to get the number of rows
-    int get_n_rows() const {
-        return n_rows;
-    }
-    
-    // Accessor function to get the number of columns
-    int get_n_cols() const {
-        return n_cols;
-    }
-    
-    // Accessor function to get the data of the 2D array
-    std::vector<T> get_data() const {
-        return data;
-    }
-    
-    // Overload the () operator to access elements of the 2D array
-    T& operator()(int i, int j) {
-        if (i < 0 || i >= n_rows || j < 0 || j >= n_cols) {
-            throw std::out_of_range("Index out of range");
-        }
-        return data[i * n_cols + j];
-    }
-    
-    // Overload the () operator to access elements of the 2D array (const version)
-    const T& operator()(int i, int j) const {
-        if (i < 0 || i >= n_rows || j < 0 || j >= n_cols) {
-            throw std::out_of_range("Index out of range");
-        }
-        return data[i * n_cols + j];
-    }
-    
-    // Fill the array with a particular value
-    void fill(const T& value) {
-        std::fill(data.begin(), data.end(), value);
-    }
-
-    void fill(const T& value, int istart, int iend, int jstart, int jend) {
-        for (int i = istart; i < iend; i++)
-        {
-            for (int j = jstart; j < jend; j++)
-            {
-                (*this)(i, j) = value;
-            }
-        }
-
-    }
-
-    ndarray<T> slice(int istart, int iend, int jstart, int jend) {
-        ndarray<T> subarray(iend - istart, jend - jstart);
-        for (int i = istart; i < iend; i++)
-        {
-            for (int j = jstart; j < jend; j++)
-            {
-                subarray(i - istart, j - jstart) = (*this)(i, j);
-            }
-        }
-        return subarray;
-    }
-};
-
-// Overload the << operator to print the elements of the 2D array
-template<typename T>
-std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
-    for (int i = 0; i < arr.get_n_rows(); i++) {
-        for (int j = 0; j < arr.get_n_cols(); j++) {
-            os << arr(i, j) << " ";
-        }
-        os << std::endl;
-    }
-    return os;
+int main() {
+    int a[] = {4, 4, 5, 5, 6, 6};
+    // print(bisect_left(i, i * i <= 600, 0, 10));
+    // print(bisect_right(i, i * i > 9, 0, 10));
+    return 0;
 }
-
-typedef ndarray<ll> llarray;
-typedef ndarray<int> intarray;
-

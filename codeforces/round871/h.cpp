@@ -395,3 +395,49 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+
+// Actual code
+vi a(2 * pow(10, 5));
+llarray ans(2 * pow(10, 5), 64);
+
+ll solve(int n, int k) {
+    ans.fill(0, 0, n, 0, 64);
+
+    // Fill it out for the first element
+    ans(0, a[0]) = 1;
+
+    rep(i, 1, n - 1) {
+        rep(prev, 0, 63) {
+            ans(i, prev & a[i]) += ans(i - 1, prev);
+            ans(i, prev) += ans(i - 1, prev);
+        }
+        ans(i, a[i]) += 1;
+
+        rep(j, 0, 63) {
+            ans(i, j) = mod(ans(i, j));
+        }
+    }
+
+    ll tot = 0;
+    rep(j, 0, 63) {
+        if (sum_digits(j, 2) == k) {
+            tot = mod(tot + ans(n - 1, j));
+        }
+    }
+
+    return tot;
+}
+
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        int n, k;
+        cin >> n >> k;
+        rep(i, 0, n - 1) {
+            cin >> a[i];
+        }
+        print(solve(n, k));
+    }
+    return 0;
+}
