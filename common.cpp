@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include <sstream>
+#include <functional>
 
 //  Definition of the macro.
 #define ass(a, b, x, y) (tie(a, b) = make_tuple(x, y));
@@ -16,6 +17,13 @@ typedef vector<vector<ll>> vvl;
 typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef string str;
+
+template <typename T>
+struct Identity {
+    constexpr const T& operator()(const T& value) const {
+        return value;
+    }
+};
 
 // Number Theory
 
@@ -52,6 +60,8 @@ ll inv(ll x, ll y) {
 }
 
 ll gcd(ll a, ll b) {
+    a = abs(a);
+    b = abs(b);
     if (a > b) {
         ass(a, b, b, a);
     }
@@ -84,6 +94,7 @@ bool is_pow_of_2(ll n) {
 // Looping
 #define rep(i, d, u) for(ll i = d; i <= u; ++i)
 #define dep(i, u, d) for(ll i = u; i >= d; --i)
+#define cep(t) while(t--)
 #define foreach(i, c) for(auto i : c)
 
 // Input
@@ -212,11 +223,17 @@ bool any(std::vector<bool> v) {
     lcret; \
 })
 
-template <typename T, typename F>
-void sort_vec(vector<T>& v, F key) {
-    sort(v.begin(), v.end(), [&](const T& a, const T& b) {
-        return key(a) < key(b);
-    });
+
+template <typename T, typename KeyFunc = Identity<T>>
+void sort_vec(vector<T>& vec, size_t start, size_t end, KeyFunc keyFunc = Identity<T>{}) {
+    if (start >= end || end >= vec.size()) {
+        return;  // Invalid indices or empty range
+    }
+
+    sort(vec.begin() + start, vec.begin() + end + 1,
+              [&keyFunc](const T& a, const T& b) {
+                  return keyFunc(a) < keyFunc(b);
+              });
 }
 
 void reset_graph(vvi& g) {
@@ -397,7 +414,17 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
-// Just to test stuff
+
+ll solve(ll n) {
+}
+
 int main () {
-    return 0;
+    init();
+    ll t;
+    cin >> t;
+    cep(t) {
+        ll n;
+        cin >> n;
+        print(solve(n));
+    }
 }
