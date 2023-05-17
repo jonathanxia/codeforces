@@ -2,8 +2,6 @@
 #include <sstream>
 
 //  Definition of the macro.
-#define min(x, y) (((x) < (y)) ? (x) : (y))
-#define max(x, y) (((x) > (y)) ? (x) : (y))
 #define ass(a, b, x, y) (tie(a, b) = make_tuple(x, y));
 #define ordered(x, y, z) ((x) <= (y) && (y) <= (z))
 
@@ -101,6 +99,10 @@ long long read_binary() {
 }
 
 // Printing
+
+void init() {
+    ios_base::sync_with_stdio(false), cin.tie(nullptr);
+}
 
 template<typename T>
 void print(const T& t) {
@@ -395,3 +397,7 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+// Just to test stuff
+int main () {
+    return 0;
+}
