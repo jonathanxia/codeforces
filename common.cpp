@@ -301,7 +301,7 @@ void display_tree(int node, int parent, vector<vector<ll>>& adj_list,
     } \
     bbbmid = bbbans; \
     if (!((cond))) { \
-        bbbans = -1; \
+        bbbans = (lo)-1; \
     } \
     bbbans; \
 })
@@ -320,7 +320,7 @@ void display_tree(int node, int parent, vector<vector<ll>>& adj_list,
     } \
     mid = bbbans; \
     if (!((cond))) { \
-        bbbans = hi + 1; \
+        bbbans = (hi) + 1; \
     } \
     bbbans; \
 })
@@ -413,6 +413,7 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
+
 
 
 ll solve(ll n) {

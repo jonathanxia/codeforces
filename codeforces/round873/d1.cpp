@@ -301,7 +301,7 @@ void display_tree(int node, int parent, vector<vector<ll>>& adj_list,
     } \
     bbbmid = bbbans; \
     if (!((cond))) { \
-        bbbans = -1; \
+        bbbans = (lo)-1; \
     } \
     bbbans; \
 })
@@ -320,7 +320,7 @@ void display_tree(int node, int parent, vector<vector<ll>>& adj_list,
     } \
     mid = bbbans; \
     if (!((cond))) { \
-        bbbans = hi + 1; \
+        bbbans = (hi) + 1; \
     } \
     bbbans; \
 })
@@ -414,38 +414,70 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+// sparsetable.cpp
+class SparseTable {
+private:
+    vector<vector<ll>> table;
+    vector<ll> logTable;
+    vector<ll> arrSize;
+    function<ll(ll, ll)> operation;
 
-vl a(3 * pow(10, 5));
+public:
+    SparseTable(const vector<ll>& arr, function<ll(ll, ll)> op) {
+        ll n = arr.size();
+        ll logn = log2(n) + 1;
+
+        table.resize(n, vector<ll>(logn));
+        logTable.resize(n + 1);
+        arrSize.resize(n + 1);
+        operation = op;
+
+        // Precompute logarithm values and array sizes
+        for (int i = 2; i <= n; i++) {
+            logTable[i] = logTable[i / 2] + 1;
+            arrSize[i] = arrSize[i / 2] + (i & 1);
+        }
+
+        // Initialize the first column of the table
+        for (int i = 0; i < n; i++) {
+            table[i][0] = arr[i];
+        }
+
+        // Compute the rest of the table using dynamic programming
+        for (int j = 1; (1 << j) <= n; j++) {
+            for (int i = 0; (i + (1 << j) - 1) < n; i++) {
+                table[i][j] = operation(table[i][j - 1], table[i + (1 << (j - 1))][j - 1]);
+            }
+        }
+    }
+
+    ll query(int left, int right) {
+        ll k = logTable[right - left + 1];
+        ll len = arrSize[right - left + 1];
+        return operation(table[left][k], table[right - (1 << k) + 1][k]);
+    }
+};
 
 
-ll solve(ll n) {
+ll solve(vl& a, ll n) {
+    auto a2 = vslice(a, 0, n);
+    SparseTable minst(a2, [](ll a, ll b) { return min(a, b); });
+    SparseTable maxst(a2, [](ll a, ll b) { return max(a, b); });
+
     ll ans = 0;
     rep(i, 1, n - 1) {
-        // i is such that a[i] is the min of the right side
-        int j = i - 1;
-        while (j >= 0 && a[j] > a[i]) {
-            j--;
-        }
-        // Now a[j] < a[i], or j == 0
-        if (j < 0 || a[j] >= a[i]) {
-            // No way split point happens before i
+        // B B B S S S S B B B i B B B S S S B
+        //       j2      j             r
+
+        int r = bisect_left(x, minst.query(i, x) >= a[i], i, n - 1);
+        int j = bisect_right(x, minst.query(x, i - 1) > a[i], 0, i - 1);
+        if (j <= 0) {
             continue;
         }
-        int j2 = j;
-        while (j2 >= 0 && a[j2] < a[i]) {
-            j2--;
-        }
-        // The split point must be (j, j + 1), because a[j] < a[i] and a[j + 1] > a[i]
-        // The left endpoint can be selected as j - j2;
 
-        int r = i + 1;
-        while (r < n && a[r] > a[i]) {
-            r++;
-        }
-        // At this point you know a[r] < a[i], so just do r - i
-        // print("index", i, j - j2, r - i);
+        int j2 = bisect_right(x, maxst.query(x, j - 1) < a[i], 0, j - 1);
 
-        ans += ((ll) (j - j2)) * (r - i);
+        ans += (j - j2) * (r - i + 1);
     }
 
     ll s = 0;
@@ -453,7 +485,6 @@ ll solve(ll n) {
         // Length k subarrays is just [0...k-1], ..., [n-k, n-1]
         s += (n - k + 1) * (k - 1);
     }
-    // print("s", s);
 
     return s - ans;
 }
@@ -463,6 +494,7 @@ int main () {
     init();
     ll t;
     cin >> t;
+    vl a(3 * pow(10, 5));
     cep(t) {
         ll n;
         cin >> n;
@@ -470,6 +502,7 @@ int main () {
             cin >> a[i];
         }
 
-        print(solve(n));
+        print(solve(a, n));
     }
+
 }
