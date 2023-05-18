@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
+#include <cmath>
 
 //  Definition of the macro.
 #define ass(a, b, x, y) (tie(a, b) = make_tuple(x, y));
@@ -431,18 +432,18 @@ typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
 
-ll solve(ll n) {
-}
+// ll solve(ll n) {
+// }
 
-int main () {
-    init();
-    ll t;
-    cin >> t;
-    string s;
-    cep(t) {
-        ll n;
-        cin >> n;
-        cin >> s;
-        print(solve(s, n));
-    }
-}
+// int main () {
+//     init();
+//     ll t;
+//     cin >> t;
+//     string s;
+//     cep(t) {
+//         ll n;
+//         cin >> n;
+//         cin >> s;
+//         print(solve(s, n));
+//     }
+// }

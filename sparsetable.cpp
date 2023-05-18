@@ -1,7 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <cmath>
-#include <functional>
+#include <common.h>
 
 using namespace std;
 
@@ -46,3 +43,8 @@ public:
         return operation(table[left][k], table[right - (1 << k) + 1][k]);
     }
 };
+
+int main() {
+    SparseTable st({3, 5, 1, 4, 2}, [](ll a, ll b) {return min(a, b);});
+    print(st.query(2, 4));
+}
