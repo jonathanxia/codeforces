@@ -170,6 +170,9 @@ std::vector<T> arange(T start, T end, T step = 1) {
 }
 
 // List manipulation
+typedef priority_queue<ll, vl, greater<ll>> minheap;
+typedef priority_queue<ll, vl, less<ll>> maxheap;
+
 template<typename T>
 vector<T> vslice(const vector<T>& v, int start=0, int end=-1) {
     int n = v.size();
@@ -287,7 +290,7 @@ void display_tree(int node, int parent, vector<vector<ll>>& adj_list,
 }
 
 // Binary Search
-#define bisect_left(bbbmid, cond, lo, hi) ({ \
+#define largest_st(bbbmid, cond, lo, hi) ({ \
     ll bbbl = (lo), bbbr = (hi), bbbans = (hi); \
     ll bbbmid; \
     while (bbbl <= bbbr) { \
@@ -306,7 +309,7 @@ void display_tree(int node, int parent, vector<vector<ll>>& adj_list,
     bbbans; \
 })
 
-#define bisect_right(mid, cond, lo, hi) ({ \
+#define smallest_st(mid, cond, lo, hi) ({ \
     ll bbbl = (lo), bbbr = (hi), bbbans = (hi); \
     ll mid; \
     while (bbbl <= bbbr) { \
@@ -324,6 +327,19 @@ void display_tree(int node, int parent, vector<vector<ll>>& adj_list,
     } \
     bbbans; \
 })
+
+// Strings
+string str_lower(const string& s) {
+    string result = s;
+    transform(result.begin(), result.end(), result.begin(), ::tolower);
+    return result;
+}
+
+string str_upper(const string& s) {
+    string result = s;
+    transform(result.begin(), result.end(), result.begin(), ::toupper);
+    return result;
+}
 
 // Numpy
 
@@ -415,7 +431,6 @@ typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
 
-
 ll solve(ll n) {
 }
 
@@ -423,9 +438,11 @@ int main () {
     init();
     ll t;
     cin >> t;
+    string s;
     cep(t) {
         ll n;
         cin >> n;
-        print(solve(n));
+        cin >> s;
+        print(solve(s, n));
     }
 }
