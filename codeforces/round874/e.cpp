@@ -514,17 +514,17 @@ typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
 
-// ll solve() {
-//     ll n;
-//     cin >> n;
-//     return mod(tot);
-// }
+ll solve() {
+    ll n;
+    cin >> n;
+    return mod(tot);
+}
 
-// int main () {
-//     init();
-//     ll t;
-//     cin >> t;
-//     cep(t) {
-//         print(solve());
-//     }
-// }
+int main () {
+    init();
+    ll t;
+    cin >> t;
+    cep(t) {
+        print(solve());
+    }
+}

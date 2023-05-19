@@ -19,27 +19,6 @@ typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef string str;
 
-// Maps
-struct custom_hash {
-    static uint64_t splitmix64(uint64_t x) {
-        // http://xorshift.di.unimi.it/splitmix64.c
-        x += 0x9e3779b97f4a7c15;
-        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
-        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
-        return x ^ (x >> 31);
-    }
-
-    size_t operator()(uint64_t x) const {
-        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
-        return splitmix64(x + FIXED_RANDOM);
-    }
-};
-
-typedef unordered_map<long long, int, custom_hash> umapli;
-typedef unordered_map<ll, ll, custom_hash> umapll;
-typedef unordered_set<ll, custom_hash> uset;
-typedef unordered_map<ll, vl, custom_hash> umaplvl;
-
 template <typename T>
 struct Identity {
     constexpr const T& operator()(const T& value) const {
@@ -56,16 +35,6 @@ int sum_digits(int n, int b) {
         n /= b;
     }
     return sum;
-}
-
-vl get_digits(int n, int b) {
-    vl ans;
-    while (n > 0) {
-        ans.push_back(n % b);
-        n /= b;
-    }
-
-    return ans;
 }
 
 ll mod(ll a, ll p) {
@@ -126,8 +95,6 @@ bool is_pow_of_2(ll n) {
 // Looping
 #define rep(i, d, u) for(ll i = d; i <= u; ++i)
 #define dep(i, u, d) for(ll i = u; i >= d; --i)
-#define irep(i, d, u) for(i = d; i <= u; ++i)
-#define idep(i, u, d) for(i = u; i >= d; --i)
 #define cep(t) while(t--)
 #define foreach(i, c) for(auto i : c)
 
@@ -142,14 +109,6 @@ long long read_binary() {
     }
     return res;
 }
-
-void read_array(vl& arr, int n) {
-    rep(i, 0, n - 1) {
-        cin >> arr[i];
-    }
-}
-
-
 
 // Printing
 
@@ -166,17 +125,6 @@ template<typename T, typename... Args>
 void print(const T& t, const Args&... args) {
     std::cout << t << " ";
     print(args...);
-}
-
-template<typename K, typename V>
-std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V, custom_hash>& mp)
-{
-    os << "{ ";
-    for (const auto& p : mp) {
-        os << "{" << p.first << ": " << p.second << "} ";
-    }
-    os << "}";
-    return os;
 }
 
 template<typename T>
@@ -202,16 +150,6 @@ std::ostream& operator<<(std::ostream& os, const std::set<T>& s) {
     return os;
 }
 
-template<typename T>
-std::ostream& operator<<(std::ostream& os, const std::unordered_set<T, custom_hash>& s) {
-    os << "{ ";
-    for (const auto& item : s) {
-        os << item << " ";
-    }
-    os << "}";
-    return os;
-}
-
 template<typename K, typename V>
 std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
 {
@@ -222,8 +160,6 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
     os << "}";
     return os;
 }
-
-
 
 template <typename T>
 std::vector<T> arange(T start, T end, T step = 1) {
@@ -237,16 +173,6 @@ std::vector<T> arange(T start, T end, T step = 1) {
 // List manipulation
 typedef priority_queue<ll, vl, greater<ll>> minheap;
 typedef priority_queue<ll, vl, less<ll>> maxheap;
-
-template <typename T>
-int index(const vector<T>& vec, const T& element) {
-    for (int i = 0; i < vec.size(); ++i) {
-        if (vec[i] == element) {
-            return i;
-        }
-    }
-    throw out_of_range("Element not found in vector");
-}
 
 template<typename T>
 vector<T> vslice(const vector<T>& v, int start=0, int end=-1) {
@@ -314,22 +240,6 @@ void sort_vec(vector<T>& vec, size_t start, size_t end, KeyFunc keyFunc = Identi
               });
 }
 
-template <typename T>
-vector<int> argsort(const vector<T>& array) {
-    // Initialize original index positions
-    vector<int> indices(array.size());
-    for (int i = 0; i < indices.size(); ++i) {
-        indices[i] = i;
-    }
-
-    // Sort the indices based on comparing array values
-    sort(indices.begin(), indices.end(), [&array](int i1, int i2) {
-        return array[i1] < array[i2];
-    });
-
-    return indices;
-}
-
 void reset_graph(vvi& g) {
     rep(i, 0, g.size() - 1)
     {
@@ -343,6 +253,27 @@ void cumsum(vl& arr) {
     }
 }
 
+
+// Maps
+struct custom_hash {
+    static uint64_t splitmix64(uint64_t x) {
+        // http://xorshift.di.unimi.it/splitmix64.c
+        x += 0x9e3779b97f4a7c15;
+        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+        return x ^ (x >> 31);
+    }
+
+    size_t operator()(uint64_t x) const {
+        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+        return splitmix64(x + FIXED_RANDOM);
+    }
+};
+
+
+typedef unordered_map<long long, int, custom_hash> umapli;
+typedef unordered_map<ll, ll, custom_hash> umapll;
+typedef unordered_set<ll, custom_hash> uset;
 
 
 int di[4] = {1, 0, -1, 0};
@@ -485,7 +416,6 @@ public:
     }
 };
 
-
 // Overload the << operator to print the elements of the 2D array
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
@@ -498,33 +428,63 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
-template <typename T>
-string str_join(const vector<T>& elements, const string& delimiter) {
-    ostringstream oss;
-    for (size_t i = 0; i < elements.size(); ++i) {
-        if (i != 0) {
-            oss << delimiter;
-        }
-        oss << elements[i];
-    }
-    return oss.str();
-}
-
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
 
-// ll solve() {
-//     ll n;
-//     cin >> n;
-//     return mod(tot);
-// }
+str solve() {
+    ll n;
+    cin >> n;
 
-// int main () {
-//     init();
-//     ll t;
-//     cin >> t;
-//     cep(t) {
-//         print(solve());
-//     }
-// }
+    vl a(n);
+    rep(i, 0, n - 1) {
+        cin >> a[i];
+    }
+
+    sort_vec(a, 0, n - 1);
+
+    vl m(n);
+    rep(i, 0, n - 1) {
+        m[i] = a[i] % 2;
+    }
+
+    vb haseven(n);
+    vb hasodd(n);
+    haseven[0] = false;
+    hasodd[0] = false;
+    rep(i, 1, n - 1) {
+        haseven[i] = haseven[i - 1] || (a[i - 1] % 2 == 0);
+        hasodd[i] = hasodd[i - 1] || (a[i - 1] % 2 == 1);
+    }
+
+    vb canmakeeven(n);
+    vb canmakeodd(n);
+    rep(i, 0, n - 1) {
+        if (a[i] % 2 == 0) {
+            canmakeeven[i] = true;
+            canmakeodd[i] = hasodd[i];
+        }
+        if (a[i] % 2 == 1) {
+            canmakeeven[i] = hasodd[i];
+            canmakeodd[i] = true;
+        }
+    }
+    // print(a);
+    // print("even", canmakeeven);
+
+    if (all(canmakeeven) || all(canmakeodd)) {
+        return "YES";
+    }
+
+    return "NO";
+}
+
+int main () {
+    init();
+    ll t;
+    cin >> t;
+    string s;
+    cep(t) {
+        print(solve());
+    }
+}

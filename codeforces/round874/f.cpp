@@ -514,17 +514,59 @@ typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
 
-// ll solve() {
-//     ll n;
-//     cin >> n;
-//     return mod(tot);
-// }
+ll solve() {
+    ll n, m;
+    cin >> n >> m;
+    vl a(n);
+    rep(i, 0, n -1 ) {
+        cin >> a[i];
+    }
 
-// int main () {
-//     init();
-//     ll t;
-//     cin >> t;
-//     cep(t) {
-//         print(solve());
-//     }
-// }
+    sort_vec(a, 0, n - 1);
+
+    umapll counts;
+    foreach(x, a) {
+        counts[x]++;
+    }
+
+    // Get the ranges
+    int ptr = 0;
+    ll tot = 0;
+    while (ptr < n) {
+        ll start = a[ptr];
+        // Find the end
+        ll end = start;
+        while (counts[end] > 0) {
+            end++;
+        }
+
+        if (end - start < m) {
+            ptr = smallest_st(x, a[x] > end, ptr, n - 1);
+            continue;
+        }
+        // Do the product now
+        ll prod = 1;
+        rep(i, start, start + m - 1) {
+            prod = mod(prod * counts[i]);
+        }
+
+        rep(i, start, end - m) {
+            // Multiply this from i to i + m - 1
+            tot = mod(tot + prod);
+            prod = mod(prod * counts[i + m]);
+            prod = mdiv(prod, counts[i]);
+        }
+        ptr = smallest_st(x, a[x] > end, ptr, n - 1);
+    }
+
+    return mod(tot);
+}
+
+int main () {
+    init();
+    ll t;
+    cin >> t;
+    cep(t) {
+        print(solve());
+    }
+}
