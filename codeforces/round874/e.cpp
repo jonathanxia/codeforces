@@ -39,6 +39,7 @@ typedef unordered_map<long long, int, custom_hash> umapli;
 typedef unordered_map<ll, ll, custom_hash> umapll;
 typedef unordered_set<ll, custom_hash> uset;
 typedef unordered_map<ll, vl, custom_hash> umaplvl;
+typedef unordered_map<str, ll, custom_hash> umapstrl;
 
 template <typename T>
 struct Identity {
@@ -49,7 +50,7 @@ struct Identity {
 
 // Number Theory
 
-int sum_digits(int n, int b) {
+ll sum_digits(ll n, ll b) {
     int sum = 0;
     while (n > 0) {
         sum += n % b;
@@ -239,7 +240,7 @@ typedef priority_queue<ll, vl, greater<ll>> minheap;
 typedef priority_queue<ll, vl, less<ll>> maxheap;
 
 template <typename T>
-int index(const vector<T>& vec, const T& element) {
+int indexof(const vector<T>& vec, const T& element) {
     for (int i = 0; i < vec.size(); ++i) {
         if (vec[i] == element) {
             return i;
@@ -330,10 +331,18 @@ vector<int> argsort(const vector<T>& array) {
     return indices;
 }
 
-void reset_graph(vvi& g) {
+template <typename T>
+void reset_graph(vector<vector<T>>& g) {
     rep(i, 0, g.size() - 1)
     {
         g[i].clear();
+    }
+}
+
+template <typename T, typename S>
+void setvec(vector<T>& v, S elem) {
+    rep(i, 0, v.size() - 1) {
+        v[i] = elem;
     }
 }
 
@@ -514,10 +523,112 @@ typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
 
-ll solve() {
+
+
+vvl graph(2 * pow(10, 5));
+vl ccnum(2 * pow(10, 5));
+vb isendpoint(2 * pow(10, 5));
+
+void dfs(ll node, ll c) {
+    ccnum[node] = c;
+    ll numchil = 0;
+    foreach(child, graph[node]) {
+        if (ccnum[child] == 0) {
+            dfs(child, c);
+            numchil++;
+        }
+    }
+
+    if (numchil == 0) {
+        isendpoint[node] = true;
+    }
+}
+
+vb visited2;
+vb is_link;
+
+void dfs2(ll node, ll start, ll parent) {
+    visited2[node] = true;
+    bool is_end = true;
+    foreach(child, graph[node]) {
+        if (!visited2[child]) {
+            dfs2(child, start, node);
+            is_end = false;
+        }
+    }
+    vl children;
+    foreach(child, graph[node]) {
+        if (child != parent) {
+            children.push_back(child);
+        }
+    }
+    if (is_end) {
+        if (children.size() == 0) {
+            // No other child, then you are a link
+            is_link[start] = true;
+        }
+        else {
+            is_link[start] = false;
+        }
+    }
+}
+
+void solve() {
     ll n;
     cin >> n;
-    return mod(tot);
+    vl a(n);
+    read_array(a, n);
+
+    graph.resize(n);
+    ccnum.resize(n);
+    isendpoint.resize(n);
+    visited2.resize(n);
+    is_link.resize(n);
+    reset_graph(graph);
+    setvec(ccnum, 0);
+    setvec(isendpoint, false);
+    setvec(visited2, false);
+    setvec(is_link, false);
+
+    rep(i, 0, n - 1) {
+        if (!contains(graph[i], a[i] - 1)) {
+            graph[i].push_back(a[i] - 1);
+        }
+        if (!contains(graph[a[i] - 1], i)) {
+            graph[a[i] - 1].push_back(i);
+        }
+    }
+
+    int c = 1;
+    rep(i, 0, n - 1) {
+        if (ccnum[i] == 0) {
+            dfs(i, c);
+            c++;
+        }
+    }
+    ll highest = c - 1;
+
+    // We got the ccnums, now rack them up
+    ll numcycles = 0;
+    ll numlinks = 0;
+    vb checked_ccnum(c);
+    rep(i, 0, n - 1) {
+        if (!checked_ccnum[ccnum[i]] && isendpoint[i]) {
+            checked_ccnum[ccnum[i]] = true;
+            dfs2(i, i, -1);
+
+            if (is_link[i]) {
+                numlinks++;
+            }
+            else {
+                numcycles++;
+            }
+        }
+    }
+
+    // print("numcycles=", numcycles);
+    // print("ccnums", ccnum);
+    print(numcycles + (numlinks > 0), numlinks + numcycles);
 }
 
 int main () {
@@ -525,6 +636,6 @@ int main () {
     ll t;
     cin >> t;
     cep(t) {
-        print(solve());
+        solve();
     }
 }

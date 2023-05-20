@@ -33,12 +33,23 @@ struct custom_hash {
         static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
         return splitmix64(x + FIXED_RANDOM);
     }
+
+    size_t operator()(str s) const {
+        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+        size_t tot = 0;
+        for (char x : s) {
+            tot = tot & 37 + splitmix64((uint64_t) x + FIXED_RANDOM);
+        }
+        return tot;
+    }
+
 };
 
 typedef unordered_map<long long, int, custom_hash> umapli;
 typedef unordered_map<ll, ll, custom_hash> umapll;
 typedef unordered_set<ll, custom_hash> uset;
 typedef unordered_map<ll, vl, custom_hash> umaplvl;
+typedef unordered_map<str, ll, custom_hash> umapstrl;
 
 template <typename T>
 struct Identity {
@@ -239,7 +250,7 @@ typedef priority_queue<ll, vl, greater<ll>> minheap;
 typedef priority_queue<ll, vl, less<ll>> maxheap;
 
 template <typename T>
-int index(const vector<T>& vec, const T& element) {
+int indexof(const vector<T>& vec, const T& element) {
     for (int i = 0; i < vec.size(); ++i) {
         if (vec[i] == element) {
             return i;
@@ -330,19 +341,45 @@ vector<int> argsort(const vector<T>& array) {
     return indices;
 }
 
-void reset_graph(vvi& g) {
+template <typename T>
+void reset_graph(vector<vector<T>>& g) {
     rep(i, 0, g.size() - 1)
     {
         g[i].clear();
     }
 }
 
-void cumsum(vl& arr) {
-    rep(i, 1, arr.size() - 1) {
-        arr[i] += arr[i - 1];
+template <typename T, typename S>
+void setvec(vector<T>& v, S elem) {
+    rep(i, 0, v.size() - 1) {
+        v[i] = elem;
     }
 }
 
+void cumsum(vl& arr, ll start, ll end) {
+    ll s = 0;
+    rep(i, start, end) {
+        s += arr[i];
+        arr[i] = s;
+    }
+}
+
+ll sum(vl& arr, ll start, ll end) {
+    ll s = 0;
+    rep(i, start, end) {
+        s += arr[i];
+    }
+    return s;
+}
+
+ll msum(vl& arr, ll start, ll end, ll m) {
+    ll s = 0;
+    rep(i, start, end) {
+        s += arr[i];
+        s = mod(s, m);
+    }
+    return s;
+}
 
 
 int di[4] = {1, 0, -1, 0};
@@ -513,18 +550,3 @@ string str_join(const vector<T>& elements, const string& delimiter) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
-
-// ll solve() {
-//     ll n;
-//     cin >> n;
-//     return mod(tot);
-// }
-
-// int main () {
-//     init();
-//     ll t;
-//     cin >> t;
-//     cep(t) {
-//         print(solve());
-//     }
-// }
