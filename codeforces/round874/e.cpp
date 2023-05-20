@@ -525,70 +525,13 @@ typedef ndarray<int> intarray;
 
 
 
-vvl graph(2 * pow(10, 5));
-vl ccnum(2 * pow(10, 5));
-vb isendpoint(2 * pow(10, 5));
-
-void dfs(ll node, ll c) {
-    ccnum[node] = c;
-    ll numchil = 0;
-    foreach(child, graph[node]) {
-        if (ccnum[child] == 0) {
-            dfs(child, c);
-            numchil++;
-        }
-    }
-
-    if (numchil == 0) {
-        isendpoint[node] = true;
-    }
-}
-
-vb visited2;
-vb is_link;
-
-void dfs2(ll node, ll start, ll parent) {
-    visited2[node] = true;
-    bool is_end = true;
-    foreach(child, graph[node]) {
-        if (!visited2[child]) {
-            dfs2(child, start, node);
-            is_end = false;
-        }
-    }
-    vl children;
-    foreach(child, graph[node]) {
-        if (child != parent) {
-            children.push_back(child);
-        }
-    }
-    if (is_end) {
-        if (children.size() == 0) {
-            // No other child, then you are a link
-            is_link[start] = true;
-        }
-        else {
-            is_link[start] = false;
-        }
-    }
-}
-
 void solve() {
     ll n;
     cin >> n;
     vl a(n);
     read_array(a, n);
 
-    graph.resize(n);
-    ccnum.resize(n);
-    isendpoint.resize(n);
-    visited2.resize(n);
-    is_link.resize(n);
-    reset_graph(graph);
-    setvec(ccnum, 0);
-    setvec(isendpoint, false);
-    setvec(visited2, false);
-    setvec(is_link, false);
+    vvl graph(n);
 
     rep(i, 0, n - 1) {
         if (!contains(graph[i], a[i] - 1)) {
@@ -599,36 +542,39 @@ void solve() {
         }
     }
 
-    int c = 1;
+    vl ccnum(n);
+    vl cc_num_vertex(n);
+    vl cc_num_edge(n);
+    auto dfs = [&](auto&& dfs, int node, int c) -> void {
+        ccnum[node] = c;
+        cc_num_vertex[c]++;
+        foreach(child, graph[node]) {
+            cc_num_edge[c]++;
+            if (ccnum[child] == 0) {
+                dfs(dfs, child, c);
+            }
+        }
+    };
+
+    int curc = 1;
     rep(i, 0, n - 1) {
         if (ccnum[i] == 0) {
-            dfs(i, c);
-            c++;
-        }
-    }
-    ll highest = c - 1;
-
-    // We got the ccnums, now rack them up
-    ll numcycles = 0;
-    ll numlinks = 0;
-    vb checked_ccnum(c);
-    rep(i, 0, n - 1) {
-        if (!checked_ccnum[ccnum[i]] && isendpoint[i]) {
-            checked_ccnum[ccnum[i]] = true;
-            dfs2(i, i, -1);
-
-            if (is_link[i]) {
-                numlinks++;
-            }
-            else {
-                numcycles++;
-            }
+            dfs(dfs, i, curc);
+            curc++;
         }
     }
 
-    // print("numcycles=", numcycles);
-    // print("ccnums", ccnum);
-    print(numcycles + (numlinks > 0), numlinks + numcycles);
+    int numcc = curc - 1;
+    int cycles = 0;
+    int noncycles = 0;
+    rep(c, 1, numcc) {
+        if (cc_num_vertex[c] * 2 == cc_num_edge[c]) {
+            cycles++;
+        } else {
+            noncycles++;
+        }
+    }
+    print(cycles + (noncycles > 0), cycles + noncycles);
 }
 
 int main () {

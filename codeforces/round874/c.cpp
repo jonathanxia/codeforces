@@ -211,11 +211,13 @@ bool contains(const Container& c, const T& value) {
     return std::find(c.begin(), c.end(), value) != c.end();
 }
 
-bool all(std::vector<bool> v) {
+template<typename T>
+bool all(std::vector<T> v) {
     return std::all_of(v.begin(), v.end(), [](bool b){ return b; });
 }
 
-bool any(std::vector<bool> v) {
+template<typename T>
+bool any(std::vector<T> v) {
     return std::any_of(v.begin(), v.end(), [](bool b){ return b; });
 }
 
@@ -386,6 +388,12 @@ public:
         }
         return data[i * n_cols + j];
     }
+
+    void resize(int rows, int cols) {
+        data.resize(rows * cols);
+        n_rows = rows;
+        n_cols = cols;
+    }
     
     // Fill the array with a particular value
     void fill(const T& value) {
@@ -400,7 +408,28 @@ public:
                 (*this)(i, j) = value;
             }
         }
+    }
 
+    vector<T> get_row(int row, int cstart=0, int cend=-1) {
+        if (cend == -1) {
+            cend = n_cols;
+        }
+        vector<T> ret(cend - cstart);
+        rep(i, cstart, cend - 1) {
+            ret[i - cstart] = (*this)(row, i);
+        }
+        return ret;
+    }
+
+    vector<T> get_col(int col, int rstart=0, int rend=-1) {
+        if (rend == -1) {
+            rend = n_rows;
+        }
+        vector<T> ret(rend - rstart);
+        rep(i, rstart, rend - 1) {
+            ret[i - rstart] = (*this)(i, col);
+        }
+        return ret;
     }
 
     ndarray<T> slice(int istart, int iend, int jstart, int jend) {
@@ -443,36 +472,17 @@ str solve() {
 
     sort_vec(a, 0, n - 1);
 
-    vl m(n);
+    bool hasodd = false;
+    intarray possible(2, n);
+
     rep(i, 0, n - 1) {
-        m[i] = a[i] % 2;
+        int m = a[i] & 1;
+        possible(m, i) = true;
+        possible(1 - m, i) = hasodd;
+        hasodd = hasodd || (m == 1);
     }
 
-    vb haseven(n);
-    vb hasodd(n);
-    haseven[0] = false;
-    hasodd[0] = false;
-    rep(i, 1, n - 1) {
-        haseven[i] = haseven[i - 1] || (a[i - 1] % 2 == 0);
-        hasodd[i] = hasodd[i - 1] || (a[i - 1] % 2 == 1);
-    }
-
-    vb canmakeeven(n);
-    vb canmakeodd(n);
-    rep(i, 0, n - 1) {
-        if (a[i] % 2 == 0) {
-            canmakeeven[i] = true;
-            canmakeodd[i] = hasodd[i];
-        }
-        if (a[i] % 2 == 1) {
-            canmakeeven[i] = hasodd[i];
-            canmakeodd[i] = true;
-        }
-    }
-    // print(a);
-    // print("even", canmakeeven);
-
-    if (all(canmakeeven) || all(canmakeodd)) {
+    if (all(possible.get_row(0)) || all(possible.get_row(1))) {
         return "YES";
     }
 

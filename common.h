@@ -18,38 +18,7 @@ typedef vector<vector<ll>> vvl;
 typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef string str;
-
-// Maps
-struct custom_hash {
-    static uint64_t splitmix64(uint64_t x) {
-        // http://xorshift.di.unimi.it/splitmix64.c
-        x += 0x9e3779b97f4a7c15;
-        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
-        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
-        return x ^ (x >> 31);
-    }
-
-    size_t operator()(uint64_t x) const {
-        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
-        return splitmix64(x + FIXED_RANDOM);
-    }
-
-    size_t operator()(str s) const {
-        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
-        size_t tot = 0;
-        for (char x : s) {
-            tot = tot & 37 + splitmix64((uint64_t) x + FIXED_RANDOM);
-        }
-        return tot;
-    }
-
-};
-
-typedef unordered_map<long long, int, custom_hash> umapli;
-typedef unordered_map<ll, ll, custom_hash> umapll;
-typedef unordered_set<ll, custom_hash> uset;
-typedef unordered_map<ll, vl, custom_hash> umaplvl;
-typedef unordered_map<str, ll, custom_hash> umapstrl;
+typedef pair<ll, ll> pl;
 
 template <typename T>
 struct Identity {
@@ -67,16 +36,6 @@ int sum_digits(int n, int b) {
         n /= b;
     }
     return sum;
-}
-
-vl get_digits(int n, int b) {
-    vl ans;
-    while (n > 0) {
-        ans.push_back(n % b);
-        n /= b;
-    }
-
-    return ans;
 }
 
 ll mod(ll a, ll p) {
@@ -137,8 +96,6 @@ bool is_pow_of_2(ll n) {
 // Looping
 #define rep(i, d, u) for(ll i = d; i <= u; ++i)
 #define dep(i, u, d) for(ll i = u; i >= d; --i)
-#define irep(i, d, u) for(i = d; i <= u; ++i)
-#define idep(i, u, d) for(i = u; i >= d; --i)
 #define cep(t) while(t--)
 #define foreach(i, c) for(auto i : c)
 
@@ -153,14 +110,6 @@ long long read_binary() {
     }
     return res;
 }
-
-void read_array(vl& arr, int n) {
-    rep(i, 0, n - 1) {
-        cin >> arr[i];
-    }
-}
-
-
 
 // Printing
 
@@ -177,17 +126,6 @@ template<typename T, typename... Args>
 void print(const T& t, const Args&... args) {
     std::cout << t << " ";
     print(args...);
-}
-
-template<typename K, typename V>
-std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V, custom_hash>& mp)
-{
-    os << "{ ";
-    for (const auto& p : mp) {
-        os << "{" << p.first << ": " << p.second << "} ";
-    }
-    os << "}";
-    return os;
 }
 
 template<typename T>
@@ -213,16 +151,6 @@ std::ostream& operator<<(std::ostream& os, const std::set<T>& s) {
     return os;
 }
 
-template<typename T>
-std::ostream& operator<<(std::ostream& os, const std::unordered_set<T, custom_hash>& s) {
-    os << "{ ";
-    for (const auto& item : s) {
-        os << item << " ";
-    }
-    os << "}";
-    return os;
-}
-
 template<typename K, typename V>
 std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
 {
@@ -233,8 +161,6 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
     os << "}";
     return os;
 }
-
-
 
 template <typename T>
 std::vector<T> arange(T start, T end, T step = 1) {
@@ -248,16 +174,6 @@ std::vector<T> arange(T start, T end, T step = 1) {
 // List manipulation
 typedef priority_queue<ll, vl, greater<ll>> minheap;
 typedef priority_queue<ll, vl, less<ll>> maxheap;
-
-template <typename T>
-int indexof(const vector<T>& vec, const T& element) {
-    for (int i = 0; i < vec.size(); ++i) {
-        if (vec[i] == element) {
-            return i;
-        }
-    }
-    throw out_of_range("Element not found in vector");
-}
 
 template<typename T>
 vector<T> vslice(const vector<T>& v, int start=0, int end=-1) {
@@ -296,11 +212,13 @@ bool contains(const Container& c, const T& value) {
     return std::find(c.begin(), c.end(), value) != c.end();
 }
 
-bool all(std::vector<bool> v) {
+template<typename T>
+bool all(std::vector<T> v) {
     return std::all_of(v.begin(), v.end(), [](bool b){ return b; });
 }
 
-bool any(std::vector<bool> v) {
+template<typename T>
+bool any(std::vector<T> v) {
     return std::any_of(v.begin(), v.end(), [](bool b){ return b; });
 }
 
@@ -325,61 +243,40 @@ void sort_vec(vector<T>& vec, size_t start, size_t end, KeyFunc keyFunc = Identi
               });
 }
 
-template <typename T>
-vector<int> argsort(const vector<T>& array) {
-    // Initialize original index positions
-    vector<int> indices(array.size());
-    for (int i = 0; i < indices.size(); ++i) {
-        indices[i] = i;
-    }
-
-    // Sort the indices based on comparing array values
-    sort(indices.begin(), indices.end(), [&array](int i1, int i2) {
-        return array[i1] < array[i2];
-    });
-
-    return indices;
-}
-
-template <typename T>
-void reset_graph(vector<vector<T>>& g) {
+void reset_graph(vvi& g) {
     rep(i, 0, g.size() - 1)
     {
         g[i].clear();
     }
 }
 
-template <typename T, typename S>
-void setvec(vector<T>& v, S elem) {
-    rep(i, 0, v.size() - 1) {
-        v[i] = elem;
+void cumsum(vl& arr) {
+    rep(i, 1, arr.size() - 1) {
+        arr[i] += arr[i - 1];
     }
 }
 
-void cumsum(vl& arr, ll start, ll end) {
-    ll s = 0;
-    rep(i, start, end) {
-        s += arr[i];
-        arr[i] = s;
-    }
-}
 
-ll sum(vl& arr, ll start, ll end) {
-    ll s = 0;
-    rep(i, start, end) {
-        s += arr[i];
+// Maps
+struct custom_hash {
+    static uint64_t splitmix64(uint64_t x) {
+        // http://xorshift.di.unimi.it/splitmix64.c
+        x += 0x9e3779b97f4a7c15;
+        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+        return x ^ (x >> 31);
     }
-    return s;
-}
 
-ll msum(vl& arr, ll start, ll end, ll m) {
-    ll s = 0;
-    rep(i, start, end) {
-        s += arr[i];
-        s = mod(s, m);
+    size_t operator()(uint64_t x) const {
+        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+        return splitmix64(x + FIXED_RANDOM);
     }
-    return s;
-}
+};
+
+
+typedef unordered_map<long long, int, custom_hash> umapli;
+typedef unordered_map<ll, ll, custom_hash> umapll;
+typedef unordered_set<ll, custom_hash> uset;
 
 
 int di[4] = {1, 0, -1, 0};
@@ -492,6 +389,12 @@ public:
         }
         return data[i * n_cols + j];
     }
+
+    void resize(int rows, int cols) {
+        data.resize(rows * cols);
+        n_rows = rows;
+        n_cols = cols;
+    }
     
     // Fill the array with a particular value
     void fill(const T& value) {
@@ -506,7 +409,28 @@ public:
                 (*this)(i, j) = value;
             }
         }
+    }
 
+    vector<T> get_row(int row, int cstart=0, int cend=-1) {
+        if (cend == -1) {
+            cend = n_cols;
+        }
+        vector<T> ret(cend - cstart);
+        rep(i, cstart, cend - 1) {
+            ret[i - cstart] = (*this)(row, i);
+        }
+        return ret;
+    }
+
+    vector<T> get_col(int col, int rstart=0, int rend=-1) {
+        if (rend == -1) {
+            rend = n_rows;
+        }
+        vector<T> ret(rend - rstart);
+        rep(i, rstart, rend - 1) {
+            ret[i - rstart] = (*this)(i, col);
+        }
+        return ret;
     }
 
     ndarray<T> slice(int istart, int iend, int jstart, int jend) {
@@ -522,7 +446,6 @@ public:
     }
 };
 
-
 // Overload the << operator to print the elements of the 2D array
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
@@ -533,18 +456,6 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
         os << std::endl;
     }
     return os;
-}
-
-template <typename T>
-string str_join(const vector<T>& elements, const string& delimiter) {
-    ostringstream oss;
-    for (size_t i = 0; i < elements.size(); ++i) {
-        if (i != 0) {
-            oss << delimiter;
-        }
-        oss << elements[i];
-    }
-    return oss.str();
 }
 
 typedef ndarray<ll> llarray;
