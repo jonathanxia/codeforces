@@ -1,0 +1,1 @@
+{"name":"Local: a","url":"/home/jonathanxia/Desktop/code/codeforces/round863/a.cpp","tests":[{"id":1684642075950,"input":"7\n^______^\n___^_^^^_^___^\n^_\n^\n^_^^^^^_^_^^\n___^^\n_\n","output":"5\n5\n1\n1\n0\n3\n2\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/jonathanxia/Desktop/code/codeforces/round863/a.cpp","group":"local","local":true}

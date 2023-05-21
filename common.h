@@ -53,7 +53,6 @@ struct Identity {
 };
 
 // Number Theory
-
 ll sum_digits(ll n, ll b) {
     int sum = 0;
     while (n > 0) {
@@ -133,6 +132,7 @@ bool is_pow_of_2(ll n) {
 #define dep(i, u, d) for(ll i = u; i >= d; --i)
 #define irep(i, d, u) for(i = d; i <= u; ++i)
 #define idep(i, u, d) for(i = u; i >= d; --i)
+#define srep(i, d, u, s) for(ll i = d; i <= u; i += s)
 #define cep(t) while(t--)
 #define foreach(i, c) for(auto i : c)
 
@@ -153,8 +153,6 @@ void read_array(vl& arr, int n) {
         cin >> arr[i];
     }
 }
-
-
 
 // Printing
 
@@ -249,8 +247,6 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
     return os;
 }
 
-
-
 template <typename T>
 std::vector<T> arange(T start, T end, T step = 1) {
     std::vector<T> result;
@@ -271,7 +267,7 @@ int indexof(const vector<T>& vec, const T& element) {
             return i;
         }
     }
-    throw out_of_range("Element not found in vector");
+    return -1;
 }
 
 template<typename T>
@@ -329,6 +325,15 @@ bool any(std::vector<T> v) {
     lcret; \
 })
 
+#define RCC(typ, expr, x, lo, hi, cond) ({ \
+    typ lcret; \
+    rep(x, lo, hi) {\
+        if (cond) \
+        lcret.push_back(expr); \
+    } \
+    lcret; \
+})
+
 
 template <typename T, typename KeyFunc = Identity<T>>
 void sort_vec(vector<T>& vec, size_t start, size_t end, KeyFunc keyFunc = Identity<T>{}) {
@@ -358,13 +363,7 @@ vector<int> argsort(const vector<T>& array) {
     return indices;
 }
 
-template <typename T>
-void reset_graph(vector<vector<T>>& g) {
-    rep(i, 0, g.size() - 1)
-    {
-        g[i].clear();
-    }
-}
+
 
 template <typename T, typename S>
 void setvec(vector<T>& v, S elem) {
@@ -380,7 +379,6 @@ void cumsum(vl& arr) {
 }
 
 
-
 int di[4] = {1, 0, -1, 0};
 int dj[4] = {0, 1, 0, -1};
 
@@ -392,6 +390,14 @@ void display_tree(int node, int parent, vector<vector<ll>>& adj_list,
         if (child != parent) {
             display_tree(child, node, adj_list, labels, depth + 1);
         }
+    }
+}
+
+template <typename T>
+void reset_graph(vector<vector<T>>& g) {
+    rep(i, 0, g.size() - 1)
+    {
+        g[i].clear();
     }
 }
 
@@ -445,6 +451,24 @@ string str_upper(const string& s) {
     string result = s;
     transform(result.begin(), result.end(), result.begin(), ::toupper);
     return result;
+}
+
+template <typename T>
+string str_join(const vector<T>& elements, const string& delimiter) {
+    ostringstream oss;
+    for (size_t i = 0; i < elements.size(); ++i) {
+        if (i != 0) {
+            oss << delimiter;
+        }
+        oss << elements[i];
+    }
+    return oss.str();
+}
+
+int stoi(char ch) {
+    str mystr(1, ch);
+    int num = stoi(mystr);
+    return num;
 }
 
 // Numpy
@@ -561,23 +585,6 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
-template <typename T>
-string str_join(const vector<T>& elements, const string& delimiter) {
-    ostringstream oss;
-    for (size_t i = 0; i < elements.size(); ++i) {
-        if (i != 0) {
-            oss << delimiter;
-        }
-        oss << elements[i];
-    }
-    return oss.str();
-}
-
-int stoi(char ch) {
-    str mystr(1, ch);
-    int num = stoi(mystr);
-    return num;
-}
 
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
