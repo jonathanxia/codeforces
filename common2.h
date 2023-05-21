@@ -310,11 +310,13 @@ bool contains(const Container& c, const T& value) {
     return std::find(c.begin(), c.end(), value) != c.end();
 }
 
-bool all(std::vector<bool> v) {
+template<typename T>
+bool all(std::vector<T> v) {
     return std::all_of(v.begin(), v.end(), [](bool b){ return b; });
 }
 
-bool any(std::vector<bool> v) {
+template<typename T>
+bool any(std::vector<T> v) {
     return std::any_of(v.begin(), v.end(), [](bool b){ return b; });
 }
 
@@ -545,78 +547,3 @@ string str_join(const vector<T>& elements, const string& delimiter) {
 
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
-
-
-
-
-void solve() {
-    ll n;
-    dprint("HIIIIIIIIIIIII");
-    cin >> n;
-    int u, v;
-    vvpl graph(n);
-    rep(i, 1, n - 1) {
-        cin >> u >> v;
-        graph[u - 1].append({v - 1, i});
-        graph[v - 1].append({u - 1, i});
-    }
-
-
-    if (n % 3 != 0) {
-        print(-1);
-        return;
-    }
-
-    vb visited(n);
-    vl removed_edges;
-    bool invalid = false;
-    auto dfs = [&](auto&& dfs, int node, int incoming_edgo) -> ll {
-        visited[node] = true;
-        if (invalid) {
-            // Just leave
-            return 0;
-        }
-        ll remaining = 1; // Always count myself
-        foreach(data, graph[node]) {
-            int child = data.first;
-            int edgeno = data.second;
-
-            if (!visited[child]) {
-                remaining += dfs(dfs, child, edgeno);
-            }
-        }
-
-        if (remaining == 3) {
-            removed_edges.push_back(incoming_edgo);
-            return 0;
-        }
-
-        if (remaining > 3) {
-            invalid = true;
-        }
-
-        return remaining;
-    };
-
-    dfs(dfs, 0, -1);
-    if (invalid) {
-        print(-1);
-        return;
-    }
-    if (contains(removed_edges, -1)) {
-        print(n / 3 - 1);
-        print(str_join(vslice(removed_edges, 0, removed_edges.size() - 1), " "));
-    }
-    else {
-        print("-1");
-    }
-}
-
-int main () {
-    init();
-    ll t;
-    cin >> t;
-    cep(t) {
-        solve();
-    }
-}
