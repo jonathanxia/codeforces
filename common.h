@@ -6,7 +6,8 @@
 //  Definition of the macro.
 #define ass(a, b, x, y) (tie(a, b) = make_tuple(x, y));
 #define ordered(x, y, z) ((x) <= (y) && (y) <= (z))
-#define append push_back
+
+#define to_str to_string
 
 using namespace std;
 
@@ -570,6 +571,12 @@ string str_join(const vector<T>& elements, const string& delimiter) {
         oss << elements[i];
     }
     return oss.str();
+}
+
+int stoi(char ch) {
+    str mystr(1, ch);
+    int num = stoi(mystr);
+    return num;
 }
 
 typedef ndarray<ll> llarray;

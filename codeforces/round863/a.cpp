@@ -6,7 +6,8 @@
 //  Definition of the macro.
 #define ass(a, b, x, y) (tie(a, b) = make_tuple(x, y));
 #define ordered(x, y, z) ((x) <= (y) && (y) <= (z))
-#define append push_back
+
+#define to_str to_string
 
 using namespace std;
 
@@ -490,6 +491,12 @@ public:
         }
         return data[i * n_cols + j];
     }
+
+    void resize(int rows, int cols) {
+        data.resize(rows * cols);
+        n_rows = rows;
+        n_cols = cols;
+    }
     
     // Fill the array with a particular value
     void fill(const T& value) {
@@ -504,7 +511,28 @@ public:
                 (*this)(i, j) = value;
             }
         }
+    }
 
+    vector<T> get_row(int row, int cstart=0, int cend=-1) {
+        if (cend == -1) {
+            cend = n_cols;
+        }
+        vector<T> ret(cend - cstart);
+        rep(i, cstart, cend - 1) {
+            ret[i - cstart] = (*this)(row, i);
+        }
+        return ret;
+    }
+
+    vector<T> get_col(int col, int rstart=0, int rend=-1) {
+        if (rend == -1) {
+            rend = n_rows;
+        }
+        vector<T> ret(rend - rstart);
+        rep(i, rstart, rend - 1) {
+            ret[i - rstart] = (*this)(i, col);
+        }
+        return ret;
     }
 
     ndarray<T> slice(int istart, int iend, int jstart, int jend) {
@@ -545,5 +573,37 @@ string str_join(const vector<T>& elements, const string& delimiter) {
     return oss.str();
 }
 
+int stoi(char ch) {
+    str mystr(1, ch);
+    int num = stoi(mystr);
+    return num;
+}
+
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
+
+void solve(str& s) {
+    int n = s.size();
+    umapll counts;
+    rep(i, 0, n - 1) {
+        counts[s[i]]++;
+    }
+    int num = 0;
+    foreach(p, counts) {
+        if (p.second > 1) {
+            num++;
+        }
+    }
+    num > 1 ? print("YES") : print("NO");
+}
+
+int main() {
+    ll t;
+    cin >> t;
+    cep(t) {
+        str s;
+        cin >> s;
+        solve(s);
+    }
+    return 0;
+}
