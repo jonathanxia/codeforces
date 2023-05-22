@@ -23,6 +23,17 @@ typedef string str;
 typedef pair<ll, ll> pl;
 typedef vector<vector<pl>> vvpl;
 
+// Looping
+#define rep(i, d, u) for(ll i = d; i <= u; ++i)
+#define dep(i, u, d) for(ll i = u; i >= d; --i)
+#define irep(i, d, u) for(i = d; i <= u; ++i)
+#define idep(i, u, d) for(i = u; i >= d; --i)
+#define srep(i, d, u, s) for(ll i = d; i <= u; i += s)
+#define cep(t) while(t--)
+#define foreach(i, c) for(auto i : c)
+
+
+
 // Maps
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
@@ -62,7 +73,7 @@ ll sum_digits(ll n, ll b) {
     return sum;
 }
 
-vl get_digits(int n, int b) {
+vl get_digits(ll n, ll b) {
     vl ans;
     while (n > 0) {
         ans.push_back(n % b);
@@ -70,6 +81,15 @@ vl get_digits(int n, int b) {
     }
 
     return ans;
+}
+
+ll digits_to_num(vl& digs, ll b) {
+    ll s = 0;
+    dep(i, digs.size() - 1, 0) {
+        s *= b;
+        s += digs[i];
+    }
+    return s;
 }
 
 ll mod(ll a, ll p) {
@@ -126,15 +146,6 @@ bool is_pow_of_2(ll n) {
     return (n > 0) && ((n & (n - 1)) == 0);
 }
 
-
-// Looping
-#define rep(i, d, u) for(ll i = d; i <= u; ++i)
-#define dep(i, u, d) for(ll i = u; i >= d; --i)
-#define irep(i, d, u) for(i = d; i <= u; ++i)
-#define idep(i, u, d) for(i = u; i >= d; --i)
-#define srep(i, d, u, s) for(ll i = d; i <= u; i += s)
-#define cep(t) while(t--)
-#define foreach(i, c) for(auto i : c)
 
 // Input
 long long read_binary() {
@@ -199,14 +210,12 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V, custom
 
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec) {
-    os << "[";
     for (auto it = vec.begin(); it != vec.end(); ++it) {
         os << *it;
         if (it != vec.end() - 1) {
-            os << ", ";
+            os << " ";
         }
     }
-    os << "]";
     return os;
 }
 
@@ -268,6 +277,14 @@ int indexof(const vector<T>& vec, const T& element) {
         }
     }
     return -1;
+}
+
+template<typename T>
+vector<T> vunique(const vector<T>& input) {
+    vector<T> uniqueElements = input;
+    sort(uniqueElements.begin(), uniqueElements.end());
+    uniqueElements.erase(unique(uniqueElements.begin(), uniqueElements.end()), uniqueElements.end());
+    return uniqueElements;
 }
 
 template<typename T>
