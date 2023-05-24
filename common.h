@@ -64,86 +64,88 @@ struct Identity {
 };
 
 // Number Theory
-ll sum_digits(ll n, ll b) {
-    int sum = 0;
-    while (n > 0) {
-        sum += n % b;
-        n /= b;
-    }
-    return sum;
-}
-
-vl get_digits(ll n, ll b) {
-    vl ans;
-    while (n > 0) {
-        ans.push_back(n % b);
-        n /= b;
+namespace nt {
+    ll sum_digits(ll n, ll b) {
+        int sum = 0;
+        while (n > 0) {
+            sum += n % b;
+            n /= b;
+        }
+        return sum;
     }
 
-    return ans;
-}
+    vl get_digits(ll n, ll b) {
+        vl ans;
+        while (n > 0) {
+            ans.push_back(n % b);
+            n /= b;
+        }
 
-ll digits_to_num(vl& digs, ll b) {
-    ll s = 0;
-    dep(i, digs.size() - 1, 0) {
-        s *= b;
-        s += digs[i];
-    }
-    return s;
-}
-
-ll mod(ll a, ll p) {
-    return (a % p + p) % p;
-}
-
-ll M = pow(10, 9) + 7;
-ll mod(ll a) {
-    return mod(a, M);
-}
-
-ll inv(ll x, ll y) {
-    ll p = y;
-
-    ll ax = 1;
-    ll ay = 0;
-    while (x > 0) {
-        ll q = y / x;
-        tie(ax, ay) = make_tuple(ay - q * ax, ax);
-        tie(x, y) = make_tuple(y % x, x);
+        return ans;
     }
 
-    return mod(ay, p);
-}
-
-ll gcd(ll a, ll b) {
-    a = abs(a);
-    b = abs(b);
-    if (a > b) {
-        ass(a, b, b, a);
+    ll digits_to_num(vl& digs, ll b) {
+        ll s = 0;
+        dep(i, digs.size() - 1, 0) {
+            s *= b;
+            s += digs[i];
+        }
+        return s;
     }
-    while (a > 0) {
-        ass(a, b, b % a, a);
+
+    ll mod(ll a, ll p) {
+        return (a % p + p) % p;
     }
-    return b;
-}
 
-ll mdiv(ll x, ll y) {
-    x = mod(x);
-    y = mod(y);
-    return mod(x * inv(y, M), M);
-}
-
-ll v_p(ll x, ll p) {
-    ll res = 0;
-    while (x % p == 0) {
-        ++res;
-        x /= p;
+    ll M = pow(10, 9) + 7;
+    ll mod(ll a) {
+        return mod(a, M);
     }
-    return res;
-}
 
-bool is_pow_of_2(ll n) {
-    return (n > 0) && ((n & (n - 1)) == 0);
+    ll inv(ll x, ll y) {
+        ll p = y;
+
+        ll ax = 1;
+        ll ay = 0;
+        while (x > 0) {
+            ll q = y / x;
+            tie(ax, ay) = make_tuple(ay - q * ax, ax);
+            tie(x, y) = make_tuple(y % x, x);
+        }
+
+        return mod(ay, p);
+    }
+
+    ll gcd(ll a, ll b) {
+        a = abs(a);
+        b = abs(b);
+        if (a > b) {
+            ass(a, b, b, a);
+        }
+        while (a > 0) {
+            ass(a, b, b % a, a);
+        }
+        return b;
+    }
+
+    ll mdiv(ll x, ll y) {
+        x = mod(x);
+        y = mod(y);
+        return mod(x * inv(y, M), M);
+    }
+
+    ll v_p(ll x, ll p) {
+        ll res = 0;
+        while (x % p == 0) {
+            ++res;
+            x /= p;
+        }
+        return res;
+    }
+
+    bool is_pow_of_2(ll n) {
+        return (n > 0) && ((n & (n - 1)) == 0);
+    }
 }
 
 
@@ -256,82 +258,155 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
     return os;
 }
 
-template <typename T>
-std::vector<T> arange(T start, T end, T step = 1) {
-    std::vector<T> result;
-    for (T value = start; value < end; value += step) {
-        result.push_back(value);
-    }
-    return result;
-}
+
 
 // List manipulation
 typedef priority_queue<ll, vl, greater<ll>> minheap;
 typedef priority_queue<ll, vl, less<ll>> maxheap;
 
-template <typename T>
-int indexof(const vector<T>& vec, const T& element) {
-    for (int i = 0; i < vec.size(); ++i) {
-        if (vec[i] == element) {
-            return i;
+namespace vec {
+    template <typename T>
+    std::vector<T> arange(T start, T end, T step = 1) {
+        std::vector<T> result;
+        for (T value = start; value < end; value += step) {
+            result.push_back(value);
+        }
+        return result;
+    }
+
+    template <typename T>
+    int indexof(const vector<T>& vec, const T& element) {
+        for (int i = 0; i < vec.size(); ++i) {
+            if (vec[i] == element) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    template<typename T>
+    vector<T> unique(const vector<T>& input) {
+        vector<T> uniqueElements = input;
+        sort(uniqueElements.begin(), uniqueElements.end());
+        uniqueElements.erase(std::unique(uniqueElements.begin(), uniqueElements.end()), uniqueElements.end());
+        return uniqueElements;
+    }
+
+    template<typename T>
+    vector<T> slice(const vector<T>& v, int start=0, int end=-1) {
+        int n = v.size();
+        if (end == -1) {
+            end = n;
+        }
+        int len = end - start;
+        vector<T> result(len);
+        for (int i = 0; i < len; i++) {
+            result[i] = v[start + i];
+        }
+        return result;
+    }
+
+    template<typename T>
+    vector<T> slice2d(const vector<T>& v, int start=0, int end=-1, int start2=0, int end2=-1) {
+        int n = v.size();
+        int m = v[0].size();
+        if (end == -1) {
+            end = n;
+        }
+        if (end2 == -1) {
+            end2 = m;
+        }
+        int len = end - start;
+        vector<T> result(len);
+        for (int i = 0; i < len; i++) {
+            result[i] = vslice(v[start + i], start2, end2);
+        }
+        return result;
+    }
+
+    template<typename Container, typename T>
+    bool contains(const Container& c, const T& value) {
+        return std::find(c.begin(), c.end(), value) != c.end();
+    }
+
+    template<typename T>
+    bool all(std::vector<T> v) {
+        return std::all_of(v.begin(), v.end(), [](bool b){ return b; });
+    }
+
+    template<typename T>
+    bool any(std::vector<T> v) {
+        return std::any_of(v.begin(), v.end(), [](bool b){ return b; });
+    }
+
+    template <typename T>
+    T min(vector<T>& v, int start=0, int end=-1) {
+        if (end == -1) {
+            end = v.size();
+        }
+
+        T ans = v[start];
+        rep(i, start + 1, end - 1) {
+            ans = min(ans, v[i]);
+        }
+        return ans;
+    }
+
+    template <typename T>
+    T max(vector<T>& v, int start=0, int end=-1) {
+        if (end == -1) {
+            end = v.size();
+        }
+
+        T ans = v[start];
+        rep(i, start + 1, end - 1) {
+            ans = min(ans, v[i]);
+        }
+        return ans;
+    }
+
+    template <typename T, typename KeyFunc = Identity<T>>
+    void sort_vec(vector<T>& vec, size_t start, size_t end, KeyFunc keyFunc = Identity<T>{}) {
+        if (start >= end || end >= vec.size()) {
+            return;  // Invalid indices or empty range
+        }
+
+        sort(vec.begin() + start, vec.begin() + end + 1,
+                [&keyFunc](const T& a, const T& b) {
+                    return keyFunc(a) < keyFunc(b);
+                });
+    }
+
+    template <typename T>
+    vector<int> argsort(const vector<T>& array) {
+        // Initialize original index positions
+        vector<int> indices(array.size());
+        for (int i = 0; i < indices.size(); ++i) {
+            indices[i] = i;
+        }
+
+        // Sort the indices based on comparing array values
+        sort(indices.begin(), indices.end(), [&array](int i1, int i2) {
+            return array[i1] < array[i2];
+        });
+
+        return indices;
+    }
+
+
+
+    template <typename T, typename S>
+    void setvec(vector<T>& v, S elem) {
+        rep(i, 0, v.size() - 1) {
+            v[i] = elem;
         }
     }
-    return -1;
-}
 
-template<typename T>
-vector<T> vunique(const vector<T>& input) {
-    vector<T> uniqueElements = input;
-    sort(uniqueElements.begin(), uniqueElements.end());
-    uniqueElements.erase(unique(uniqueElements.begin(), uniqueElements.end()), uniqueElements.end());
-    return uniqueElements;
-}
-
-template<typename T>
-vector<T> vslice(const vector<T>& v, int start=0, int end=-1) {
-    int n = v.size();
-    if (end == -1) {
-        end = n;
+    void cumsum(vl& arr) {
+        rep(i, 1, arr.size() - 1) {
+            arr[i] += arr[i - 1];
+        }
     }
-    int len = end - start;
-    vector<T> result(len);
-    for (int i = 0; i < len; i++) {
-        result[i] = v[start + i];
-    }
-    return result;
-}
-
-template<typename T>
-vector<T> vslice2d(const vector<T>& v, int start=0, int end=-1, int start2=0, int end2=-1) {
-    int n = v.size();
-    int m = v[0].size();
-    if (end == -1) {
-        end = n;
-    }
-    if (end2 == -1) {
-        end2 = m;
-    }
-    int len = end - start;
-    vector<T> result(len);
-    for (int i = 0; i < len; i++) {
-        result[i] = vslice(v[start + i], start2, end2);
-    }
-    return result;
-}
-
-template<typename Container, typename T>
-bool contains(const Container& c, const T& value) {
-    return std::find(c.begin(), c.end(), value) != c.end();
-}
-
-template<typename T>
-bool all(std::vector<T> v) {
-    return std::all_of(v.begin(), v.end(), [](bool b){ return b; });
-}
-
-template<typename T>
-bool any(std::vector<T> v) {
-    return std::any_of(v.begin(), v.end(), [](bool b){ return b; });
 }
 
 #define RC(typ, expr, x, lo, hi) ({ \
@@ -350,50 +425,6 @@ bool any(std::vector<T> v) {
     } \
     lcret; \
 })
-
-
-template <typename T, typename KeyFunc = Identity<T>>
-void sort_vec(vector<T>& vec, size_t start, size_t end, KeyFunc keyFunc = Identity<T>{}) {
-    if (start >= end || end >= vec.size()) {
-        return;  // Invalid indices or empty range
-    }
-
-    sort(vec.begin() + start, vec.begin() + end + 1,
-              [&keyFunc](const T& a, const T& b) {
-                  return keyFunc(a) < keyFunc(b);
-              });
-}
-
-template <typename T>
-vector<int> argsort(const vector<T>& array) {
-    // Initialize original index positions
-    vector<int> indices(array.size());
-    for (int i = 0; i < indices.size(); ++i) {
-        indices[i] = i;
-    }
-
-    // Sort the indices based on comparing array values
-    sort(indices.begin(), indices.end(), [&array](int i1, int i2) {
-        return array[i1] < array[i2];
-    });
-
-    return indices;
-}
-
-
-
-template <typename T, typename S>
-void setvec(vector<T>& v, S elem) {
-    rep(i, 0, v.size() - 1) {
-        v[i] = elem;
-    }
-}
-
-void cumsum(vl& arr) {
-    rep(i, 1, arr.size() - 1) {
-        arr[i] += arr[i - 1];
-    }
-}
 
 
 int di[4] = {1, 0, -1, 0};
