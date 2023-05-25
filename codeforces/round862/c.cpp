@@ -641,3 +641,49 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+void solve() {
+    ll n, m;
+    cin >> n >> m;
+    vl k(n);
+    rep(i, 0, n - 1) {
+        cin >> k[i];
+    }
+
+    vec::sort_vec(k, 0, n - 1);
+
+    rep(j, 0, m - 1) {
+        ll a, b, c;
+        cin >> a >> b >> c;
+
+        ll k_idx1 = smallest_st(x, k[x] >= b, 0, n - 1);
+        if (k_idx1 <= n - 1) {
+            ll k1 = k[k_idx1];
+            if ((b - k1) * (b - k1) - 4 * a * c < 0) {
+                print("YES");
+                print(k1);
+                continue;
+            }
+        }
+
+        ll k_idx0 = largest_st(x, k[x] < b, 0, n - 1);
+        if(k_idx0 >= 0) {
+            ll k1 = k[k_idx0];
+            if ((b - k1) * (b - k1) - 4 * a * c < 0) {
+                print("YES");
+                print(k1);
+                continue;
+            }
+
+        }
+
+        print("NO");
+    }
+}
+
+int main() {
+    int t;
+    cin >> t;
+    cep(t) {
+        solve();
+    }
+}

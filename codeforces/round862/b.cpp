@@ -641,3 +641,31 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+void solve() {
+    int n;
+    cin >> n;
+    str s;
+    cin >> s;
+
+    str output;
+
+    vl chars = RC(vl, s[i], i, 0, n - 1);
+    ll smallest_char = vec::min(chars);
+    int best_idx = 0;
+    dep(i, n - 1, 0) {
+        if (chars[i] == smallest_char) {
+            best_idx = i;
+            break;
+        }
+    }
+
+    print(str_slice(s, best_idx, best_idx + 1) + str_slice(s, 0, best_idx) + str_slice(s, best_idx + 1, n));
+}
+
+int main() {
+    int t;
+    cin >> t;
+    cep(t) {
+        solve();
+    }
+}

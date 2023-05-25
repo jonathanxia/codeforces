@@ -348,7 +348,7 @@ namespace vec {
 
         T ans = v[start];
         rep(i, start + 1, end - 1) {
-            ans = std::min(ans, v[i]);
+            ans = min(ans, v[i]);
         }
         return ans;
     }
@@ -361,7 +361,7 @@ namespace vec {
 
         T ans = v[start];
         rep(i, start + 1, end - 1) {
-            ans = std::max(ans, v[i]);
+            ans = min(ans, v[i]);
         }
         return ans;
     }
@@ -520,10 +520,6 @@ int stoi(char ch) {
     return num;
 }
 
-string str_slice(const str& s, int start, int end) {
-    return s.substr(start, end - start);
-}
-
 // Numpy
 
 template<typename T>
@@ -638,6 +634,44 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
+
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+void solve() {
+    int n;
+    cin >> n;
+    vl a(n);
+    rep(i, 0, n - 1) {
+        cin >> a[i];
+    }
+
+    ll tot = 0;
+    rep(i, 0, n - 1) {
+        tot ^= a[i];
+    }
+
+    if (n % 2 == 1) {
+        print(tot);
+        return;
+    }
+
+    else {
+        if (tot == 0) {
+            print("3");
+            return;
+        }
+        else {
+            print("-1");
+            return;
+        }
+    }
+}
+
+int main() {
+    int t;
+    cin >> t;
+    cep(t) {
+        solve();
+    }
+}
