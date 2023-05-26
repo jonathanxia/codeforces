@@ -458,6 +458,15 @@ namespace vec {
     lcret; \
 })
 
+#define LC(typ, expr, x, arr) ({ \
+    typ lcret; \
+    foreach(x, arr) {\
+        lcret.push_back(expr); \
+    } \
+    lcret; \
+})
+
+
 
 int di[4] = {1, 0, -1, 0};
 int dj[4] = {0, 1, 0, -1};
