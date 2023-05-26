@@ -672,3 +672,52 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+bool is_possible(vl& a, ll n, ll x, ll k) {
+    // Is it possible to achieve with k values
+    // a sum that is at most x on both sides?
+    vl L(n + 1);
+    maxheap pq1;
+
+    ll tot1 = 0;
+    rep(i, 0, n - 1) {
+        pq1.push(a[i]);
+        tot1 += a[i];
+        if (tot1 > x) {
+            tot1 -= pq1.top();
+            pq1.pop();
+        }
+
+        L[i + 1] = pq1.size();
+    }
+
+    vl R(n + 1);
+    maxheap pq2;
+    ll tot2 = 0;
+    dep(i, n - 1, 0) {
+        pq2.push(a[i]);
+        tot2 += a[i];
+        if (tot2 > x) {
+            tot2 -= pq2.top();
+            pq2.pop();
+        }
+
+        R[i] = pq2.size();
+    }
+
+    return vec::any(RC(vb, L[i] + R[i] >= k, i, 0, n));
+}
+
+void solve() {
+    ll n, k; cin >> n >> k;
+    vl a(n);
+    read_array(a, n);
+
+    print(smallest_st(x, is_possible(a, n, x, k), 0, 1LL * pow(10, 9) * k));
+}
+
+int main() {
+    int t; cin >> t;
+    cep(t) {
+        solve();
+    }
+}

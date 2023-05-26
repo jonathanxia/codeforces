@@ -104,6 +104,23 @@ namespace nt {
         return mod(a, M);
     }
 
+    // Function to calculate (base^exponent) % modulus using repeated squaring
+    ll mpow(ll base, ll exponent, ll modulus=M) {
+        ll result = 1;
+
+        while (exponent > 0) {
+            // If the exponent is odd, multiply the result by base
+            if (exponent & 1)
+                result = (result * base) % modulus;
+
+            // Square the base and reduce the exponent by half
+            base = (base * base) % modulus;
+            exponent >>= 1;
+        }
+
+        return result;
+    }
+
     ll inv(ll x, ll y) {
         ll p = y;
 
@@ -273,6 +290,19 @@ namespace vec {
         for (T value = start; value < end; value += step) {
             result.push_back(value);
         }
+        return result;
+    }
+
+    template <typename T>
+    unordered_map<T, ll, custom_hash> Counter(vector<T> v, ll start=0, ll end=-1) {
+        if (end == -1) {
+            end = v.size() - 1;
+        }
+        unordered_map<T, ll, custom_hash> result;
+        rep(i, start, end) {
+            result[v[i]]++;
+        }
+
         return result;
     }
 
@@ -642,53 +672,52 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
-ll recurse(vl a, ll n) {
+ll recurse_left(vl a, ll n) {
     if (n == 1) {
         return 1;
     }
-    umapll counts;
-    foreach(x, a) {
-        counts[x]++;
-        if (counts[x] > 1 && x != -2) {
+    // Check for a contradiction
+    auto counts = vec::Counter(a);
+    foreach(k, counts) {
+        if (k.first >= 0 && k.second >= 2) {
+            dprint("Full contradiction found", k.first);
+            dprint("counts=", counts);
             return 0;
         }
     }
 
-    vl a1 = RC(vl, a[i] / 2, i, 0, n / 2 - 1);
-    rep(i, 0, n / 2 - 1) {
-        if (a[i] == -2) {
-            a1[i] = -2;
+    vl left_a = RC(vl, a[i] >= 0 ? a[i] / 2 : -1, i, 0, n / 2 - 1);
+    vl right_a = RC(vl, a[i] >= 0 ? a[i] / 2 : -1, i, n / 2, n - 1);
+
+    ll left = recurse_left(left_a, n / 2);
+    // print("recurse_left on", a, ",", n);
+    // print("left=", left);
+
+    auto rcounts = vec::Counter(right_a);
+    foreach(k, rcounts) {
+        if (k.first >= 0 && k.second > 1) {
+            dprint("Contradiction found", k.first);
+            dprint("right_a", right_a);
+            return 0;
         }
     }
 
-    vl a2 = RC(vl, a[i] / 2, i, n/2, n - 1);
-    rep(i, n / 2, n - 1) {
-        if (a[i] == -2) {
-            a2[i - n / 2] = -2;
-        }
-    }
-    ll left = recurse(a1, n / 2);
-    ll right = recurse(a2, n / 2);
-
-    uset stuff;
-    rep(i, 0, n - 1) {
-        if (a[i] != -2) {
-            stuff.insert(a[i] / 2);
-        }
-    }
-    print("a", a, "n", n);
-    print("stuff=", stuff);
-
-    ll freedom = n / 2 - stuff.size();
-    ll p = 1;
-    cep(freedom) {
-        p *= 2;
+    // Should be possible, count up how many degrees of freedom.
+    ll p = left;
+    rcounts.erase(-1);
+    ll free = n / 2 - rcounts.size();
+    // print("free=", free);
+    rep(i, 1, free) {
+        p *= i;
         p = nt::mod(p);
     }
 
-    print("a=", a, "n=", n, "p", "left", "right", p , left , right);
-
-    return nt::mod(nt::mod(p * left) * right);
+    auto halfcounts = vec::Counter(RC(vl, a[i] >= 0 ? a[i] / 2 : -1, i, 0, n - 1));
+    halfcounts.erase(-1);
+    ll expo = n / 2 - halfcounts.size();
+    p = nt::mod(p * nt::mpow(2, expo));
+    dprint("recurse_left(", "[", a, "]", n, ") =", p);
+    return p;
 }
 
 void solve() {
@@ -698,10 +727,17 @@ void solve() {
     vl a(n);
     rep(i, 0, n - 1) {
         cin >> a[i];
-        a[i]--;
+        if (a[i] >= 1) a[i]--;
+    }
+    // Invert a because you read the problem wrong
+    vl a2(n, -1);
+    rep(i, 0, n - 1) {
+        if (a[i] >= 0) {
+            a2[a[i]] = i;
+        }
     }
 
-    print(recurse(a, n));
+    print(recurse_left(a2, n));
 }
 
 int main() {
