@@ -425,31 +425,7 @@ namespace vec {
         return indices;
     }
 
-    template <typename T>
-    int argmax(const vector<T>& arr) {
-        T best = arr[0];
-        int best_idx = 0;
-        rep(i, 0, arr.size() - 1) {
-            if (arr[i] > best) {
-                best_idx = i;
-                best = arr[i];
-            }
-        }
-        return best_idx;
-    }
 
-    template <typename T>
-    int argmin(const vector<T>& arr) {
-        T best = arr[0];
-        int best_idx = 0;
-        rep(i, 0, arr.size() - 1) {
-            if (arr[i] < best) {
-                best_idx = i;
-                best = arr[i];
-            }
-        }
-        return best_idx;
-    }
 
     template <typename T, typename S>
     void setvec(vector<T>& v, S elem) {
@@ -458,44 +434,10 @@ namespace vec {
         }
     }
 
-    vl cumsum(vl& arr) {
-        vl ret(arr);
+    void cumsum(vl& arr) {
         rep(i, 1, arr.size() - 1) {
-            ret[i] += ret[i - 1];
+            arr[i] += arr[i - 1];
         }
-        return ret;
-    }
-
-    vl cummax(vl& arr, bool reverse=false) {
-        vl ret(arr);
-        if (reverse) {
-            dep(i, arr.size() - 2, 0) {
-                ret[i] = std::max(ret[i + 1], ret[i]);
-            }
-        }
-        else {
-            rep(i, 1, arr.size() - 1)
-            {
-                ret[i] = std::max(ret[i], ret[i - 1]);
-            }
-        }
-        return ret;
-    }
-
-    vl cummin(vl& arr, bool reverse=false) {
-        vl ret(arr);
-        if (reverse) {
-            dep(i, arr.size() - 2, 0) {
-                ret[i] = std::min(ret[i + 1], ret[i]);
-            }
-        }
-        else {
-            rep(i, 1, arr.size() - 1)
-            {
-                ret[i] = std::min(ret[i], ret[i - 1]);
-            }
-        }
-        return ret;
     }
 }
 
@@ -739,3 +681,6 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+int main() {
+    return 0;
+}

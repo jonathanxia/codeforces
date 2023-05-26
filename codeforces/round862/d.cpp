@@ -739,3 +739,62 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+void solve() {
+    ll n; cin >> n;
+    vvl graph(n);
+
+    rep(i, 0, n - 2) {
+        ll u, v;
+        cin >> u >> v;
+        u--; v--;
+        graph[u].pb(v);
+        graph[v].pb(u);
+    }
+
+    auto dfs = [&](auto&& dfs, ll node, ll parent, ll dist, vl& distances) -> void {
+        distances[node] = dist;
+        foreach(child, graph[node]) {
+            if (child != parent) {
+                dfs(dfs, child, node, dist + 1, distances);
+            }
+        }
+    };
+
+    vl dist_to_0(n);
+    vl dist_to_1(n);
+    vl dist_to_2(n);
+
+    dfs(dfs, 0, -1, 0, dist_to_0);
+    ll a = vec::argmax(dist_to_0);
+    dfs(dfs, a, -1, 0, dist_to_1);
+    ll b = vec::argmax(dist_to_1);
+    dfs(dfs, b, -1, 0, dist_to_2);
+
+    vl radius = RC(vl, max(dist_to_1[i], dist_to_2[i]), i, 0, n - 1);
+    dprint("diameter", a, b);
+    dprint("radius", radius);
+
+    vl output(n + 1);
+    rep(i, 0, n - 1) {
+        output[radius[i]]++;
+    }
+
+    dprint("output", output);
+
+    ll prev = 0;
+    dep(i, n, 1) {
+        if (prev == 0 && output[i] != 0) {
+            output[i]--;
+        }
+        output[i] += prev;
+        prev = output[i];
+        output[i] = n - output[i];
+    }
+
+    print(vec::slice(output, 1, n + 1));
+}
+
+int main() {
+    solve();
+    return 0;
+}
