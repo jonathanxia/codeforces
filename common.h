@@ -106,6 +106,10 @@ public:
         return std::any_of(this->begin(), this->end(), [](bool b){ return b; });
     }
 
+    T sum() {
+        return std::accumulate(this->begin(), this->end(), T(0));
+    }
+
     T min(int start=0, int end=-1) {
         if (end == -1) {
             end = this->size();
@@ -131,7 +135,7 @@ public:
     }
 
     template <typename KeyFunc = Identity<T>>
-    void sort_vec(int start = 0, int end = -1, KeyFunc keyFunc = Identity<T>{}) {
+    void sort(int start = 0, int end = -1, KeyFunc keyFunc = Identity<T>{}) {
         if (end == -1) {
             end = this->size() - 1;
         }
@@ -139,7 +143,7 @@ public:
             return;  // Invalid indices or empty range
         }
 
-        sort(this->begin() + start, this->begin() + end + 1,
+        std::sort(this->begin() + start, this->begin() + end + 1,
                 [&keyFunc](const T& a, const T& b) {
                     return keyFunc(a) < keyFunc(b);
                 });
@@ -348,6 +352,16 @@ std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p) {
 
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const std::set<T>& s) {
+    os << "{ ";
+    for (const auto& item : s) {
+        os << item << " ";
+    }
+    os << "}";
+    return os;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const std::multiset<T>& s) {
     os << "{ ";
     for (const auto& item : s) {
         os << item << " ";
@@ -605,6 +619,28 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
+template <typename T>
+void mset_del(multiset<T>& ss, T x) {
+    ss.erase(ss.find(x));
+}
+
+template <typename T>
+void mset_move(multiset<T>& ss1, multiset<T>& ss2, T x) {
+    auto ptr = ss1.find(x);
+    ss1.erase(ptr);
+    ss2.insert(x);
+}
+
+template <typename T>
+T min(multiset<T>& ss) {
+    return *(ss.begin());
+}
+
+template <typename T>
+T max(multiset<T>& ss) {
+    return *(ss.rbegin());
+}
+
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
-
+typedef multiset<ll> msetl;

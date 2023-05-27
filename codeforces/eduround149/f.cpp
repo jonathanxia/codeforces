@@ -106,6 +106,10 @@ public:
         return std::any_of(this->begin(), this->end(), [](bool b){ return b; });
     }
 
+    T sum() {
+        return std::accumulate(this->begin(), this->end(), T(0));
+    }
+
     T min(int start=0, int end=-1) {
         if (end == -1) {
             end = this->size();
@@ -131,7 +135,7 @@ public:
     }
 
     template <typename KeyFunc = Identity<T>>
-    void sort_vec(int start = 0, int end = -1, KeyFunc keyFunc = Identity<T>{}) {
+    void sort(int start = 0, int end = -1, KeyFunc keyFunc = Identity<T>{}) {
         if (end == -1) {
             end = this->size() - 1;
         }
@@ -139,7 +143,7 @@ public:
             return;  // Invalid indices or empty range
         }
 
-        sort(this->begin() + start, this->begin() + end + 1,
+        std::sort(this->begin() + start, this->begin() + end + 1,
                 [&keyFunc](const T& a, const T& b) {
                     return keyFunc(a) < keyFunc(b);
                 });
@@ -348,6 +352,16 @@ std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p) {
 
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const std::set<T>& s) {
+    os << "{ ";
+    for (const auto& item : s) {
+        os << item << " ";
+    }
+    os << "}";
+    return os;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const std::multiset<T>& s) {
     os << "{ ";
     for (const auto& item : s) {
         os << item << " ";
@@ -605,47 +619,118 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
+template <typename T>
+void mset_del(multiset<T>& ss, T x) {
+    ss.erase(ss.find(x));
+}
+
+template <typename T>
+void mset_move(multiset<T>& ss1, multiset<T>& ss2, T x) {
+    auto ptr = ss1.find(x);
+    ss1.erase(ptr);
+    ss2.insert(x);
+}
+
+template <typename T>
+T min(multiset<T>& ss) {
+    return *(ss.begin());
+}
+
+template <typename T>
+T max(multiset<T>& ss) {
+    return *(ss.rbegin());
+}
+
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
-
-bool is_possible(vl& a, ll n, ll k, ll x) {
-    vl L(n + 1);
-    ll tot1 = 0;
-    maxheap pq1;
-    rep(i, 0, n - 1) {
-        pq1.push(a[i]);
-        tot1 += a[i];
-        if (tot1 > x) {
-            tot1 -= pq1.top();
-            pq1.pop();
-        }
-        L[i + 1] = pq1.size();
-    }
-
-    vl R(n + 1);
-    ll tot2 = 0;
-    maxheap pq2;
-    dep(i, n - 1, 0) {
-        pq2.push(a[i]);
-        tot2 += a[i];
-        if (tot2 > x) {
-            tot2 -= pq2.top();
-            pq2.pop();
-        }
-        R[i] = pq2.size();
-    }
-
-    return RC(vb, L[i] + R[i] >= k, i, 0, n).any();
-}
+typedef multiset<ll> msetl;
 
 void solve() {
     ll n, k; cin >> n >> k;
     vl a(n);
     read_array(a, n);
 
-    print(
-        smallest_st(x, is_possible(a, n, k, x), 0, 1LL * n * pow(10, 9))
-    );
+    msetl left_in, left_out;    
+
+    vl b(a);
+    b.sort();
+    msetl right_in(b.begin(), b.begin() + k);
+    msetl right_out(b.begin() + k, b.end());
+
+    ll left_sum = 0;
+    ll right_sum = b.slice(0, k).sum();
+
+    ll best = right_sum;
+
+    dprint("i=", -1, "best", best, "partition", left_in.size(), right_in.size());
+    rep(i, 0, n - 1) {
+        // Move a[i] from the right to the left
+        if (!right_out.count(a[i])) {
+            mset_move(right_in, left_out, a[i]);
+
+            ll smallest_left = min(left_out);
+            mset_move(left_out, left_in, smallest_left);
+            left_sum += smallest_left;
+            right_sum -= a[i];
+
+            ll local_score = max(right_sum, left_sum);
+
+            if (right_out.size()) {
+                ll largest_left = max(left_in);
+                ll smallest_right_out = min(right_out);
+                if (local_score > max(right_sum + smallest_right_out, left_sum - largest_left)) {
+                    local_score = max(right_sum + smallest_right_out, left_sum - largest_left);
+                    mset_move(left_in, left_out, largest_left);
+                    mset_move(right_out, right_in, smallest_right_out);
+                    left_sum -= largest_left;
+                    right_sum += smallest_right_out;
+                }
+            }
+            dprint("left_in", left_in, "right_in", right_in);
+
+            best = min(best, local_score);
+        }
+        else {
+            mset_del(right_out, a[i]);
+            left_out.insert(a[i]);
+
+            if (left_in.size() && *left_out.begin() < *left_in.rbegin()) {
+                ll x1, x2;
+                x1 = min(left_out);
+                x2 = max(left_in);
+
+                mset_move(left_out, left_in, x1);
+                mset_move(left_in, left_out, x2);
+                left_sum = left_sum - x2 + x1;
+            }
+
+            ll local_score = max(left_sum, right_sum);
+
+            // Is it worth doing x + 1?
+            if (right_in.size()) {
+                ll largest_right = *right_in.rbegin();
+                ll smallest_left = *left_out.begin();
+
+                if (local_score > max(left_sum + smallest_left, right_sum - largest_right)) {
+                    local_score = max(left_sum + smallest_left, right_sum - largest_right);
+
+                    mset_del(right_in, largest_right);
+                    right_out.insert(largest_right);
+                    mset_del(left_out, smallest_left);
+                    left_in.insert(smallest_left);
+
+                    left_sum += smallest_left;
+                    right_sum -= largest_right;
+                }
+            }
+
+            best = min(best, local_score);
+        }
+
+        dprint("i=", i, "best", best, "partition", left_in.size(), right_in.size());
+    }
+
+    print(best);
 }
 
 int main() {
