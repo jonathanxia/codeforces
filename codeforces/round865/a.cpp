@@ -231,11 +231,6 @@ public:
         return ret;
     }
 
-    template<typename T>
-    bool is_lex_less(const vec<T>& perm) {
-        // Compare the permutations lexicographically
-        return std::lexicographical_compare(this.begin(), this.end(), perm.begin(), perm.end());
-    }
 };
 
 typedef vec<vec<int>> vvi;
@@ -501,7 +496,7 @@ public:
 
     // Constructor to initialize the 2D array with given shape
     ndarray(int n_rows_, int n_cols_) : n_rows(n_rows_), n_cols(n_cols_) {
-        data = vec<T>(n_rows * n_cols);
+        data = std::vector<T>(n_rows * n_cols);
     }
     
     // Accessor function to get the number of rows
@@ -515,7 +510,7 @@ public:
     }
     
     // Accessor function to get the data of the 2D array
-    vec<T> get_data() const {
+    std::vector<T> get_data() const {
         return data;
     }
     
@@ -556,22 +551,22 @@ public:
         }
     }
 
-    vec<T> get_row(int row, int cstart=0, int cend=-1) {
+    vector<T> get_row(int row, int cstart=0, int cend=-1) {
         if (cend == -1) {
             cend = n_cols;
         }
-        vec<T> ret(cend - cstart);
+        vector<T> ret(cend - cstart);
         rep(i, cstart, cend - 1) {
             ret[i - cstart] = (*this)(row, i);
         }
         return ret;
     }
 
-    vec<T> get_col(int col, int rstart=0, int rend=-1) {
+    vector<T> get_col(int col, int rstart=0, int rend=-1) {
         if (rend == -1) {
             rend = n_rows;
         }
-        vec<T> ret(rend - rstart);
+        vector<T> ret(rend - rstart);
         rep(i, rstart, rend - 1) {
             ret[i - rstart] = (*this)(i, col);
         }
@@ -599,12 +594,139 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
         for (int j = 0; j < arr.get_n_cols(); j++) {
             os << arr(i, j) << " ";
         }
-        if (i != arr.get_n_rows() - 1) {
-            os << std::endl;
-        }
+        os << std::endl;
     }
     return os;
 }
 
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
+
+// Number Theory
+namespace nt {
+    ll sum_digits(ll n, ll b) {
+        int sum = 0;
+        while (n > 0) {
+            sum += n % b;
+            n /= b;
+        }
+        return sum;
+    }
+
+    vl get_digits(ll n, ll b) {
+        vl ans;
+        while (n > 0) {
+            ans.push_back(n % b);
+            n /= b;
+        }
+
+        return ans;
+    }
+
+    ll digits_to_num(vl& digs, ll b) {
+        ll s = 0;
+        dep(i, digs.size() - 1, 0) {
+            s *= b;
+            s += digs[i];
+        }
+        return s;
+    }
+
+    ll mod(ll a, ll p) {
+        return (a % p + p) % p;
+    }
+
+    // ll M = pow(10, 9) + 7;
+    ll M = 998244353;
+    ll mod(ll a) {
+        return mod(a, M);
+    }
+
+    // Function to calculate (base^exponent) % modulus using repeated squaring
+    ll mpow(ll base, ll exponent, ll modulus=M) {
+        ll result = 1;
+
+        while (exponent > 0) {
+            // If the exponent is odd, multiply the result by base
+            if (exponent & 1)
+                result = (result * base) % modulus;
+
+            // Square the base and reduce the exponent by half
+            base = (base * base) % modulus;
+            exponent >>= 1;
+        }
+
+        return result;
+    }
+
+    ll inv(ll x, ll y) {
+        ll p = y;
+
+        ll ax = 1;
+        ll ay = 0;
+        while (x > 0) {
+            ll q = y / x;
+            tie(ax, ay) = make_tuple(ay - q * ax, ax);
+            tie(x, y) = make_tuple(y % x, x);
+        }
+
+        return mod(ay, p);
+    }
+
+    ll gcd(ll a, ll b) {
+        a = abs(a);
+        b = abs(b);
+        if (a > b) {
+            ass(a, b, b, a);
+        }
+        while (a > 0) {
+            ass(a, b, b % a, a);
+        }
+        return b;
+    }
+
+    ll mdiv(ll x, ll y) {
+        x = mod(x);
+        y = mod(y);
+        return mod(x * inv(y, M), M);
+    }
+
+    ll v_p(ll x, ll p) {
+        ll res = 0;
+        while (x % p == 0) {
+            ++res;
+            x /= p;
+        }
+        return res;
+    }
+
+    bool is_pow_of_2(ll n) {
+        return (n > 0) && ((n & (n - 1)) == 0);
+    }
+}
+
+using namespace nt;
+
+void solve() {
+    ll a, b;
+    cin >> a >> b;
+    
+    if (gcd(a, b) == 1) {
+        print("1");
+        print(a, b);
+    }
+    else {
+        print(2);
+        print(a - 1, 1);
+        print(a, b);
+    }
+}
+
+int main() {
+    init();
+    int t; cin >> t;
+    cep(t) {
+        solve();
+    }
+    return 0;
+}

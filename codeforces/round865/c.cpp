@@ -608,3 +608,37 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
+
+void solve() {
+    ll n; cin >> n;
+
+    vl a(n);
+    read_array(a, n);
+
+    if (n % 2 == 1) {
+        print("YES");
+        return;
+    }
+
+    ll tot = 0;
+    ll sgn = 1;
+    rep(i, 0, n - 1) {
+        tot += a[i] * sgn;
+        sgn *= -1;
+    }
+
+    if (tot > 0) {
+        print("NO");
+        return;
+    }
+    else {
+        print("YES");
+    }
+}
+
+int main() {
+    init();
+    ll t; cin >> t;
+    cep(t) { solve(); }
+    return 0;
+}

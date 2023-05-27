@@ -231,11 +231,6 @@ public:
         return ret;
     }
 
-    template<typename T>
-    bool is_lex_less(const vec<T>& perm) {
-        // Compare the permutations lexicographically
-        return std::lexicographical_compare(this.begin(), this.end(), perm.begin(), perm.end());
-    }
 };
 
 typedef vec<vec<int>> vvi;
@@ -608,3 +603,35 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
+
+void solve() {
+    ll n;
+    cin >> n;
+
+    llarray output(3, n + 1);
+    output(1, 1) = 2 * n - 1;
+    output(2, n) = 2 * n;
+
+    rep(i, 2, n) {
+        if (i % 2 == 0) {
+            output(1, i) = i;
+            output(2, i - 1) = i - 1;
+        }
+        else {
+            output(1, i) = n + i - 1;
+            output(2, i - 1) = n + (i - 1) - 1;
+        }
+    }
+
+    print(output.slice(1, 3, 1, n + 1));
+}
+
+int main() {
+    init();
+
+    int t; cin >> t;
+    cep(t) {
+        solve();
+    }
+    return 0;
+}
