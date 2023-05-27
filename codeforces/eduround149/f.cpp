@@ -14,16 +14,6 @@ using namespace std;
 
 typedef long long ll;
 
-typedef vector<vector<int>> vvi;
-typedef vector<int> vi;
-
-typedef vector<vector<ll>> vvl;
-typedef vector<ll> vl;
-typedef vector<bool> vb;
-typedef string str;
-typedef pair<ll, ll> pl;
-typedef vector<vector<pl>> vvpl;
-
 // Looping
 #define rep(i, d, u) for(ll i = d; i <= u; ++i)
 #define dep(i, u, d) for(ll i = u; i >= d; --i)
@@ -33,9 +23,6 @@ typedef vector<vector<pl>> vvpl;
 #define cep(t) while(t--)
 #define foreach(i, c) for(auto i : c)
 
-
-
-// Maps
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
         // http://xorshift.di.unimi.it/splitmix64.c
@@ -51,12 +38,6 @@ struct custom_hash {
     }
 };
 
-typedef unordered_map<long long, int, custom_hash> umapli;
-typedef unordered_map<ll, ll, custom_hash> umapll;
-typedef unordered_set<ll, custom_hash> uset;
-typedef unordered_map<ll, vl, custom_hash> umaplvl;
-typedef unordered_map<str, ll, custom_hash> umapstrl;
-
 template <typename T>
 struct Identity {
     constexpr const T& operator()(const T& value) const {
@@ -64,109 +45,217 @@ struct Identity {
     }
 };
 
-// Number Theory
-namespace nt {
-    ll sum_digits(ll n, ll b) {
-        int sum = 0;
-        while (n > 0) {
-            sum += n % b;
-            n /= b;
+// Personal vectors
+template<typename T>
+class vec : public vector<T> {
+public:
+    using std::vector<T>::vector;  // Inherit base class constructors
+
+    bool contains(const T& value) const {
+        auto it = std::find(this->begin(), this->end(), value);
+        return (it != this->end());
+    }
+
+    int indexof(const T& element) {
+        for (int i = 0; i < this->size(); ++i) {
+            if ((*this)[i] == element) {
+                return i;
+            }
         }
-        return sum;
+        return -1;
     }
 
-    vl get_digits(ll n, ll b) {
-        vl ans;
-        while (n > 0) {
-            ans.push_back(n % b);
-            n /= b;
+    static vec<T> arange(T start, T end, T step = 1) {
+        vec<T> result;
+        for (T value = start; value < end; value += step) {
+            result.push_back(value);
         }
-
-        return ans;
+        return result;
     }
 
-    ll digits_to_num(vl& digs, ll b) {
-        ll s = 0;
-        dep(i, digs.size() - 1, 0) {
-            s *= b;
-            s += digs[i];
+    unordered_map<T, ll, custom_hash> counter(ll start=0, ll end=-1) {
+        if (end == -1) {
+            end = this->size() - 1;
         }
-        return s;
-    }
-
-    ll mod(ll a, ll p) {
-        return (a % p + p) % p;
-    }
-
-    // ll M = pow(10, 9) + 7;
-    ll M = 998244353;
-    ll mod(ll a) {
-        return mod(a, M);
-    }
-
-    // Function to calculate (base^exponent) % modulus using repeated squaring
-    ll mpow(ll base, ll exponent, ll modulus=M) {
-        ll result = 1;
-
-        while (exponent > 0) {
-            // If the exponent is odd, multiply the result by base
-            if (exponent & 1)
-                result = (result * base) % modulus;
-
-            // Square the base and reduce the exponent by half
-            base = (base * base) % modulus;
-            exponent >>= 1;
+        unordered_map<T, ll, custom_hash> result;
+        rep(i, start, end) {
+            result[(*this)[i]]++;
         }
 
         return result;
     }
 
-    ll inv(ll x, ll y) {
-        ll p = y;
+    vec<T> slice(int start=0, int end=-1) {
+        int n = this->size();
+        if (end == -1) {
+            end = n;
+        }
+        int len = end - start;
+        vec<T> result(len);
+        for (int i = 0; i < len; i++) {
+            result[i] = (*this)[start + i];
+        }
+        return result;
+    }
 
-        ll ax = 1;
-        ll ay = 0;
-        while (x > 0) {
-            ll q = y / x;
-            tie(ax, ay) = make_tuple(ay - q * ax, ax);
-            tie(x, y) = make_tuple(y % x, x);
+    bool all() {
+        return std::all_of(this->begin(), this->end(), [](bool b){ return b; });
+    }
+
+    bool any() {
+        return std::any_of(this->begin(), this->end(), [](bool b){ return b; });
+    }
+
+    T min(int start=0, int end=-1) {
+        if (end == -1) {
+            end = this->size();
         }
 
-        return mod(ay, p);
-    }
-
-    ll gcd(ll a, ll b) {
-        a = abs(a);
-        b = abs(b);
-        if (a > b) {
-            ass(a, b, b, a);
+        T ans = (*this)[start];
+        rep(i, start + 1, end - 1) {
+            ans = std::min(ans, (*this)[i]);
         }
-        while (a > 0) {
-            ass(a, b, b % a, a);
+        return ans;
+    }
+
+    T max(int start=0, int end=-1) {
+        if (end == -1) {
+            end = this->size();
         }
-        return b;
-    }
 
-    ll mdiv(ll x, ll y) {
-        x = mod(x);
-        y = mod(y);
-        return mod(x * inv(y, M), M);
-    }
-
-    ll v_p(ll x, ll p) {
-        ll res = 0;
-        while (x % p == 0) {
-            ++res;
-            x /= p;
+        T ans = (*this)[start];
+        rep(i, start + 1, end - 1) {
+            ans = std::max(ans, (*this)[i]);
         }
-        return res;
+        return ans;
     }
 
-    bool is_pow_of_2(ll n) {
-        return (n > 0) && ((n & (n - 1)) == 0);
-    }
-}
+    template <typename KeyFunc = Identity<T>>
+    void sort_vec(int start = 0, int end = -1, KeyFunc keyFunc = Identity<T>{}) {
+        if (end == -1) {
+            end = this->size() - 1;
+        }
+        if (start >= end || end >= this->size()) {
+            return;  // Invalid indices or empty range
+        }
 
+        sort(this->begin() + start, this->begin() + end + 1,
+                [&keyFunc](const T& a, const T& b) {
+                    return keyFunc(a) < keyFunc(b);
+                });
+    }
+
+    vec<int> argsort() {
+        // Initialize original index positions
+        vec<int> indices(this->size());
+        for (int i = 0; i < indices.size(); ++i) {
+            indices[i] = i;
+        }
+
+        // Sort the indices based on comparing array values
+        sort(indices.begin(), indices.end(), [&](int i1, int i2) {
+            return (*this)[i1] < (*this)[i2];
+        });
+
+        return indices;
+    }
+
+    int argmax() {
+        T best = (*this)[0];
+        int best_idx = 0;
+        rep(i, 0, this->size() - 1) {
+            if ((*this)[i] > best) {
+                best_idx = i;
+                best = (*this)[i];
+            }
+        }
+        return best_idx;
+    }
+
+    int argmin() {
+        T best = (*this)[0];
+        int best_idx = 0;
+        rep(i, 0, this->size() - 1) {
+            if ((*this)[i] < best) {
+                best_idx = i;
+                best = (*this)[i];
+            }
+        }
+        return best_idx;
+    }
+
+    template <typename S>
+    void fill(S elem) {
+        rep(i, 0, this->size() - 1) {
+            (*this)[i] = elem;
+        }
+    }
+
+    vec<T> cumsum() {
+        vec<T> ret(*this);
+        rep(i, 1, this->size() - 1) {
+            ret[i] += ret[i - 1];
+        }
+        return ret;
+    }
+
+    vec<T> cummax(bool reverse=false) {
+        vec<T> ret(*this);
+        if (reverse) {
+            dep(i, this->size() - 2, 0) {
+                ret[i] = std::max(ret[i + 1], ret[i]);
+            }
+        }
+        else {
+            rep(i, 1, this->size() - 1)
+            {
+                ret[i] = std::max(ret[i], ret[i - 1]);
+            }
+        }
+        return ret;
+    }
+
+    vec<T> cummin(bool reverse=false) {
+        vec<T> ret(*this);
+        if (reverse) {
+            dep(i, this->size() - 2, 0) {
+                ret[i] = std::min(ret[i + 1], ret[i]);
+            }
+        }
+        else {
+            rep(i, 1, this->size() - 1)
+            {
+                ret[i] = std::min(ret[i], ret[i - 1]);
+            }
+        }
+        return ret;
+    }
+
+    bool is_lex_less(const vec<T>& perm) {
+        // Compare the permutations lexicographically
+        return std::lexicographical_compare(this->begin(), this->end(), perm.begin(), perm.end());
+    }
+};
+
+typedef vec<vec<int>> vvi;
+typedef vec<int> vi;
+
+typedef vec<vec<ll>> vvl;
+typedef vec<ll> vl;
+typedef vec<bool> vb;
+typedef pair<ll, ll> pl;
+typedef vec<vec<pl>> vvpl;
+
+typedef string str;
+
+// Maps
+
+typedef unordered_map<long long, int, custom_hash> umapli;
+typedef unordered_map<ll, ll, custom_hash> umapll;
+typedef unordered_map<ll, vl, custom_hash> umaplvl;
+typedef unordered_map<str, ll, custom_hash> umapstrl;
+
+typedef unordered_set<ll, custom_hash> uset;
 
 // Input
 long long read_binary() {
@@ -219,21 +308,32 @@ void dprint(const T& t, const Args&... args) {
 }
 
 template<typename K, typename V>
-std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V, custom_hash>& mp)
+std::ostream& operator<<(std::ostream& os, const unordered_map<K, V, custom_hash>& mp)
 {
     os << "{ ";
     for (const auto& p : mp) {
-        os << "{" << p.first << ": " << p.second << "} ";
+        os << p.first << ": " << p.second << ", ";
     }
     os << "}";
     return os;
 }
 
 template<typename T>
-std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec) {
-    for (auto it = vec.begin(); it != vec.end(); ++it) {
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& v) {
+    for (auto it = v.begin(); it != v.end(); ++it) {
         os << *it;
-        if (it != vec.end() - 1) {
+        if (it != v.end() - 1) {
+            os << " ";
+        }
+    }
+    return os;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const vec<T>& v) {
+    for (auto it = v.begin(); it != v.end(); ++it) {
+        os << *it;
+        if (it != v.end() - 1) {
             os << " ";
         }
     }
@@ -271,7 +371,7 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
 {
     os << "{ ";
     for (const auto& p : mp) {
-        os << "{" << p.first << ": " << p.second << "} ";
+        os << p.first << ": " << p.second << ", ";
     }
     os << "}";
     return os;
@@ -283,163 +383,6 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
 typedef priority_queue<ll, vl, greater<ll>> minheap;
 typedef priority_queue<ll, vl, less<ll>> maxheap;
 
-namespace vec {
-    template <typename T>
-    std::vector<T> arange(T start, T end, T step = 1) {
-        std::vector<T> result;
-        for (T value = start; value < end; value += step) {
-            result.push_back(value);
-        }
-        return result;
-    }
-
-    template <typename T>
-    unordered_map<T, ll, custom_hash> Counter(vector<T> v, ll start=0, ll end=-1) {
-        if (end == -1) {
-            end = v.size() - 1;
-        }
-        unordered_map<T, ll, custom_hash> result;
-        rep(i, start, end) {
-            result[v[i]]++;
-        }
-
-        return result;
-    }
-
-    template <typename T>
-    int indexof(const vector<T>& vec, const T& element) {
-        for (int i = 0; i < vec.size(); ++i) {
-            if (vec[i] == element) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    template<typename T>
-    vector<T> unique(const vector<T>& input) {
-        vector<T> uniqueElements = input;
-        sort(uniqueElements.begin(), uniqueElements.end());
-        uniqueElements.erase(std::unique(uniqueElements.begin(), uniqueElements.end()), uniqueElements.end());
-        return uniqueElements;
-    }
-
-    template<typename T>
-    vector<T> slice(const vector<T>& v, int start=0, int end=-1) {
-        int n = v.size();
-        if (end == -1) {
-            end = n;
-        }
-        int len = end - start;
-        vector<T> result(len);
-        for (int i = 0; i < len; i++) {
-            result[i] = v[start + i];
-        }
-        return result;
-    }
-
-    template<typename T>
-    vector<T> slice2d(const vector<T>& v, int start=0, int end=-1, int start2=0, int end2=-1) {
-        int n = v.size();
-        int m = v[0].size();
-        if (end == -1) {
-            end = n;
-        }
-        if (end2 == -1) {
-            end2 = m;
-        }
-        int len = end - start;
-        vector<T> result(len);
-        for (int i = 0; i < len; i++) {
-            result[i] = vslice(v[start + i], start2, end2);
-        }
-        return result;
-    }
-
-    template<typename Container, typename T>
-    bool contains(const Container& c, const T& value) {
-        return std::find(c.begin(), c.end(), value) != c.end();
-    }
-
-    template<typename T>
-    bool all(std::vector<T> v) {
-        return std::all_of(v.begin(), v.end(), [](bool b){ return b; });
-    }
-
-    template<typename T>
-    bool any(std::vector<T> v) {
-        return std::any_of(v.begin(), v.end(), [](bool b){ return b; });
-    }
-
-    template <typename T>
-    T min(vector<T>& v, int start=0, int end=-1) {
-        if (end == -1) {
-            end = v.size();
-        }
-
-        T ans = v[start];
-        rep(i, start + 1, end - 1) {
-            ans = std::min(ans, v[i]);
-        }
-        return ans;
-    }
-
-    template <typename T>
-    T max(vector<T>& v, int start=0, int end=-1) {
-        if (end == -1) {
-            end = v.size();
-        }
-
-        T ans = v[start];
-        rep(i, start + 1, end - 1) {
-            ans = std::max(ans, v[i]);
-        }
-        return ans;
-    }
-
-    template <typename T, typename KeyFunc = Identity<T>>
-    void sort_vec(vector<T>& vec, size_t start, size_t end, KeyFunc keyFunc = Identity<T>{}) {
-        if (start >= end || end >= vec.size()) {
-            return;  // Invalid indices or empty range
-        }
-
-        sort(vec.begin() + start, vec.begin() + end + 1,
-                [&keyFunc](const T& a, const T& b) {
-                    return keyFunc(a) < keyFunc(b);
-                });
-    }
-
-    template <typename T>
-    vector<int> argsort(const vector<T>& array) {
-        // Initialize original index positions
-        vector<int> indices(array.size());
-        for (int i = 0; i < indices.size(); ++i) {
-            indices[i] = i;
-        }
-
-        // Sort the indices based on comparing array values
-        sort(indices.begin(), indices.end(), [&array](int i1, int i2) {
-            return array[i1] < array[i2];
-        });
-
-        return indices;
-    }
-
-
-
-    template <typename T, typename S>
-    void setvec(vector<T>& v, S elem) {
-        rep(i, 0, v.size() - 1) {
-            v[i] = elem;
-        }
-    }
-
-    void cumsum(vl& arr) {
-        rep(i, 1, arr.size() - 1) {
-            arr[i] += arr[i - 1];
-        }
-    }
-}
 
 #define RC(typ, expr, x, lo, hi) ({ \
     typ lcret; \
@@ -458,28 +401,18 @@ namespace vec {
     lcret; \
 })
 
+#define LC(typ, expr, x, arr) ({ \
+    typ lcret; \
+    foreach(x, arr) {\
+        lcret.push_back(expr); \
+    } \
+    lcret; \
+})
 
-int di[4] = {1, 0, -1, 0};
-int dj[4] = {0, 1, 0, -1};
 
-// Graphs
-void display_tree(int node, int parent, vector<vector<ll>>& adj_list,
-                  vector<ll>& labels, int depth = 0) {
-    cout << string(depth, ' ') << "Node " << node << " (" << labels[node] << ")" << endl;
-    for (int child : adj_list[node]) {
-        if (child != parent) {
-            display_tree(child, node, adj_list, labels, depth + 1);
-        }
-    }
-}
 
-template <typename T>
-void reset_graph(vector<vector<T>>& g) {
-    rep(i, 0, g.size() - 1)
-    {
-        g[i].clear();
-    }
-}
+int dx[4] = {1, 0, -1, 0};
+int dy[4] = {0, 1, 0, -1};
 
 // Binary Search
 #define largest_st(bbbmid, cond, lo, hi) ({ \
@@ -555,6 +488,7 @@ string str_slice(const str& s, int start, int end) {
     return s.substr(start, end - start);
 }
 
+
 // Numpy
 
 template<typename T>
@@ -562,11 +496,11 @@ class ndarray {
 public:
     int n_rows; // number of rows
     int n_cols; // number of columns
-    std::vector<T> data; // vector to store the data
+    vec<T> data; // vector to store the data
 
     // Constructor to initialize the 2D array with given shape
     ndarray(int n_rows_, int n_cols_) : n_rows(n_rows_), n_cols(n_cols_) {
-        data = std::vector<T>(n_rows * n_cols);
+        data = vec<T>(n_rows * n_cols);
     }
     
     // Accessor function to get the number of rows
@@ -580,7 +514,7 @@ public:
     }
     
     // Accessor function to get the data of the 2D array
-    std::vector<T> get_data() const {
+    vec<T> get_data() const {
         return data;
     }
     
@@ -621,22 +555,22 @@ public:
         }
     }
 
-    vector<T> get_row(int row, int cstart=0, int cend=-1) {
+    vec<T> get_row(int row, int cstart=0, int cend=-1) {
         if (cend == -1) {
             cend = n_cols;
         }
-        vector<T> ret(cend - cstart);
+        vec<T> ret(cend - cstart);
         rep(i, cstart, cend - 1) {
             ret[i - cstart] = (*this)(row, i);
         }
         return ret;
     }
 
-    vector<T> get_col(int col, int rstart=0, int rend=-1) {
+    vec<T> get_col(int col, int rstart=0, int rend=-1) {
         if (rend == -1) {
             rend = n_rows;
         }
-        vector<T> ret(rend - rstart);
+        vec<T> ret(rend - rstart);
         rep(i, rstart, rend - 1) {
             ret[i - rstart] = (*this)(i, col);
         }
@@ -664,7 +598,9 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
         for (int j = 0; j < arr.get_n_cols(); j++) {
             os << arr(i, j) << " ";
         }
-        os << std::endl;
+        if (i != arr.get_n_rows() - 1) {
+            os << std::endl;
+        }
     }
     return os;
 }
@@ -672,13 +608,10 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
-bool is_possible(vl& a, ll n, ll x, ll k) {
-    // Is it possible to achieve with k values
-    // a sum that is at most x on both sides?
+bool is_possible(vl& a, ll n, ll k, ll x) {
     vl L(n + 1);
-    maxheap pq1;
-
     ll tot1 = 0;
+    maxheap pq1;
     rep(i, 0, n - 1) {
         pq1.push(a[i]);
         tot1 += a[i];
@@ -686,13 +619,12 @@ bool is_possible(vl& a, ll n, ll x, ll k) {
             tot1 -= pq1.top();
             pq1.pop();
         }
-
         L[i + 1] = pq1.size();
     }
 
     vl R(n + 1);
-    maxheap pq2;
     ll tot2 = 0;
+    maxheap pq2;
     dep(i, n - 1, 0) {
         pq2.push(a[i]);
         tot2 += a[i];
@@ -700,11 +632,10 @@ bool is_possible(vl& a, ll n, ll x, ll k) {
             tot2 -= pq2.top();
             pq2.pop();
         }
-
         R[i] = pq2.size();
     }
 
-    return vec::any(RC(vb, L[i] + R[i] >= k, i, 0, n));
+    return RC(vb, L[i] + R[i] >= k, i, 0, n).any();
 }
 
 void solve() {
@@ -712,12 +643,16 @@ void solve() {
     vl a(n);
     read_array(a, n);
 
-    print(smallest_st(x, is_possible(a, n, x, k), 0, 1LL * pow(10, 9) * k));
+    print(
+        smallest_st(x, is_possible(a, n, k, x), 0, 1LL * n * pow(10, 9))
+    );
 }
 
 int main() {
+    init();
     int t; cin >> t;
     cep(t) {
         solve();
     }
+    return 0;
 }

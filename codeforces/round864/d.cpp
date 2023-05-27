@@ -284,6 +284,7 @@ void init() {
 template<typename T>
 void print(const T& t) {
     std::cout << t << std::endl;
+    cout.flush();
 }
 
 template<typename T, typename... Args>
@@ -608,3 +609,83 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+void solve() {
+    ll n, m;
+    cin >> n >> m;
+    vl a(n);
+    read_array(a, n);
+
+    vvl graph(n);
+    rep(i, 0, n - 2) {
+        ll u, v;
+        cin >> u >> v;
+        graph[u-1].pb(v -1 );
+        graph[v-1].pb(u - 1);
+    }
+
+    vl importance(n);
+    vl num_desc(n);
+    vec<set<pair<ll, ll>>> fat_kid(n);
+    vl p(n);
+
+    auto dfs1 = [&](auto&& dfs1, ll node, ll parent) -> void {
+        importance[node] += a[node];
+        num_desc[node]++;
+        p[node] = parent;
+        foreach(child, graph[node]) {
+            if (child == parent) {
+                continue;
+            }
+
+            dfs1(dfs1, child, node);
+            importance[node] += importance[child];
+            num_desc[node] += num_desc[child];
+            fat_kid[node].insert({num_desc[child], -child});
+        }
+    };
+
+    dfs1(dfs1, 0, -1);
+
+    rep(i, 0, m - 1) {
+        ll t, x;
+        cin >> t >> x;
+        x--;
+
+        if (t == 1) {
+            print(importance[x]);
+            continue;
+        }
+
+        dprint("Rotation x = ", x);
+
+        // Rotation time
+        if (num_desc[x] == 1) {
+            continue;
+        }
+
+        ll father = p[x];
+        fat_kid[father].erase({num_desc[x], -x});
+
+        auto ppp = *(fat_kid[x].rbegin());
+        ll y = -ppp.second;
+        fat_kid[x].erase(ppp);
+
+        ass(importance[x], importance[y], importance[x] - importance[y], importance[x]);
+        ass(num_desc[x], num_desc[y], num_desc[x] - num_desc[y], num_desc[x]);
+        ass(p[x], p[y], y, p[x]);
+
+        // Update fat kid
+        fat_kid[y].insert({num_desc[x], -x});
+        fat_kid[father].insert({num_desc[y], -y});
+
+        dprint("importance", importance);
+        dprint("num_desc", num_desc);
+        dprint("fat_kid", fat_kid);
+        dprint("p", p);
+    }
+}
+
+int main() {
+    init();
+    solve();
+}

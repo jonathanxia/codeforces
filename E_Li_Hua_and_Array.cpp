@@ -283,7 +283,7 @@ void init() {
 
 template<typename T>
 void print(const T& t) {
-    std::cout << t << std::endl;
+    std::cout << t << "\n";
 }
 
 template<typename T, typename... Args>
@@ -607,4 +607,13 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
+void solve() {
+    print(10);
+    print(2);
+    print(1);
+}
 
+int main() {
+    init();
+    solve();
+}

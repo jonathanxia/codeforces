@@ -231,10 +231,9 @@ public:
         return ret;
     }
 
-    template<typename T>
     bool is_lex_less(const vec<T>& perm) {
         // Compare the permutations lexicographically
-        return std::lexicographical_compare(this.begin(), this.end(), perm.begin(), perm.end());
+        return std::lexicographical_compare(this->begin(), this->end(), perm.begin(), perm.end());
     }
 };
 
@@ -638,7 +637,11 @@ void solve() {
 
 int main() {
     init();
-    ll t; cin >> t;
-    cep(t) { solve(); }
+
+    vl a{3, 1, 2, 4, 5};
+    vl b{3, 1, 2, 4, 5};
+
+    print(a.is_lex_less(b));
+
     return 0;
 }

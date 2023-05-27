@@ -608,3 +608,61 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+void solve() {
+    ll n, k;
+    cin >> n >> k;
+
+    llarray a(n, n);
+
+    rep(i, 0, n - 1) {
+        rep(j, 0, n - 1) {
+            cin >> a(i, j);
+        }
+    }
+
+    llarray b(n, n);
+
+    rep(i, 0, n - 1) {
+        rep(j, 0, n - 1) {
+            b(i, j) = a(n - 1 - i, n - 1 - j);
+        }
+    }
+
+    ll num_ops = 0;
+
+    llarray visited(n, n);
+    rep(i, 0, n - 1) {
+        rep(j, 0, n - 1) {
+            if (visited(i, j)) {
+                continue;
+            }
+            if (a(i, j) != b(i, j)) {
+                num_ops++;
+            }
+            visited(i, j) = 1;
+            visited(n - 1 - i, n - 1 - j) = 1;
+        }
+    }
+
+
+    dprint("HIHIHIHI");
+    if (num_ops > k) {
+        print("NO");
+        return;
+    }
+    if (n % 2 == 1) {
+        print("YES");
+        return;
+    }
+    else {
+        print((k - num_ops) % 2 == 0 ? "YES" : "NO");
+    }
+}
+
+int main() {
+    init();
+    int t; cin >> t;
+    cep(t) {
+        solve();
+    }
+}

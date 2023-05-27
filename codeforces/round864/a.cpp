@@ -608,3 +608,53 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+void solve() {
+    ll n, m;
+    cin >> n >> m;
+
+    ll x1, x2, y1, y2;
+    cin >> x1 >> y1 >> x2 >> y2;
+    x1--; x2--; y1--; y2--;
+
+    ll best = 4;
+
+    ll cnt = 0;
+    rep(i, 0, 3) {
+        ll newx = x1 + dx[i];
+        ll newy = y1 + dy[i];
+
+        if (ordered(0, newx, n - 1) && ordered(0, newy, m - 1)) {
+            cnt++;
+        }
+
+    }
+    if (cnt < best) {
+        best = cnt;
+    }
+
+    cnt = 0;
+    rep(i, 0, 3) {
+        ll newx = x2 + dx[i];
+        ll newy = y2 + dy[i];
+
+        if (ordered(0, newx, n - 1) && ordered(0, newy, m - 1)) {
+            cnt++;
+        }
+
+    }
+
+
+    if (cnt < best) {
+        best = cnt;
+    }
+
+    print(best);
+}
+
+int main() {
+    init();
+    int t; cin >> t;
+    cep(t) {
+        solve();
+    }
+}

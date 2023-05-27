@@ -284,6 +284,7 @@ void init() {
 template<typename T>
 void print(const T& t) {
     std::cout << t << std::endl;
+    cout.flush();
 }
 
 template<typename T, typename... Args>
@@ -608,3 +609,51 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+void solve() {
+    ll n, m;
+    cin >> n >> m;
+
+    ll d1, d2, d3;
+
+    cout << "? 1 1" << endl;
+    cin >> d1;
+
+    ll r, c;
+    ll cand = d1 + 1;
+
+    if (cand > n) {
+        print("?", 1, cand);
+        cin >> d2;
+
+        print("!", d2 + 1, cand);
+        return;
+    }
+    if (cand > m) {
+        print("?", cand, 1);
+        cin >> d2;
+        print("!", cand, d2 + 1);
+        return;
+    }
+
+    print("?", cand, 1);
+    cin >> d2;
+    print("?", 1, cand);
+    cin >> d3;
+
+    if (d2 < d1) {
+        print("!", cand, d2 + 1);
+    }
+    else if (d3 < d1) {
+        print("!", d3 + 1, cand);
+    }
+    else {
+        print("!", cand, cand);
+    }
+}
+
+int main() {
+    int t; cin >> t;
+    cep(t) {
+        solve();
+    }
+}

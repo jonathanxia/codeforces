@@ -608,3 +608,246 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+// Number Theory
+const ll MAX_PRIME = 5 * pow(10, 6);
+vl primes;
+vl isnotprime(MAX_PRIME + 1);
+
+// Number Theory
+namespace nt {
+    ll sum_digits(ll n, ll b) {
+        int sum = 0;
+        while (n > 0) {
+            sum += n % b;
+            n /= b;
+        }
+        return sum;
+    }
+
+    vl get_digits(ll n, ll b) {
+        vl ans;
+        while (n > 0) {
+            ans.push_back(n % b);
+            n /= b;
+        }
+
+        return ans;
+    }
+
+    ll digits_to_num(vl& digs, ll b) {
+        ll s = 0;
+        dep(i, digs.size() - 1, 0) {
+            s *= b;
+            s += digs[i];
+        }
+        return s;
+    }
+
+    ll mod(ll a, ll p) {
+        return (a % p + p) % p;
+    }
+
+    // ll M = pow(10, 9) + 7;
+    ll M = 998244353;
+    ll mod(ll a) {
+        return mod(a, M);
+    }
+
+    // Function to calculate (base^exponent) % modulus using repeated squaring
+    ll mpow(ll base, ll exponent, ll modulus=M) {
+        ll result = 1;
+
+        while (exponent > 0) {
+            // If the exponent is odd, multiply the result by base
+            if (exponent & 1)
+                result = (result * base) % modulus;
+
+            // Square the base and reduce the exponent by half
+            base = (base * base) % modulus;
+            exponent >>= 1;
+        }
+
+        return result;
+    }
+
+    ll inv(ll x, ll y) {
+        ll p = y;
+
+        ll ax = 1;
+        ll ay = 0;
+        while (x > 0) {
+            ll q = y / x;
+            tie(ax, ay) = make_tuple(ay - q * ax, ax);
+            tie(x, y) = make_tuple(y % x, x);
+        }
+
+        return mod(ay, p);
+    }
+
+    ll gcd(ll a, ll b) {
+        a = abs(a);
+        b = abs(b);
+        if (a > b) {
+            ass(a, b, b, a);
+        }
+        while (a > 0) {
+            ass(a, b, b % a, a);
+        }
+        return b;
+    }
+
+    ll mdiv(ll x, ll y) {
+        x = mod(x);
+        y = mod(y);
+        return mod(x * inv(y, M), M);
+    }
+
+    ll v_p(ll x, ll p) {
+        ll res = 0;
+        while (x % p == 0) {
+            ++res;
+            x /= p;
+        }
+        return res;
+    }
+
+    bool is_pow_of_2(ll n) {
+        return (n > 0) && ((n & (n - 1)) == 0);
+    }
+
+    umapll phi_cache;
+    ll phi(ll n) {
+        if (phi_cache.count(n) > 0) {
+            return phi_cache[n];
+        }
+        ll result = n;  // Initialize the result with n
+
+        // Check for prime factors of n
+        foreach (p, primes) {
+            if (p * p > n) {
+                break;
+            }
+            if (n % p == 0) {
+                // p is a prime factor of n
+                while (n % p == 0) {
+                    n /= p;
+                }
+                // Reduce the result using the formula: result = result * (1 - 1/p)
+                result -= result / p;
+            }
+        }
+
+        // If n is a prime number greater than 1
+        if (n > 1) {
+            result -= result / n;
+        }
+
+        phi_cache[n] = result;
+
+        return result;
+    }
+}
+
+void do_sieve() {
+    rep(d, 2, MAX_PRIME) {
+        if (!isnotprime[d]) {
+            primes.push_back(d);
+
+            int x = 2 * d;
+            while (x <= MAX_PRIME) {
+                isnotprime[x] = true;
+                x += d;
+            }
+        }
+    }
+}
+
+using namespace nt;
+
+ll LCA(ll x, ll y) {
+    if (x == y) {
+        return x;
+    }
+
+    while (x != y) {
+        if (x > y) {
+            x = phi(x);
+            continue;
+        }
+        if (y > x) {
+            y = phi(y);
+            continue;
+        }
+    }
+    return x;
+}
+
+class SparseTable {
+public:
+    vector<vector<ll>> table;
+    vector<ll> logTable;
+    vector<ll> arrSize;
+    function<ll(ll, ll)> operation;
+
+    SparseTable(const vector<ll>& arr, function<ll(ll, ll)> op) {
+        ll n = arr.size();
+        ll logn = log2(n) + 1;
+
+        table.resize(n, vector<ll>(logn));
+        logTable.resize(n + 1);
+        arrSize.resize(n + 1);
+        operation = op;
+
+        // Precompute logarithm values and array sizes
+        for (int i = 2; i <= n; i++) {
+            logTable[i] = logTable[i / 2] + 1;
+            arrSize[i] = arrSize[i / 2] + (i & 1);
+        }
+
+        // Initialize the first column of the table
+        for (int i = 0; i < n; i++) {
+            table[i][0] = arr[i];
+        }
+
+        // Compute the rest of the table using dynamic programming
+        for (int j = 1; (1 << j) <= n; j++) {
+            for (int i = 0; (i + (1 << j) - 1) < n; i++) {
+                table[i][j] = operation(table[i][j - 1], table[i + (1 << (j - 1))][j - 1]);
+            }
+        }
+    }
+
+    ll query(int left, int right) {
+        ll k = logTable[right - left + 1];
+        ll len = arrSize[right - left + 1];
+        return operation(table[left][k], table[right - (1 << k) + 1][k]);
+    }
+};
+
+
+void solve() {
+    ll n, m; cin >> n >> m;
+    vl a(n);
+    read_array(a, n);
+
+    rep(i, 0, m - 1) {
+        ll t, l, r;
+        cin >> t >> l >> r;
+        l--;
+        r--;
+        if (t == 1) {
+            rep(j, l, r) {
+                a[j] = phi(a[j]);
+            }
+            continue;
+        }
+
+
+    }
+}
+
+int main() {
+    init();
+    do_sieve();
+    solve();
+}
