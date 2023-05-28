@@ -378,6 +378,51 @@ void cumsum(vl& arr) {
     }
 }
 
+template <typename T>
+ll sum(vector<T>& x) {
+    ll s = 0;
+    foreach(xi, x) {
+        s += xi;
+    }
+    return s;
+}
+
+template <typename T>
+ll msum(vector<T>& x, ll m) {
+    ll s = 0;
+    foreach(xi, x) {
+        s += xi;
+        s = mod(s, m);
+    }
+    return s;
+}
+
+template <typename T>
+T max(vector<T>& x) {
+    if (x.size() == 0) {
+        dprint("BAD EMPTY ARRAY IN MAX");
+        throw std::out_of_range("BAD");
+    }
+    T m = x[0];
+    rep(i, 1, x.size() - 1) {
+        m = max(x[i], m);
+    }
+    return m;
+}
+
+template <typename T>
+T min(vector<T>& x) {
+    if (x.size() == 0) {
+        dprint("BAD EMPTY ARRAY IN MIN");
+        throw std::out_of_range("BAD");
+    }
+    T m = x[0];
+    rep(i, 1, x.size() - 1) {
+        m = min(x[i], m);
+    }
+    return m;
+}
+
 
 int di[4] = {1, 0, -1, 0};
 int dj[4] = {0, 1, 0, -1};
@@ -470,6 +515,22 @@ int stoi(char ch) {
     int num = stoi(mystr);
     return num;
 }
+
+
+vector<string> str_split(const string& s, char delimiter) {
+    vector<string> tokens;
+    istringstream iss(s);
+    string token;
+
+    while (getline(iss, token, delimiter)) {
+        tokens.push_back(token);
+    }
+
+    return tokens;
+}
+
+str atoz = "abcdefghijklmnopqrstuvwxyz";
+str AtoZ = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 // Numpy
 
@@ -589,27 +650,25 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
 
+ll mylog(ll x) {
+    ll cnt = 0;
+    while (x > 0) {
+        cnt++;
+        x = x / 2;
+    }
+    return cnt;
+}
+
 ll solve(str& s) {
-    ll blen = 0;
-    ll tot = 0;
-    int n = s.size();
-    rep(i, 0, n) {
-        if (i < n && s[i] == '_') {blen++;}
-        else {
-            tot += max(blen - 1, 0LL);
-            blen = 0;
-        }
+    ll best = INT_MAX;
+    foreach(ch, atoz) {
+        vector<str> words = str_split(s, ch);
+
+        vl foo = RC(vl, mylog(words[i].size()), i, 0, words.size() - 1);
+        ll score = max(foo);
+        best = min(best, score);
     }
-    if (s[0] == '_') {
-        tot++;
-    }
-    if (s[s.size() - 1] == '_') {
-        tot++;
-    }
-    if (s.size() == 1 && s[0] == '^') {
-        tot++;
-    }
-    return tot;
+    return best;
 }
 
 int main() {

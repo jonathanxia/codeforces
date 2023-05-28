@@ -4,16 +4,16 @@ using namespace std;
 
 class SparseTable {
 public:
-    vec<vec<ll>> table;
-    vec<ll> logTable;
-    vec<ll> arrSize;
+    vector<vector<ll>> table;
+    vector<ll> logTable;
+    vector<ll> arrSize;
     function<ll(ll, ll)> operation;
 
     SparseTable(const vector<ll>& arr, function<ll(ll, ll)> op) {
         ll n = arr.size();
         ll logn = log2(n) + 1;
 
-        table.resize(n, vec<ll>(logn));
+        table.resize(n, vector<ll>(logn));
         logTable.resize(n + 1);
         arrSize.resize(n + 1);
         operation = op;
