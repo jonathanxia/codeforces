@@ -51,6 +51,13 @@ class vec : public vector<T> {
 public:
     using std::vector<T>::vector;  // Inherit base class constructors
 
+    vec(vector<T>& v) {
+        this->resize(v.size());
+        rep(i, 0, v.size() - 1) {
+            (*this)[i] = v[i];
+        }
+    }
+
     bool contains(const T& value) const {
         auto it = std::find(this->begin(), this->end(), value);
         return (it != this->end());
@@ -106,6 +113,10 @@ public:
         return std::any_of(this->begin(), this->end(), [](bool b){ return b; });
     }
 
+    T sum() {
+        return std::accumulate(this->begin(), this->end(), T(0));
+    }
+
     T min(int start=0, int end=-1) {
         if (end == -1) {
             end = this->size();
@@ -131,7 +142,7 @@ public:
     }
 
     template <typename KeyFunc = Identity<T>>
-    void sort_vec(int start = 0, int end = -1, KeyFunc keyFunc = Identity<T>{}) {
+    void sort(int start = 0, int end = -1, KeyFunc keyFunc = Identity<T>{}) {
         if (end == -1) {
             end = this->size() - 1;
         }
@@ -139,7 +150,7 @@ public:
             return;  // Invalid indices or empty range
         }
 
-        sort(this->begin() + start, this->begin() + end + 1,
+        std::sort(this->begin() + start, this->begin() + end + 1,
                 [&keyFunc](const T& a, const T& b) {
                     return keyFunc(a) < keyFunc(b);
                 });
@@ -283,7 +294,7 @@ void init() {
 
 template<typename T>
 void print(const T& t) {
-    std::cout << t << "\n";
+    std::cout << t << std::endl;
 }
 
 template<typename T, typename... Args>
@@ -348,6 +359,16 @@ std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p) {
 
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const std::set<T>& s) {
+    os << "{ ";
+    for (const auto& item : s) {
+        os << item << " ";
+    }
+    os << "}";
+    return os;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const std::multiset<T>& s) {
     os << "{ ";
     for (const auto& item : s) {
         os << item << " ";
@@ -488,6 +509,18 @@ string str_slice(const str& s, int start, int end) {
     return s.substr(start, end - start);
 }
 
+vec<str> str_split(const str& s, char delimiter) {
+    vec<str> result;
+    stringstream ss(s);
+    string token;
+
+    while (getline(ss, token, delimiter)) {
+        result.push_back(token);
+    }
+
+    return result;
+}
+
 
 // Numpy
 
@@ -605,15 +638,56 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
-typedef ndarray<ll> llarray;
-typedef ndarray<int> intarray;
-void solve() {
-    print(10);
-    print(2);
-    print(1);
+namespace mset {
+    template <typename S, typename T>
+    void mset_del(S& ss, T x) {
+        ss.erase(ss.find(x));
+    }
+
+    template <typename S, typename T>
+    void mset_move(S& ss1, S& ss2, T x) {
+        auto ptr = ss1.find(x);
+        if (ptr != ss1.end()) {
+            ss1.erase(ptr);
+            ss2.insert(x);
+        }
+        else {
+            throw std::out_of_range("element not found");
+        }
+    }
+}
+template <typename T>
+T min(multiset<T>& ss) {
+    return *(ss.begin());
 }
 
-int main() {
-    init();
-    solve();
+template <typename T>
+T max(multiset<T>& ss) {
+    return *(ss.rbegin());
 }
+
+typedef ndarray<ll> llarray;
+typedef ndarray<int> intarray;
+typedef multiset<ll> msetl;
+
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int idx = 0;
+        int n = nums.size();
+        int k = 0;
+        int back = n - 1;
+        while (idx <= back) {
+            if (nums[idx] != val) {
+                idx++;
+                k++;
+                continue;
+            }
+
+            // Yeet it to the back
+            ass(nums[idx], nums[back], nums[back], nums[idx]);
+            back--;
+        }
+        return k;
+    }
+};

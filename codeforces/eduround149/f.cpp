@@ -502,6 +502,18 @@ string str_slice(const str& s, int start, int end) {
     return s.substr(start, end - start);
 }
 
+vec<str> str_split(const str& s, char delimiter) {
+    vec result;
+    stringstream ss(s);
+    string token;
+
+    while (getline(ss, token, delimiter)) {
+        result.push_back(token);
+    }
+
+    return result;
+}
+
 
 // Numpy
 
@@ -619,18 +631,24 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
-template <typename T>
-void mset_del(multiset<T>& ss, T x) {
-    ss.erase(ss.find(x));
-}
+namespace mset {
+    template <typename S, typename T>
+    void mset_del(S<T>& ss, T x) {
+        ss.erase(ss.find(x));
+    }
 
-template <typename T>
-void mset_move(multiset<T>& ss1, multiset<T>& ss2, T x) {
-    auto ptr = ss1.find(x);
-    ss1.erase(ptr);
-    ss2.insert(x);
+    template <typename S, typename T>
+    void mset_move(S<T>& ss1, S<T>& ss2, T x) {
+        auto ptr = ss1.find(x);
+        if (ptr != ss1.end()) {
+            ss1.erase(ptr);
+            ss2.insert(x);
+        }
+        else {
+            throw std::out_of_range("element not found");
+        }
+    }
 }
-
 template <typename T>
 T min(multiset<T>& ss) {
     return *(ss.begin());
@@ -734,10 +752,6 @@ void solve() {
 }
 
 int main() {
-    init();
-    int t; cin >> t;
-    cep(t) {
-        solve();
-    }
+    print(smallest_st(x, x * x > 10, 0, 10));
     return 0;
 }

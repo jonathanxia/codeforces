@@ -51,6 +51,13 @@ class vec : public vector<T> {
 public:
     using std::vector<T>::vector;  // Inherit base class constructors
 
+    vec(vector<T>& v) {
+        this->resize(v.size());
+        rep(i, 0, v.size() - 1) {
+            (*this)[i] = v[i];
+        }
+    }
+
     bool contains(const T& value) const {
         auto it = std::find(this->begin(), this->end(), value);
         return (it != this->end());
@@ -106,6 +113,10 @@ public:
         return std::any_of(this->begin(), this->end(), [](bool b){ return b; });
     }
 
+    T sum() {
+        return std::accumulate(this->begin(), this->end(), T(0));
+    }
+
     T min(int start=0, int end=-1) {
         if (end == -1) {
             end = this->size();
@@ -131,7 +142,7 @@ public:
     }
 
     template <typename KeyFunc = Identity<T>>
-    void sort_vec(int start = 0, int end = -1, KeyFunc keyFunc = Identity<T>{}) {
+    void sort(int start = 0, int end = -1, KeyFunc keyFunc = Identity<T>{}) {
         if (end == -1) {
             end = this->size() - 1;
         }
@@ -139,7 +150,7 @@ public:
             return;  // Invalid indices or empty range
         }
 
-        sort(this->begin() + start, this->begin() + end + 1,
+        std::sort(this->begin() + start, this->begin() + end + 1,
                 [&keyFunc](const T& a, const T& b) {
                     return keyFunc(a) < keyFunc(b);
                 });
@@ -231,6 +242,10 @@ public:
         return ret;
     }
 
+    bool is_lex_less(const vec<T>& perm) {
+        // Compare the permutations lexicographically
+        return std::lexicographical_compare(this->begin(), this->end(), perm.begin(), perm.end());
+    }
 };
 
 typedef vec<vec<int>> vvi;
@@ -344,6 +359,16 @@ std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p) {
 
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const std::set<T>& s) {
+    os << "{ ";
+    for (const auto& item : s) {
+        os << item << " ";
+    }
+    os << "}";
+    return os;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const std::multiset<T>& s) {
     os << "{ ";
     for (const auto& item : s) {
         os << item << " ";
@@ -484,6 +509,18 @@ string str_slice(const str& s, int start, int end) {
     return s.substr(start, end - start);
 }
 
+vec<str> str_split(const str& s, char delimiter) {
+    vec<str> result;
+    stringstream ss(s);
+    string token;
+
+    while (getline(ss, token, delimiter)) {
+        result.push_back(token);
+    }
+
+    return result;
+}
+
 
 // Numpy
 
@@ -496,7 +533,7 @@ public:
 
     // Constructor to initialize the 2D array with given shape
     ndarray(int n_rows_, int n_cols_) : n_rows(n_rows_), n_cols(n_cols_) {
-        data = std::vector<T>(n_rows * n_cols);
+        data = vec<T>(n_rows * n_cols);
     }
     
     // Accessor function to get the number of rows
@@ -510,7 +547,7 @@ public:
     }
     
     // Accessor function to get the data of the 2D array
-    std::vector<T> get_data() const {
+    vec<T> get_data() const {
         return data;
     }
     
@@ -551,22 +588,22 @@ public:
         }
     }
 
-    vector<T> get_row(int row, int cstart=0, int cend=-1) {
+    vec<T> get_row(int row, int cstart=0, int cend=-1) {
         if (cend == -1) {
             cend = n_cols;
         }
-        vector<T> ret(cend - cstart);
+        vec<T> ret(cend - cstart);
         rep(i, cstart, cend - 1) {
             ret[i - cstart] = (*this)(row, i);
         }
         return ret;
     }
 
-    vector<T> get_col(int col, int rstart=0, int rend=-1) {
+    vec<T> get_col(int col, int rstart=0, int rend=-1) {
         if (rend == -1) {
             rend = n_rows;
         }
-        vector<T> ret(rend - rstart);
+        vec<T> ret(rend - rstart);
         rep(i, rstart, rend - 1) {
             ret[i - rstart] = (*this)(i, col);
         }
@@ -594,18 +631,69 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
         for (int j = 0; j < arr.get_n_cols(); j++) {
             os << arr(i, j) << " ";
         }
-        os << std::endl;
+        if (i != arr.get_n_rows() - 1) {
+            os << std::endl;
+        }
     }
     return os;
 }
 
+namespace mset {
+    template <typename S, typename T>
+    void mset_del(S& ss, T x) {
+        ss.erase(ss.find(x));
+    }
+
+    template <typename S, typename T>
+    void mset_move(S& ss1, S& ss2, T x) {
+        auto ptr = ss1.find(x);
+        if (ptr != ss1.end()) {
+            ss1.erase(ptr);
+            ss2.insert(x);
+        }
+        else {
+            throw std::out_of_range("element not found");
+        }
+    }
+}
+template <typename T>
+T min(multiset<T>& ss) {
+    return *(ss.begin());
+}
+
+template <typename T>
+T max(multiset<T>& ss) {
+    return *(ss.rbegin());
+}
+
 typedef ndarray<ll> llarray;
 typedef ndarray<int> intarray;
+typedef multiset<ll> msetl;
+
+void solve() {
+    ll n;
+    c in >> n;
+    vl a(n);
+    read_array(a, n);
+
+    vl counts(n + 3);
+    rep(i, 0, n - 1) {
+        if (a[i] < n + 3) {
+            counts[a[i]]++;
+        }
+    }
+
+    ll mex = 0;
+    rep(i, 0, n + 2) {
+        if (counts[i] == 0) {
+            mex = i;
+            break;
+        }
+    }
+}
 
 int main() {
-    print(vl::arange(0, 10));
-    vl a{3, 1, 2, 4, 5};
-    print(str_join(a, ","));
-    print(a.counter());
+    init(); int t; cin >> t;
+    cep(t) {solve();}
     return 0;
 }

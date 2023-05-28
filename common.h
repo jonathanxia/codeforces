@@ -51,6 +51,13 @@ class vec : public vector<T> {
 public:
     using std::vector<T>::vector;  // Inherit base class constructors
 
+    vec(vector<T>& v) {
+        this->resize(v.size());
+        rep(i, 0, v.size() - 1) {
+            (*this)[i] = v[i];
+        }
+    }
+
     bool contains(const T& value) const {
         auto it = std::find(this->begin(), this->end(), value);
         return (it != this->end());
@@ -502,6 +509,18 @@ string str_slice(const str& s, int start, int end) {
     return s.substr(start, end - start);
 }
 
+vec<str> str_split(const str& s, char delimiter) {
+    vec<str> result;
+    stringstream ss(s);
+    string token;
+
+    while (getline(ss, token, delimiter)) {
+        result.push_back(token);
+    }
+
+    return result;
+}
+
 
 // Numpy
 
@@ -619,18 +638,24 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
-template <typename T>
-void mset_del(multiset<T>& ss, T x) {
-    ss.erase(ss.find(x));
-}
+namespace mset {
+    template <typename S, typename T>
+    void mset_del(S& ss, T x) {
+        ss.erase(ss.find(x));
+    }
 
-template <typename T>
-void mset_move(multiset<T>& ss1, multiset<T>& ss2, T x) {
-    auto ptr = ss1.find(x);
-    ss1.erase(ptr);
-    ss2.insert(x);
+    template <typename S, typename T>
+    void mset_move(S& ss1, S& ss2, T x) {
+        auto ptr = ss1.find(x);
+        if (ptr != ss1.end()) {
+            ss1.erase(ptr);
+            ss2.insert(x);
+        }
+        else {
+            throw std::out_of_range("element not found");
+        }
+    }
 }
-
 template <typename T>
 T min(multiset<T>& ss) {
     return *(ss.begin());
