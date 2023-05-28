@@ -53,7 +53,7 @@ namespace nt {
     }
 
     // ll M = pow(10, 9) + 7;
-    ll M = 998244353;
+    ll M = 998244353LL;
     ll mod(ll a) {
         return mod(a, M);
     }
@@ -213,5 +213,39 @@ namespace nt {
         }
 
         return factors;
+    }
+}
+
+namespace combo {
+    ll choose(ll n, ll k, ll m=-1) {
+        ll p = 1;
+        rep(i, 1, k) {
+            p = p * (n - k + i) / i;
+            if (m > 0) {
+                p = nt::mod(p, m);
+            }
+        }
+        return p;
+    }
+
+    vl precompute_choose(ll n1, ll n2, ll k, ll m=-1) {
+        vl result(n2 - n1 + 1);
+        ll idx = max(k - n1, 0LL);
+        if (idx > n2 - n1) {
+            return result;
+        }
+        if (n1 + idx == k) {
+            result[idx] = 1;
+        }
+        else {
+            result[idx] = choose(n1 + idx, k, m);
+        }
+        rep(i, idx + 1, n2 - n1) {
+            result[i] = result[i - 1] * (n1 + i) / (n1 + i - k);
+            if (m > 0) {
+                result[i] %= m;
+            }
+        }        
+        return result;
     }
 }
