@@ -459,22 +459,22 @@ public:
     ndarray(int n_rows_, int n_cols_) : n_rows(n_rows_), n_cols(n_cols_) {
         data = vector<T>(n_rows * n_cols);
     }
-    
+
     // Accessor function to get the number of rows
     int get_n_rows() const {
         return n_rows;
     }
-    
+
     // Accessor function to get the number of columns
     int get_n_cols() const {
         return n_cols;
     }
-    
+
     // Accessor function to get the data of the 2D array
     vector<T> get_data() const {
         return data;
     }
-    
+
     // Overload the () operator to access elements of the 2D array
     T& operator()(int i, int j) {
         if (i < 0 || i >= n_rows || j < 0 || j >= n_cols) {
@@ -482,7 +482,7 @@ public:
         }
         return data[i * n_cols + j];
     }
-    
+
     // Overload the () operator to access elements of the 2D array (const version)
     const T& operator()(int i, int j) const {
         if (i < 0 || i >= n_rows || j < 0 || j >= n_cols) {
@@ -496,7 +496,7 @@ public:
         n_rows = rows;
         n_cols = cols;
     }
-    
+
     // Fill the array with a particular value
     void fill(const T& value) {
         std::fill(data.begin(), data.end(), value);
@@ -684,4 +684,274 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
         }
     }
     return os;
+}
+
+// Number Theory
+namespace nt {
+    vl primes;
+    vl isnotprime;
+    bool sieve_done = false;
+
+    void do_sieve(ll max_prime) {
+        isnotprime.resize(max_prime + 1);
+        rep(d, 2, max_prime) {
+            if (!isnotprime[d]) {
+                primes.push_back(d);
+
+                int x = 2 * d;
+                while (x <= max_prime) {
+                    isnotprime[x] = true;
+                    x += d;
+                }
+            }
+        }
+        sieve_done = true;
+    }
+
+    ll sum_digits(ll n, ll b) {
+        int sum = 0;
+        while (n > 0) {
+            sum += n % b;
+            n /= b;
+        }
+        return sum;
+    }
+
+    vl get_digits(ll n, ll b) {
+        vl ans;
+        while (n > 0) {
+            ans.push_back(n % b);
+            n /= b;
+        }
+
+        return ans;
+    }
+
+    ll digits_to_num(vl& digs, ll b) {
+        ll s = 0;
+        dep(i, digs.size() - 1, 0) {
+            s *= b;
+            s += digs[i];
+        }
+        return s;
+    }
+
+    ll mod(ll a, ll p) {
+        return (a % p + p) % p;
+    }
+
+    ll M = pow(10, 9) + 7;
+    // ll M = 998244353LL;
+    ll mod(ll a) {
+        return mod(a, M);
+    }
+
+    // Function to calculate (base^exponent) % modulus using repeated squaring
+    ll mpow(ll base, ll exponent, ll modulus=M) {
+        ll result = 1;
+
+        while (exponent > 0) {
+            // If the exponent is odd, multiply the result by base
+            if (exponent & 1)
+                result = (result * base) % modulus;
+
+            // Square the base and reduce the exponent by half
+            base = (base * base) % modulus;
+            exponent >>= 1;
+        }
+
+        return result;
+    }
+
+    ll inv(ll x, ll y) {
+        ll p = y;
+
+        ll ax = 1;
+        ll ay = 0;
+        while (x > 0) {
+            ll q = y / x;
+            tie(ax, ay) = make_tuple(ay - q * ax, ax);
+            tie(x, y) = make_tuple(y % x, x);
+        }
+
+        return mod(ay, p);
+    }
+
+    ll gcd(ll a, ll b) {
+        a = abs(a);
+        b = abs(b);
+        if (a > b) {
+            ass(a, b, b, a);
+        }
+        while (a > 0) {
+            ass(a, b, b % a, a);
+        }
+        return b;
+    }
+
+    ll mdiv(ll x, ll y) {
+        x = mod(x);
+        y = mod(y);
+        return mod(x * inv(y, M), M);
+    }
+
+    ll v_p(ll x, ll p) {
+        ll res = 0;
+        while (x % p == 0) {
+            ++res;
+            x /= p;
+        }
+        return res;
+    }
+
+    ll factorial(ll x) {
+        ll p = 1;
+        rep(i, 1, x) {
+            p *= i;
+            p = mod(p);
+        }
+        return p;
+    }
+
+    bool is_pow_of_2(ll n) {
+        return (n > 0) && ((n & (n - 1)) == 0);
+    }
+
+    ll phi(ll n) {
+        ll result = n;
+        if (!sieve_done) {
+            throw out_of_range("Sieve not done, please run do_sieve");
+        }
+
+        for (ll prime : primes) {
+            if (prime * prime > n)
+                break;
+            if (n % prime == 0) {
+                while (n % prime == 0) {
+                    n /= prime;
+                }
+                result -= result / prime;
+            }
+        }
+
+        if (n > 1) {
+            result -= result / n;
+        }
+
+        return result;
+    }
+
+    ll num_divisors(ll n) {
+        ll divisors = 1;
+
+        for (ll prime : primes) {
+            if (prime * prime > n)
+                break;
+
+            ll count = 0;
+            while (n % prime == 0) {
+                n /= prime;
+                count++;
+            }
+
+            divisors *= (count + 1);
+        }
+
+        if (n > 1) {
+            divisors *= 2;
+        }
+
+        return divisors;
+    }
+
+    ll sum_divisors(ll n) {
+        ll sum = 1;
+
+        for (ll prime : primes) {
+            if (prime * prime > n)
+                break;
+
+            if (n % prime == 0) {
+                ll factorSum = 1;
+                ll power = 1;
+                while (n % prime == 0) {
+                    n /= prime;
+                    power *= prime;
+                    factorSum += power;
+                }
+                sum *= factorSum;
+            }
+        }
+
+        if (n > 1) {
+            sum *= (n + 1);
+        }
+
+        return sum;
+    }
+
+    umapll primeFactorization(ll n) {
+        umapll factors;
+
+        for (ll prime : primes) {
+            if (prime * prime > n)
+                break;
+
+            ll exponent = 0;
+            while (n % prime == 0) {
+                n /= prime;
+                exponent++;
+            }
+
+            if (exponent > 0) {
+                factors[prime] = exponent;
+            }
+        }
+
+        if (n > 1) {
+            factors[n] = 1;
+        }
+
+        return factors;
+    }
+}
+
+namespace combo {
+    ll choose(ll n, ll k, ll m=-1) {
+        ll p = 1;
+        rep(i, 1, k) {
+            p = p * (n - k + i) / i;
+            if (m > 0) {
+                p = nt::mod(p, m);
+            }
+        }
+        return p;
+    }
+
+    vl precompute_choose(ll n1, ll n2, ll k, ll m=-1) {
+        vl result(n2 - n1 + 1);
+        ll idx = max(k - n1, 0LL);
+        if (idx > n2 - n1) {
+            return result;
+        }
+        if (n1 + idx == k) {
+            result[idx] = 1;
+        }
+        else {
+            result[idx] = choose(n1 + idx, k, m);
+        }
+        rep(i, idx + 1, n2 - n1) {
+            result[i] = result[i - 1] * (n1 + i) / (n1 + i - k);
+            if (m > 0) {
+                result[i] %= m;
+            }
+        }
+        return result;
+    }
+}
+
+int main() {
+    nt::do_sieve(2000);
+    print(nt::phi(49));
+    return 0;
 }

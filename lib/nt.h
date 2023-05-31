@@ -2,22 +2,24 @@
 
 // Number Theory
 namespace nt {
-    const ll MAX_PRIME = 2000;
     vl primes;
-    vl isnotprime(MAX_PRIME + 1);
+    vl isnotprime;
+    bool sieve_done = false;
 
-    void do_sieve() {
-        rep(d, 2, MAX_PRIME) {
+    void do_sieve(ll max_prime) {
+        isnotprime.resize(max_prime + 1);
+        rep(d, 2, max_prime) {
             if (!isnotprime[d]) {
                 primes.push_back(d);
 
                 int x = 2 * d;
-                while (x <= MAX_PRIME) {
+                while (x <= max_prime) {
                     isnotprime[x] = true;
                     x += d;
                 }
             }
         }
+        sieve_done = true;
     }
 
     ll sum_digits(ll n, ll b) {
@@ -131,6 +133,9 @@ namespace nt {
 
     ll phi(ll n) {
         ll result = n;
+        if (!sieve_done) {
+            throw out_of_range("Sieve not done, please run do_sieve");
+        }
 
         for (ll prime : primes) {
             if (prime * prime > n)
