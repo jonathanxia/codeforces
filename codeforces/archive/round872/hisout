@@ -1,0 +1,75 @@
+Exploring node 21 sorted children [31]
+	 31 : { 0 }
+Exploring node 10 sorted children [21]
+	 21 : { 0 }
+Exploring node 32 sorted children [38, 41]
+	 38 : { 0 }
+	 41 : { 0 }
+Exploring node 30 sorted children [32]
+	 32 : { 0 3 }
+Exploring node 33 sorted children [39, 48, 49]
+	 39 : { 0 }
+	 48 : { 0 }
+	 49 : { 0 }
+Exploring node 24 sorted children [30, 33]
+	 30 : { 0 3 }
+	 33 : { 0 }
+Exploring node 3 sorted children [24, 6, 7, 10, 26]
+	 24 : { 0 2 3 }
+	 6 : { 0 }
+	 7 : { 0 }
+	 10 : { 0 }
+	 26 : { 0 }
+Exploring node 22 sorted children [42]
+	 42 : { 0 }
+Exploring node 12 sorted children [22, 36]
+	 22 : { 0 }
+	 36 : { 0 }
+Exploring node 17 sorted children [19, 35]
+	 19 : { 0 }
+	 35 : { 0 }
+Exploring node 14 sorted children [17]
+	 17 : { 0 1 }
+Exploring node 40 sorted children [46]
+	 46 : { 0 }
+Exploring node 8 sorted children [14, 12, 20, 29, 40]
+	 14 : { 0 1 }
+	 12 : { 0 }
+	 20 : { 0 }
+	 29 : { 0 }
+	 40 : { 0 }
+Exploring node 43 sorted children [47]
+	 47 : { 0 }
+Exploring node 37 sorted children [43]
+	 43 : { 0 }
+Exploring node 2 sorted children [8, 3, 37]
+	 8 : { 0 5 }
+	 3 : { 2 }
+	 37 : { 0 }
+Exploring node 34 sorted children [45]
+	 45 : { 0 }
+Exploring node 27 sorted children [34]
+	 34 : { 0 }
+Exploring node 5 sorted children [27]
+	 27 : { 0 }
+Exploring node 13 sorted children [16, 23, 25, 28]
+	 16 : { 0 }
+	 23 : { 0 }
+	 25 : { 0 }
+	 28 : { 0 }
+Exploring node 11 sorted children [13]
+	 13 : { 3 }
+Exploring node 9 sorted children [11]
+	 11 : { 3 }
+Exploring node 15 sorted children [18]
+	 18 : { 0 }
+Exploring node 4 sorted children [5, 9, 15]
+	 5 : { 0 }
+	 9 : { 3 }
+	 15 : { 0 }
+Exploring node 1 sorted children [2, 4, 44, 50]
+	 2 : { 5 }
+	 4 : { 0 }
+	 44 : { 0 }
+	 50 : { 0 }
+15
