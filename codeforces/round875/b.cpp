@@ -1,5 +1,3 @@
-// #include<lib/nt.h>
-// #include<lib/lazy_segment_tree.h>
 // #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
@@ -291,6 +289,16 @@ typedef unordered_map<string, ll, custom_hash> umapstrl;
 typedef unordered_map<ll, string, custom_hash> umaplstr;
 
 typedef unordered_set<ll, custom_hash> uset;
+
+umapll operator+(const umapll& lhs, const umapll& rhs) {
+    umapll result = lhs;
+
+    for (const auto& pair : rhs) {
+        result[pair.first] += pair.second;
+    }
+
+    return result;
+}
 
 // List manipulation
 typedef priority_queue<ll, vl, greater<ll>> minheap;
@@ -689,410 +697,47 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
-// Number Theory
-namespace nt {
-    vl primes;
-    vl isnotprime;
-    bool sieve_done = false;
+umapll blocks(vl& a, ll n) {
+    ll start_idx = 0;
+    ll end_idx = 0;
 
-    void do_sieve(ll max_prime) {
-        isnotprime.resize(max_prime + 1);
-        rep(d, 2, max_prime) {
-            if (!isnotprime[d]) {
-                primes.push_back(d);
+    umapll ret;
 
-                int x = 2 * d;
-                while (x <= max_prime) {
-                    isnotprime[x] = true;
-                    x += d;
-                }
-            }
+    while (start_idx < n) {
+        while (end_idx < n && a[start_idx] == a[end_idx]) {
+            end_idx++;
         }
-        sieve_done = true;
+        ret[a[start_idx]] = max(ret[a[start_idx]], end_idx - start_idx);
+        start_idx = end_idx;
+        end_idx = start_idx;
     }
-
-    ll sum_digits(ll n, ll b) {
-        int sum = 0;
-        while (n > 0) {
-            sum += n % b;
-            n /= b;
-        }
-        return sum;
-    }
-
-    vl get_digits(ll n, ll b) {
-        vl ans;
-        while (n > 0) {
-            ans.push_back(n % b);
-            n /= b;
-        }
-
-        return ans;
-    }
-
-    ll digits_to_num(vl& digs, ll b) {
-        ll s = 0;
-        dep(i, digs.size() - 1, 0) {
-            s *= b;
-            s += digs[i];
-        }
-        return s;
-    }
-
-    ll mod(ll a, ll p) {
-        return (a % p + p) % p;
-    }
-
-    ll M = pow(10, 9) + 7;
-    // ll M = 998244353LL;
-    ll mod(ll a) {
-        return mod(a, M);
-    }
-
-    // Function to calculate (base^exponent) % modulus using repeated squaring
-    ll pow(ll base, ll exponent, ll modulus=M) {
-        ll result = 1;
-
-        while (exponent > 0) {
-            // If the exponent is odd, multiply the result by base
-            if (exponent & 1)
-                result = (result * base) % modulus;
-
-            // Square the base and reduce the exponent by half
-            base = (base * base) % modulus;
-            exponent >>= 1;
-        }
-
-        return result;
-    }
-
-    ll inv(ll x, ll y) {
-        ll p = y;
-
-        ll ax = 1;
-        ll ay = 0;
-        while (x > 0) {
-            ll q = y / x;
-            tie(ax, ay) = make_tuple(ay - q * ax, ax);
-            tie(x, y) = make_tuple(y % x, x);
-        }
-
-        return mod(ay, p);
-    }
-
-    ll mdiv(ll x, ll y) {
-        x = mod(x);
-        y = mod(y);
-        return mod(x * inv(y, M), M);
-    }
-
-    ll v_p(ll x, ll p) {
-        ll res = 0;
-        while (x % p == 0) {
-            ++res;
-            x /= p;
-        }
-        return res;
-    }
-
-    ll factorial(ll x) {
-        ll p = 1;
-        rep(i, 1, x) {
-            p *= i;
-            p = mod(p);
-        }
-        return p;
-    }
-
-    bool is_pow_of_2(ll n) {
-        return (n > 0) && ((n & (n - 1)) == 0);
-    }
-
-    ll phi(ll n) {
-        ll result = n;
-        if (!sieve_done) {
-            throw out_of_range("Sieve not done, please run do_sieve");
-        }
-
-        for (ll prime : primes) {
-            if (prime * prime > n)
-                break;
-            if (n % prime == 0) {
-                while (n % prime == 0) {
-                    n /= prime;
-                }
-                result -= result / prime;
-            }
-        }
-
-        if (n > 1) {
-            result -= result / n;
-        }
-
-        return result;
-    }
-
-    ll num_divisors(ll n) {
-        ll divisors = 1;
-
-        for (ll prime : primes) {
-            if (prime * prime > n)
-                break;
-
-            ll count = 0;
-            while (n % prime == 0) {
-                n /= prime;
-                count++;
-            }
-
-            divisors *= (count + 1);
-        }
-
-        if (n > 1) {
-            divisors *= 2;
-        }
-
-        return divisors;
-    }
-
-    ll sum_divisors(ll n) {
-        ll sum = 1;
-
-        for (ll prime : primes) {
-            if (prime * prime > n)
-                break;
-
-            if (n % prime == 0) {
-                ll factorSum = 1;
-                ll power = 1;
-                while (n % prime == 0) {
-                    n /= prime;
-                    power *= prime;
-                    factorSum += power;
-                }
-                sum *= factorSum;
-            }
-        }
-
-        if (n > 1) {
-            sum *= (n + 1);
-        }
-
-        return sum;
-    }
-
-    umapll primeFactorization(ll n) {
-        umapll factors;
-
-        for (ll prime : primes) {
-            if (prime * prime > n)
-                break;
-
-            ll exponent = 0;
-            while (n % prime == 0) {
-                n /= prime;
-                exponent++;
-            }
-
-            if (exponent > 0) {
-                factors[prime] = exponent;
-            }
-        }
-
-        if (n > 1) {
-            factors[n] = 1;
-        }
-
-        return factors;
-    }
+    return ret;
 }
-
-namespace combo {
-    ll choose(ll n, ll k, ll m=-1) {
-        ll p = 1;
-        rep(i, 1, k) {
-            p = p * (n - k + i) / i;
-            if (m > 0) {
-                p = nt::mod(p, m);
-            }
-        }
-        return p;
-    }
-
-    vl precompute_choose(ll n1, ll n2, ll k, ll m=-1) {
-        vl result(n2 - n1 + 1);
-        ll idx = max(k - n1, 0LL);
-        if (idx > n2 - n1) {
-            return result;
-        }
-        if (n1 + idx == k) {
-            result[idx] = 1;
-        }
-        else {
-            result[idx] = choose(n1 + idx, k, m);
-        }
-        rep(i, idx + 1, n2 - n1) {
-            result[i] = result[i - 1] * (n1 + i) / (n1 + i - k);
-            if (m > 0) {
-                result[i] %= m;
-            }
-        }
-        return result;
-    }
-}
-
-class LazySegmentTree {
-public:
-    ll n;
-    vl a;
-
-    struct node {
-        ll lca;
-        ll sz;
-        ll tot_dist;
-        ll mn;
-
-        node() {
-            lca = -1;
-            sz = 0;
-            tot_dist = 0;
-            mn = INT_MAX;
-        }
-        node(ll val) {
-            lca = val;
-            sz = 1;
-            tot_dist = 0;
-            mn = val;
-        }
-    };
-
-    // CHANGE ME!
-    node merge(node l, node r) {
-        if (l.lca == -1) {
-            return r;
-        }
-        if (r.lca == -1) {
-            return l;
-        }
-
-        node temp;
-        ll dist = 0;
-        ll a = l.lca, b = r.lca;
-        while (a != b) {
-            if (a > b) {
-                a = nt::phi(a);
-                dist += a.sz;
-            }
-            else {
-                b = nt::phi(b);
-                dist += b.sz;
-            }
-        }
-        temp.lca = a;
-        temp.tot_dist = a.tot_dist + b.tot_dist + dist;
-        temp.sz = a.sz + b.sz;
-        temp.mn = min(a.mn, b.mn);
-        return temp;
-    }
-
-	vl lazy;
-	vector<node> tr;
-
-    // CHANGE ME!
-	void push(int l, int r, int idx) {
-		if(lazy[idx]) {
-			tr[idx].sum += (r - l + 1) * lazy[idx];
-
-			if(l != r) {
-				lazy[2 * idx + 1] += lazy[idx];
-				lazy[2 * idx + 2] += lazy[idx];
-			}
-
-			lazy[idx] = 0;
-		}
-	}
-
-	void init(int l, int r, int idx) {
-		if(l == r) {
-			tr[idx] = node(a[l]);
-			return;
-		}
-
-		int mid = (l + r) >> 1;
-		init(l, mid, 2 * idx + 1);
-		init(mid + 1, r, 2 * idx + 2);
-
-		tr[idx] = merge(tr[2 * idx + 1], tr[2 * idx + 2]);
-	}
-
-    template <typename T>
-    LazySegmentTree(const vector<T>& arr) : a(arr), lazy(4 * arr.size()), tr(4 * arr.size()) {
-        n = a.size();
-        init(0, n, 0);
-    }
-
-	void update(int qL, int qR, ll val, int l, int r, int idx) {
-		push(l, r, idx);
-
-		if(qL > r || l > qR) {
-			return;
-		}
-
-		if(qL <= l && r <= qR) {
-			lazy[idx] += val;
-			push(l, r, idx);
-			return;
-		}
-
-		int mid = (l + r) >> 1;
-		update(qL, qR, val, l, mid, 2 * idx + 1);
-		update(qL, qR, val, mid + 1, r, 2 * idx + 2);
-
-		tr[idx] = merge(tr[2 * idx + 1], tr[2 * idx + 2]);
-	}
-
-    void update(int qL, int qR, ll val) {
-        update(qL, qR, val, 0, n, 0);
-    }
-
-	node query(int qL, int qR, int l, int r, int idx) {
-		push(l, r, idx);
-
-		if(l > qR || r < qL) {
-			return node();
-		}
-
-		if(qL <= l && r <= qR) {
-			return tr[idx];
-		}
-
-		int mid = (l + r) >> 1;
-		return merge(query(qL, qR, l, mid, 2 * idx + 1), query(qL, qR, mid + 1, r, 2 * idx + 2));
-	}
-
-    node query(int qL, int qR) {
-        return query(qL, qR, 0, n, 0);
-    }
-};
 
 void solve() {
-    ll n, m;
-    cin >> n >> m;
+    ll n; cin >> n;
     vl a(n);
+    vl b(n);
     inp::array(a, n);
+    inp::array(b, n);
 
-    LazySegmentTree st(a);
+    auto ba = blocks(a, n);
+    auto bb = blocks(b, n);
 
-    rep(i, 0, m - 1) {
-        ll t, l, r;
-        cin >> t >> l >> r;
+    ba = ba + bb;
 
-        if (t == 1) {
-        }
+    ll mxa = 0;
+    foreach(k, ba) {
+        mxa = max(k.second, mxa);
     }
+
+    print(mxa);
 }
 
 int main() {
-    solve();
+    ll t; cin >> t;
+    cep(t) {
+        solve();
+    }
     return 0;
 }

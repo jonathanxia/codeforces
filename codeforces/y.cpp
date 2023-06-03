@@ -1,5 +1,5 @@
 // #include<lib/nt.h>
-// #include<lib/lazy_segment_tree.h>
+// #include<lib/segment_tree.h>
 // #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
@@ -941,158 +941,75 @@ namespace combo {
     }
 }
 
-class LazySegmentTree {
+class SegmentTree {
 public:
-    ll n;
-    vl a;
-
-    struct node {
-        ll lca;
-        ll sz;
-        ll tot_dist;
-        ll mn;
-
-        node() {
-            lca = -1;
-            sz = 0;
-            tot_dist = 0;
-            mn = INT_MAX;
-        }
-        node(ll val) {
-            lca = val;
-            sz = 1;
-            tot_dist = 0;
-            mn = val;
-        }
+    struct node
+    {
+        ll mx;
+        node() { mx = -1e9; }
+        node(ll val) { mx = val; }
     };
 
-    // CHANGE ME!
-    node merge(node l, node r) {
-        if (l.lca == -1) {
-            return r;
-        }
-        if (r.lca == -1) {
-            return l;
-        }
+    node temp;
 
-        node temp;
-        ll dist = 0;
-        ll a = l.lca, b = r.lca;
-        while (a != b) {
-            if (a > b) {
-                a = nt::phi(a);
-                dist += a.sz;
-            }
-            else {
-                b = nt::phi(b);
-                dist += b.sz;
-            }
-        }
-        temp.lca = a;
-        temp.tot_dist = a.tot_dist + b.tot_dist + dist;
-        temp.sz = a.sz + b.sz;
-        temp.mn = min(a.mn, b.mn);
+    // MODIFY ME!
+    node merge(node l, node r)
+    {
+        temp.mx = max(l.mx, r.mx);
         return temp;
     }
 
-	vl lazy;
-	vector<node> tr;
+    ll n;
+    vector<node> t;
 
-    // CHANGE ME!
-	void push(int l, int r, int idx) {
-		if(lazy[idx]) {
-			tr[idx].sum += (r - l + 1) * lazy[idx];
+    SegmentTree(ll sz) : t(2 * sz)
+    {
+        n = sz;
+        rep(i, 0, n - 1) t[i + n] = node();
+        dep(i, n - 1, 1) {
+            t[i] = merge(t[i << 1], t[i << 1 | 1]);
+        }
+    }
 
-			if(l != r) {
-				lazy[2 * idx + 1] += lazy[idx];
-				lazy[2 * idx + 2] += lazy[idx];
-			}
-
-			lazy[idx] = 0;
-		}
-	}
-
-	void init(int l, int r, int idx) {
-		if(l == r) {
-			tr[idx] = node(a[l]);
-			return;
-		}
-
-		int mid = (l + r) >> 1;
-		init(l, mid, 2 * idx + 1);
-		init(mid + 1, r, 2 * idx + 2);
-
-		tr[idx] = merge(tr[2 * idx + 1], tr[2 * idx + 2]);
-	}
-
-    template <typename T>
-    LazySegmentTree(const vector<T>& arr) : a(arr), lazy(4 * arr.size()), tr(4 * arr.size()) {
+    template<typename T>
+    SegmentTree(const vector<T> a) : t(2 * a.size()) {
         n = a.size();
-        init(0, n, 0);
+        rep(i, 0, n - 1) t[i + n] = node(a[i]);
+        dep(i, n - 1, 1) {
+            t[i] = merge(t[i << 1], t[i << 1 | 1]);
+        }
     }
 
-	void update(int qL, int qR, ll val, int l, int r, int idx) {
-		push(l, r, idx);
-
-		if(qL > r || l > qR) {
-			return;
-		}
-
-		if(qL <= l && r <= qR) {
-			lazy[idx] += val;
-			push(l, r, idx);
-			return;
-		}
-
-		int mid = (l + r) >> 1;
-		update(qL, qR, val, l, mid, 2 * idx + 1);
-		update(qL, qR, val, mid + 1, r, 2 * idx + 2);
-
-		tr[idx] = merge(tr[2 * idx + 1], tr[2 * idx + 2]);
-	}
-
-    void update(int qL, int qR, ll val) {
-        update(qL, qR, val, 0, n, 0);
+    void modify(ll p, const node& value)
+    {
+        for(t[p += n] = value; p >>= 1; )
+            t[p] = merge(t[p << 1], t[p << 1 | 1]);
     }
 
-	node query(int qL, int qR, int l, int r, int idx) {
-		push(l, r, idx);
+    node query(ll l, ll r)
+    {
+        node resl, resr;
+        r++;
+        for(l += n, r += n; l < r; l >>= 1, r >>= 1)
+        {
+            if(l & 1) resl = merge(resl, t[l++]);
+            if(r & 1) resr = merge(t[--r], resr);
+        }
 
-		if(l > qR || r < qL) {
-			return node();
-		}
-
-		if(qL <= l && r <= qR) {
-			return tr[idx];
-		}
-
-		int mid = (l + r) >> 1;
-		return merge(query(qL, qR, l, mid, 2 * idx + 1), query(qL, qR, mid + 1, r, 2 * idx + 2));
-	}
-
-    node query(int qL, int qR) {
-        return query(qL, qR, 0, n, 0);
+        return merge(resl, resr);
     }
 };
 
-void solve() {
-    ll n, m;
-    cin >> n >> m;
-    vl a(n);
-    inp::array(a, n);
-
-    LazySegmentTree st(a);
-
-    rep(i, 0, m - 1) {
-        ll t, l, r;
-        cin >> t >> l >> r;
-
-        if (t == 1) {
-        }
-    }
-}
+// int main() {
+//     vl a{1, 3, 4, 2, 5, 2};
+//     SegmentTree segtree(a);
+//     print("max(2, 4)=", segtree.query(2, 4).mx);
+//     segtree.modify(4, 3);
+//     print("max(2, 4)=", segtree.query(2, 4).mx);
+//     print("max(0, 0)=", segtree.query(0, 0).mx);
+//     return 0;
+// }
 
 int main() {
-    solve();
     return 0;
 }

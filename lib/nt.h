@@ -61,7 +61,7 @@ namespace nt {
     }
 
     // Function to calculate (base^exponent) % modulus using repeated squaring
-    ll mpow(ll base, ll exponent, ll modulus=M) {
+    ll pow(ll base, ll exponent, ll modulus=M) {
         ll result = 1;
 
         while (exponent > 0) {
@@ -89,18 +89,6 @@ namespace nt {
         }
 
         return mod(ay, p);
-    }
-
-    ll gcd(ll a, ll b) {
-        a = abs(a);
-        b = abs(b);
-        if (a > b) {
-            ass(a, b, b, a);
-        }
-        while (a > 0) {
-            ass(a, b, b % a, a);
-        }
-        return b;
     }
 
     ll mdiv(ll x, ll y) {

@@ -28,6 +28,9 @@ def open_filename(fname):
 if __name__ == "__main__":
     fname = sys.argv[1]
     out = "\n".join(open_filename(fname))
+    preamble = "\n".join(
+        [f"// #include<{fname}>" for fname in included_fnames]
+    )
 
     with open(fname, "w") as f:
-        f.write(out)
+        f.write(preamble + "\n" + out)
