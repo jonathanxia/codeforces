@@ -1,3 +1,4 @@
+// #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -733,4 +734,68 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
         }
     }
     return os;
+}
+
+void solve() {
+    ll n; cin >> n;
+    vl c(n + 2);
+    rep(i, 1, n) {
+        cin >> c[i];
+    }
+    c[0] = 0;
+    c[n + 1] = 2 * n + 3;
+
+    // dp[start_idx][num_segments] -> sum of segments
+    llarray dp(n + 2, n + 1);
+    dp.fill(INT_MAX);
+    dp.set_row(n + 1, 0);
+
+    // Possibly useless initialization
+    bool is_bad = false;
+    dep(i, n, 0) {
+        if (c[i] > c[i + 1]) {
+            is_bad = true;
+        }
+
+        if (is_bad) {
+            dp(i, 0) = INT_MAX;
+        }
+        else {
+            dp(i, 0) = 0;
+        }
+    }
+
+    dep(start_idx, n, 0) {
+        rep(num_seg, 1, n) {
+            // Always keep the start index, try deleting people
+            rep(idx, start_idx + 1, n + 1) {
+                if (c[start_idx] > c[idx]) {
+                    continue;
+                }
+                // c[idx] > c[start_idx] at this point.
+                // Consider deleting everything between
+                // start_idx + 1 --> idx - 1
+                if (idx == start_idx + 1) {
+                    // Adjacent values, no need to waste a segment, just recurse
+                    chkmin(dp(start_idx, num_seg), dp(start_idx + 1, num_seg));
+                }
+
+                chkmin(
+                    dp(start_idx, num_seg),
+                    dp(idx, num_seg - 1) + (idx - 1 - (start_idx + 1) + 1)
+                );
+            }
+        }
+    }
+
+    print(dp.get_row(0, 1, n));
+}
+
+int main() {
+    init();
+    int t; cin >> t;
+    cep(t) {
+        solve();
+    }
+    return 0;
 }

@@ -1,26 +1,17 @@
+// #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
 #include <cmath>
 
-using namespace std;
-
 //  Definition of the macro.
 #define ass(a, b, x, y) (tie(a, b) = make_tuple(x, y));
 #define ordered(x, y, z) ((x) <= (y) && (y) <= (z))
 
-template <typename T>
-void chkmin(T& lhs, T rhs) {
-	lhs = min(lhs, rhs);
-}
-template <typename T>
-void chkmax(T& lhs, T rhs) {
-	lhs = max(lhs, rhs);
-}
-
 #define to_str to_string
 #define pb push_back
 
+using namespace std;
 
 typedef long long ll;
 
@@ -523,39 +514,21 @@ public:
     }
 
     void fill(const T& value, int istart, int iend, int jstart, int jend) {
-        for (int i = istart; i <= iend; i++)
+        for (int i = istart; i < iend; i++)
         {
-            for (int j = jstart; j <= jend; j++)
+            for (int j = jstart; j < jend; j++)
             {
                 (*this)(i, j) = value;
             }
         }
     }
 
-    void set_row(int row, const vector<T>& ret, int cstart=0, int cend=-1) {
-        if (cend == -1) {
-            cend = n_cols;
-        }
-        rep(i, cstart, cend - 1) {
-            (*this)(row, i) = ret[i - cstart];
-        }
-    }
-
-    void set_row(int row, const T& ret, int cstart=0, int cend=-1) {
-        if (cend == -1) {
-            cend = n_cols;
-        }
-        rep(i, cstart, cend - 1) {
-            (*this)(row, i) = ret;
-        }
-    }
-
     vector<T> get_row(int row, int cstart=0, int cend=-1) {
         if (cend == -1) {
-            cend = n_cols - 1;
+            cend = n_cols;
         }
-        vector<T> ret(cend - cstart + 1);
-        rep(i, cstart, cend) {
+        vector<T> ret(cend - cstart);
+        rep(i, cstart, cend - 1) {
             ret[i - cstart] = (*this)(row, i);
         }
         return ret;
@@ -563,31 +536,20 @@ public:
 
     vector<T> get_col(int col, int rstart=0, int rend=-1) {
         if (rend == -1) {
-            rend = n_rows - 1;
+            rend = n_rows;
         }
-        vector<T> ret(rend - rstart + 1);
-        rep(i, rstart, rend) {
+        vector<T> ret(rend - rstart);
+        rep(i, rstart, rend - 1) {
             ret[i - rstart] = (*this)(i, col);
         }
         return ret;
     }
 
-    void set_col(int col, const T& ret, int rstart=0, int rend=-1) {
-        if (rend == -1) {
-            rend = n_rows;
-        }
-        rep(i, rstart, rend - 1) {
-            (*this)(i, col) = ret;
-        }
-    }
-
-
-
     ndarray<T> slice(int istart, int iend, int jstart, int jend) {
         ndarray<T> subarray(iend - istart, jend - jstart);
-        for (int i = istart; i <= iend; i++)
+        for (int i = istart; i < iend; i++)
         {
-            for (int j = jstart; j <= jend; j++)
+            for (int j = jstart; j < jend; j++)
             {
                 subarray(i - istart, j - jstart) = (*this)(i, j);
             }
@@ -733,4 +695,49 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
         }
     }
     return os;
+}
+
+void solve() {
+    ll n; cin >> n;
+    vvpl graph(n);
+    rep(i, 0, n - 2) {
+        ll u, v;
+        cin >> u >> v;
+        u--;
+        v--;
+        graph[u].pb({v, i});
+        graph[v].pb({u, i});
+    }
+
+    vl time_drawn(n, n);
+
+    auto dfs = [&](auto&& dfs, ll node, ll parent, ll latest, ll timer) -> void {
+        foreach(child, graph[node]) {
+            if (child.first != parent) {
+                if (latest < child.second) {
+                    time_drawn[child.first] = timer + 1;
+                    dfs(dfs, child.first, node, child.second, timer + 1);
+                }
+                else {
+                    time_drawn[child.first] = timer;
+                    dfs(dfs, child.first, node, latest, timer);
+                }
+            }
+        }
+    };
+
+    time_drawn[0] = 1;
+    dfs(dfs, 0, -1, -1, 1);
+    print(time_drawn);
+    print(vv::max(time_drawn));
+}
+
+int main() {
+    init();
+    ll t;
+    cin >> t;
+    cep(t) {
+        solve();
+    }
+    return 0;
 }

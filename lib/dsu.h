@@ -113,22 +113,22 @@ public:
 
 
 
-int main() {
-    PersistantVector pv(7);
+// int main() {
+//     PersistantVector pv(7);
 
-    pv.set(3, 2);
-    pv.set(5, 6);
+//     pv.set(3, 2);
+//     pv.set(5, 6);
 
-    print("pv.data", pv.data);
+//     print("pv.data", pv.data);
 
-    pv.commit();
+//     pv.commit();
 
-    pv.set(3, 100);
-    pv.set(6, 20);
+//     pv.set(3, 100);
+//     pv.set(6, 20);
 
-    print("pv.data", pv.data);
+//     print("pv.data", pv.data);
 
-    pv.revert();
+//     pv.revert();
 
-    print("pv.data", pv.data);
-}
+//     print("pv.data", pv.data);
+// }
