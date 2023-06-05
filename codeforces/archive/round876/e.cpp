@@ -64,8 +64,8 @@ namespace vv {
         return (it != vec.end());
     }
 
-    template <typename S, typename T>
-    int indexof(const vector<T>& a, const S& element) {
+    template <typename T>
+    int indexof(const vector<T>& a, const T& element) {
         for (int i = 0; i < a.size(); ++i) {
             if (a[i] == element) {
                 return i;
@@ -179,8 +179,8 @@ namespace vv {
         }
 
         std::sort(a.begin() + start, a.begin() + end + 1,
-                [&keyFunc](const T& x, const T& y) {
-                    return keyFunc(x) < keyFunc(y);
+                [&keyFunc](const T& a, const T& b) {
+                    return keyFunc(a) < keyFunc(b);
                 });
     }
 
@@ -453,33 +453,11 @@ namespace mset {
 
     template <typename T>
     T min(multiset<T>& ss) {
-        if (ss.empty()) {
-            throw out_of_range("Empty set min");
-        }
         return *(ss.begin());
     }
 
     template <typename T>
     T max(multiset<T>& ss) {
-        if (ss.empty()) {
-            throw out_of_range("Empty set max");
-        }
-        return *(ss.rbegin());
-    }
-
-    template <typename T>
-    T min(set<T>& ss) {
-        if (ss.empty()) {
-            throw out_of_range("Empty set min");
-        }
-        return *(ss.begin());
-    }
-
-    template <typename T>
-    T max(set<T>& ss) {
-        if (ss.empty()) {
-            throw out_of_range("Empty set max");
-        }
         return *(ss.rbegin());
     }
 }
@@ -758,83 +736,116 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
-void solve() {
-    ll n, q; cin >> n >> q;
-    string s; cin >> s;
+void play_first(vl& a, ll n) {
+    // Calculate and recurse
+    ll i = 0;
+    while (a[i] == 0) {
+        i++;
+    }
+    if (i >= n) {
+        print("YOU MESSED UP");
+        return;
+    }
+    print(i + 1);
+    ll j;
+    cin >> j;
+    if (j == -1) {
+        // Die
+        return;
+    }
+    if (j == 0) {
+        return ;
+    }
 
-    set<ll> openidx;
-    set<ll> closeidx;
+    ll m = min(a[i], a[j - 1]);
+    a[i] -= m;
+    a[j - 1] -= m;
+    play_first(a, n);
+}
 
-    rep(i, 0, n - 2) {
-        if (s[i] == s[i + 1] && s[i] == '(') {
-            openidx.insert(i);
+void play_second(vl& side, ll n, vl& a) {
+    ll i; cin >> i;
+    if (i == -1 || i == 0) {
+        return;
+    }
+
+    i--;
+    // Find me a good j please
+    ll j;
+    irep(j, 0, n - 1) {
+        if (side[j] == 1 - side[i] && a[j] > 0 && i != j) {
+            break;
         }
-        if (s[i] == s[i + 1] && s[i] == ')') {
-            closeidx.insert(i);
+    }
+    print(j + 1);
+    ll m = min(a[i], a[j]);
+    a[i] -= m;
+    a[j] -= m;
+    play_second(side, n, a);
+}
+
+void solve() {
+    ll n; cin >> n;
+
+    vl a(n);
+    inp::array(a, n);
+
+    intarray dp(300 * n + 1, n);
+    dp.fill(0);
+
+    // Crank that dp out
+    // Set the first element in
+    dp(a[0], 0) = 1;
+    dp(0, 0) = 1;
+
+    rep(i, 1, n - 1) {
+        // Consider setting in a[i]
+        rep(ss, 0, 300 * n) {
+            if (a[i] <= ss) {
+                dp(ss, i) = dp(ss - a[i], i - 1) || dp(ss, i - 1);
+            }
+            else {
+                dp(ss, i) = dp(ss, i - 1);
+            }
         }
     }
 
-    cep(q) {
-        ll i; cin >> i;
+    ll tot = vv::sum(a);
+    if (tot % 2 == 1 || dp(tot / 2, n - 1) == 0) {
+        print("First");
+        play_first(a, n);
+        return;
+    }
 
-        i--;
-        // LOL CURSED only time c++ is good
-        s[i] = '(' + ')' - s[i];
-
-        if (s[i] == ')') {
-            openidx.erase(i);
-            openidx.erase(i - 1);
-            if (i >= 1 && s[i - 1] == ')') {
-                closeidx.insert(i - 1);
-            }
-            if (i <= n - 2 && s[i + 1] == ')') {
-                closeidx.insert(i);
-            }
-        }
-
-        else if (s[i] == '(') {
-            closeidx.erase(i);
-            closeidx.erase(i - 1);
-            if (i >= 1 && s[i - 1] == '(') {
-                openidx.insert(i - 1);
-            }
-            if (i <= n - 2 && s[i + 1] == '(') {
-                openidx.insert(i);
-            }
+    print("Second");
+    // Reverse engineer a subset sum
+    vl side(n);
+    ll ss = tot / 2;
+    dep(i, n - 1, 1) {
+        if (a[i] <= ss && dp(ss - a[i], i - 1) > 0) {
+            ss = ss - a[i];
+            side[i] = true;
         }
         else {
-            print("BAD");
+            side[i] = false;
         }
-
-        if (n % 2 == 1) {
-            print("NO");
-            continue;
-        }
-
-        if (s[0] == ')' || s[n - 1] == '(') {
-            print("NO");
-            continue;
-        }
-
-        if (openidx.empty() and closeidx.empty()) {
-            print("YES");
-            continue;
-        }
-        if (openidx.empty() or closeidx.empty()) {
-            print("NO");
-            continue;
-        }
-
-        if (
-            mset::min(openidx) > mset::min(closeidx) or
-            mset::max(openidx) > mset::max(closeidx)
-        ) {
-            print("NO");
-            continue;
-        }
-
-        print("YES");
     }
+    if (ss == 0) {
+        side[0] = false;
+    }
+    else {
+        if (a[0] != ss) {
+            cout << "BADSTUFF:";
+            auto dd = vv::counter(a);
+            foreach(k, dd) {
+                cout << k.first << ":" << k.second << ",";
+            }
+            cout << endl;
+        }
+        side[0] = true;
+    }
+
+    play_second(side, n, a);
 }
 
 int main() {

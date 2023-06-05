@@ -1,19 +1,27 @@
 // #include<lib/common.h>
-// #include<lib/sparsetable.h>
-// #include<lib/dsu.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
 #include <cmath>
 
+using namespace std;
+
 //  Definition of the macro.
 #define ass(a, b, x, y) (tie(a, b) = make_tuple(x, y));
 #define ordered(x, y, z) ((x) <= (y) && (y) <= (z))
 
+template <typename T>
+void chkmin(T& lhs, T rhs) {
+	lhs = min(lhs, rhs);
+}
+template <typename T>
+void chkmax(T& lhs, T rhs) {
+	lhs = max(lhs, rhs);
+}
+
 #define to_str to_string
 #define pb push_back
 
-using namespace std;
 
 typedef long long ll;
 
@@ -171,8 +179,8 @@ namespace vv {
         }
 
         std::sort(a.begin() + start, a.begin() + end + 1,
-                [&keyFunc](const T& a, const T& b) {
-                    return keyFunc(a) < keyFunc(b);
+                [&keyFunc](const T& x, const T& y) {
+                    return keyFunc(x) < keyFunc(y);
                 });
     }
 
@@ -516,21 +524,39 @@ public:
     }
 
     void fill(const T& value, int istart, int iend, int jstart, int jend) {
-        for (int i = istart; i < iend; i++)
+        for (int i = istart; i <= iend; i++)
         {
-            for (int j = jstart; j < jend; j++)
+            for (int j = jstart; j <= jend; j++)
             {
                 (*this)(i, j) = value;
             }
         }
     }
 
-    vector<T> get_row(int row, int cstart=0, int cend=-1) {
+    void set_row(int row, const vector<T>& ret, int cstart=0, int cend=-1) {
         if (cend == -1) {
             cend = n_cols;
         }
-        vector<T> ret(cend - cstart);
         rep(i, cstart, cend - 1) {
+            (*this)(row, i) = ret[i - cstart];
+        }
+    }
+
+    void set_row(int row, const T& ret, int cstart=0, int cend=-1) {
+        if (cend == -1) {
+            cend = n_cols;
+        }
+        rep(i, cstart, cend - 1) {
+            (*this)(row, i) = ret;
+        }
+    }
+
+    vector<T> get_row(int row, int cstart=0, int cend=-1) {
+        if (cend == -1) {
+            cend = n_cols - 1;
+        }
+        vector<T> ret(cend - cstart + 1);
+        rep(i, cstart, cend) {
             ret[i - cstart] = (*this)(row, i);
         }
         return ret;
@@ -538,20 +564,31 @@ public:
 
     vector<T> get_col(int col, int rstart=0, int rend=-1) {
         if (rend == -1) {
-            rend = n_rows;
+            rend = n_rows - 1;
         }
-        vector<T> ret(rend - rstart);
-        rep(i, rstart, rend - 1) {
+        vector<T> ret(rend - rstart + 1);
+        rep(i, rstart, rend) {
             ret[i - rstart] = (*this)(i, col);
         }
         return ret;
     }
 
+    void set_col(int col, const T& ret, int rstart=0, int rend=-1) {
+        if (rend == -1) {
+            rend = n_rows;
+        }
+        rep(i, rstart, rend - 1) {
+            (*this)(i, col) = ret;
+        }
+    }
+
+
+
     ndarray<T> slice(int istart, int iend, int jstart, int jend) {
         ndarray<T> subarray(iend - istart, jend - jstart);
-        for (int i = istart; i < iend; i++)
+        for (int i = istart; i <= iend; i++)
         {
-            for (int j = jstart; j < jend; j++)
+            for (int j = jstart; j <= jend; j++)
             {
                 subarray(i - istart, j - jstart) = (*this)(i, j);
             }
@@ -699,171 +736,26 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
-class PersistantVector {
-public:
-    vl data;
-    stack<umapll> snapshots;
-
-    PersistantVector(int size) : data(size, 0) {
-        snapshots.push(umapll());
-    }
-
-    const ll operator[](int idx) const {
-        return data[idx];
-    }
-
-    void set(int idx, ll value) {
-        auto& ss = snapshots.top();
-        if (!ss.count(idx)) {
-            ss[idx] = data[idx];
-        }
-
-        data[idx] = value;
-    }
-
-    void commit() {
-        snapshots.push(umapll());
-    }
-
-    void revert() {
-        auto dd = snapshots.top();
-        snapshots.pop();
-
-        foreach(k, dd) {
-            data[k.first] = k.second;
-        }
-    }
-};
-
-class DSU {
-public:
-    PersistantVector parent;
-    PersistantVector rank;
-    PersistantVector is_alive;
-    ll num_alive;
-    stack<ll> num_alive_snaps;
-
-    DSU(int size) : parent(size), rank(size), is_alive(size) {
-        for (int i = 0; i < size; ++i) {
-            parent.set(i, i);
-            is_alive.set(i, true);
-            rank.set(i, 0);
-        }
-        num_alive = size;
-    }
-
-    int find(int x) {
-        if (parent[x] != x) {
-            parent.set(x, find(parent[x])); // Path compression
-        }
-        return parent[x];
-    }
-
-    void unite(int x, int y) {
-        int rootX = find(x);
-        int rootY = find(y);
-        if (rootX != rootY) {
-            if (rank[rootX] < rank[rootY]) {
-                parent.set(rootX, rootY);
-            } else if (rank[rootX] > rank[rootY]) {
-                parent.set(rootY, rootX);
-            } else {
-                parent.set(rootY, rootX);
-                rank.set(rootX, rank[rootX] + 1);
-            }
-
-            // Are we killing any components? Death is
-            // infectious
-            bool new_is_alive = is_alive[rootX] && is_alive[rootY];
-
-            num_alive = num_alive - is_alive[rootX] - is_alive[rootY] + new_is_alive;
-
-            is_alive.set(rootX, new_is_alive);
-            is_alive.set(rootY, new_is_alive);
-        }
-
-        else {
-            // Same connected component, if it was alive,
-            // it is now dead
-            if (is_alive[rootX]) {
-                num_alive--;
-                is_alive.set(rootX, false);
-            }
-        }
-
-    }
-
-    void commit() {
-        parent.commit();
-        rank.commit();
-        is_alive.commit();
-        num_alive_snaps.push(num_alive);
-    }
-
-    void revert() {
-        parent.revert();
-        rank.revert();
-        is_alive.revert();
-        num_alive = num_alive_snaps.top();
-        num_alive_snaps.pop();
-    }
-};
-
-
-
-
-class SparseTable {
-public:
-    vector<vector<ll>> table;
-    vector<ll> logTable;
-    vector<ll> arrSize;
-    function<ll(ll, ll)> operation;
-
-    SparseTable(const vector<ll>& arr, function<ll(ll, ll)> op) {
-        ll n = arr.size();
-        ll logn = log2(n) + 1;
-
-        table.resize(n, vector<ll>(logn));
-        logTable.resize(n + 1);
-        arrSize.resize(n + 1);
-        operation = op;
-
-        // Precompute logarithm values and array sizes
-        for (int i = 2; i <= n; i++) {
-            logTable[i] = logTable[i / 2] + 1;
-            arrSize[i] = arrSize[i / 2] + (i & 1);
-        }
-
-        // Initialize the first column of the table
-        for (int i = 0; i < n; i++) {
-            table[i][0] = arr[i];
-        }
-
-        // Compute the rest of the table using dynamic programming
-        for (int j = 1; (1 << j) <= n; j++) {
-            for (int i = 0; (i + (1 << j) - 1) < n; i++) {
-                table[i][j] = operation(table[i][j - 1], table[i + (1 << (j - 1))][j - 1]);
-            }
-        }
-    }
-
-    ll query(int left, int right) {
-        ll k = logTable[right - left + 1];
-        ll len = arrSize[right - left + 1];
-        return operation(table[left][k], table[right - (1 << k) + 1][k]);
-    }
-};
-
-// int main() {
-//     SparseTable st({3, 5, 1, 4, 2}, [](ll a, ll b) {return min(a, b);});
-//     print(st.query(2, 4));
-// }
-
 void solve() {
+    ll n; cin >> n;
+    vl h(n);
+    inp::array(h, n);
 
+    vl best(n, INT_MAX);
+    best[0] = 0;
+    best[1] = abs(h[1] - h[0]);
+
+    rep(i, 2, n - 1) {
+        best[i] = min(
+            best[i - 1] + abs(h[i] - h[i - 1]),
+            best[i - 2] + abs(h[i] - h[i - 2])
+        );
+    }
+    print(best[n - 1]);
 }
 
 int main() {
     init();
+    solve();
     return 0;
 }

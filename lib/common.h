@@ -31,7 +31,7 @@ typedef long long ll;
 #define idep(i, u, d) for(i = u; i >= d; --i)
 #define srep(i, d, u, s) for(ll i = d; i <= u; i += s)
 #define cep(t) while(t--)
-#define foreach(i, c) for(auto i : c)
+#define foreach(i, c) for(auto& i : c)
 
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
@@ -63,8 +63,8 @@ namespace vv {
         return (it != vec.end());
     }
 
-    template <typename T>
-    int indexof(const vector<T>& a, const T& element) {
+    template <typename S, typename T>
+    int indexof(const vector<T>& a, const S& element) {
         for (int i = 0; i < a.size(); ++i) {
             if (a[i] == element) {
                 return i;
@@ -178,8 +178,8 @@ namespace vv {
         }
 
         std::sort(a.begin() + start, a.begin() + end + 1,
-                [&keyFunc](const T& a, const T& b) {
-                    return keyFunc(a) < keyFunc(b);
+                [&keyFunc](const T& x, const T& y) {
+                    return keyFunc(x) < keyFunc(y);
                 });
     }
 
@@ -452,11 +452,33 @@ namespace mset {
 
     template <typename T>
     T min(multiset<T>& ss) {
+        if (ss.empty()) {
+            throw out_of_range("Empty set min");
+        }
         return *(ss.begin());
     }
 
     template <typename T>
     T max(multiset<T>& ss) {
+        if (ss.empty()) {
+            throw out_of_range("Empty set max");
+        }
+        return *(ss.rbegin());
+    }
+
+    template <typename T>
+    T min(set<T>& ss) {
+        if (ss.empty()) {
+            throw out_of_range("Empty set min");
+        }
+        return *(ss.begin());
+    }
+
+    template <typename T>
+    T max(set<T>& ss) {
+        if (ss.empty()) {
+            throw out_of_range("Empty set max");
+        }
         return *(ss.rbegin());
     }
 }

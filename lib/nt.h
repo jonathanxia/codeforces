@@ -22,6 +22,27 @@ namespace nt {
         sieve_done = true;
     }
 
+    bool is_prime(ll n) {
+        // Checks if n is prime
+        if (n <= 1) {
+            return false;
+        }
+        
+        ll p = *prev(primes.end());
+        if (p * p < n) {
+            throw out_of_range("Generate more primes please");
+        }
+
+        ll i = 0;
+        while (primes[i] * primes[i] <= n) {
+            if (n % primes[i] == 0) {
+                return false;
+            }
+            i++;
+        }
+        return true;
+    }
+
     ll sum_digits(ll n, ll b) {
         int sum = 0;
         while (n > 0) {
