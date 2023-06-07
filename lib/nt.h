@@ -27,7 +27,7 @@ namespace nt {
         if (n <= 1) {
             return false;
         }
-        
+
         ll p = *prev(primes.end());
         if (p * p < n) {
             throw out_of_range("Generate more primes please");
@@ -75,7 +75,7 @@ namespace nt {
         return (a % p + p) % p;
     }
 
-    ll M = pow(10, 9) + 7;
+    ll M = std::pow(10, 9) + 7;
     // ll M = 998244353LL;
     ll mod(ll a) {
         return mod(a, M);
@@ -112,10 +112,10 @@ namespace nt {
         return mod(ay, p);
     }
 
-    ll mdiv(ll x, ll y) {
+    ll mdiv(ll x, ll y, ll m=M) {
         x = mod(x);
         y = mod(y);
-        return mod(x * inv(y, M), M);
+        return mod(x * inv(y, m), m);
     }
 
     ll v_p(ll x, ll p) {
@@ -267,6 +267,21 @@ namespace combo {
             result[i] = result[i - 1] * (n1 + i) / (n1 + i - k);
             if (m > 0) {
                 result[i] %= m;
+            }
+        }
+        return result;
+    }
+
+    vl precompute_choose2(ll n, ll k1, ll k2, ll m = -1) {
+        vl result(k2 - k1 + 1);
+        result[0] = choose(n, k1, m=m);
+        rep(i, k1 + 1, k2) {
+            if (m > 0) {
+                result[i] = nt::mdiv(
+                    result[i - 1] * (n - i + 1), i, m);
+            }
+            else {
+                result[i] = result[i - 1] * (n - i + 1) / i;
             }
         }
         return result;
