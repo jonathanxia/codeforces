@@ -761,7 +761,7 @@ template<typename T>
 std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     for (int i = 0; i < arr.get_n_rows(); i++) {
         for (int j = 0; j < arr.get_n_cols(); j++) {
-            os << arr(i, j);
+            os << arr(i, j) << " ";
         }
         if (i != arr.get_n_rows() - 1) {
             os << std::endl;
@@ -770,197 +770,75 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
-string directions = ">^<v";
-
-pl ask(ll r, ll c, ndarray<char> q, bool flip) {
-    if (flip) {
-        ass(r, c, c, r);
-        q = q.transpose();
-        ll n = q.n_rows;
-
-        rep(i, 0, n - 1) {
-            rep(j, 0, n - 1) {
-                switch (q(i, j)) {
-                    case '>':
-                        q(i, j) = 'v';
-                        break;
-                    case '<':
-                        q(i, j) = '^';
-                        break;
-                    case 'v':
-                        q(i, j) = '>';
-                        break;
-                    case '^':
-                        q(i, j) = '<';
-                        break;
-                }
-            }
-        }
-    }
-
-    print("?", r, c);
-    print(q);
-
-    ll x, y;
-    cin >> x >> y;
-    if (flip) {
-        return {y, x};
-    }
-    else {
-        return {x, y};
-    }
-}
-
-ll find_row(ll row1, ll row2, ll n, bool flip, bool start_backwards) {
-    if (row1 == row2) {
-        return row1;
-    }
-
-    ll half_row = (row1 + row2) / 2;
-
-    ndarray<char> query(n, n);
-
-    rep(i, 0, row1 - 1) {
-        query.set_row(i, '^');
-    }
-    rep(i, half_row + 1, n - 1) {
-        query.set_row(i, 'v');
-    }
-
-    char dir;
-
-    auto run_forward = [&]() -> ll {
-        dir = '>';
-        rep(r, row1, half_row) {
-            query.set_row(r, dir);
-            dir = '>' + '<' - dir;
-        }
-
-        ll c = n - 1;
-        rep(r, row1, half_row - 1) {
-            query(r, c) = 'v';
-            c = n - 1 - c;
-        }
-
-        ll expected_col = (half_row - row1) % 2 ? 0 : n + 1;
-
-        ll x, y;
-        tie(x, y) = ask(row1 + 1, 1, query, flip);
-
-        if (x == n + 1) {
-            return half_row;
-        }
-        if (x == 0) {
-            return row1;
-        }
-
-        if (x == -1 && y == -1) {
-            // Infinite loop, don't start backwards
-            return find_row(row1, half_row, n, flip, false);
-        }
-
-        if (x != half_row + 1 || y != expected_col) {
-            return find_row(row1, half_row, n, flip, start_backwards);
-        }
-
-        return -1; // Don't know
-    };
-
-    // Let's sus out some more, run it backwards
-    auto run_back = [&]() -> ll {
-        dir = '<';
-        rep(r, row1, half_row) {
-            query.set_row(r, dir);
-            dir = '>' + '<' - dir;
-        }
-
-        ll c = n - 1;
-        rep(r, row1 + 1, half_row) {
-            query(r, c) = '^';
-            c = n - 1 - c;
-        }
-
-        ll x, y;
-        tie(x, y) = ask(half_row + 1, (half_row - row1) % 2 == 0 ? n : 1, query, flip);
-
-        if (x != row1 + 1 || y != 0) {
-            return find_row(row1, half_row, n, flip, true);
-        }
-        // Don't know
-        return -1;
-    };
-
-    if (start_backwards) {
-        ll propose = run_back();
-        if (propose >= 0) {
-            return propose;
-        }
-
-        propose = run_forward();
-        if (propose >= 0) {
-            return propose;
-        }
-    }
-    else {
-        ll propose = run_forward();
-        if (propose >= 0) {
-            return propose;
-        }
-
-        propose = run_back();
-        if (propose >= 0) {
-            return propose;
-        }
-    }
-    // Everything seems to be working fine
-    return find_row(half_row + 1, row2, n, flip, start_backwards);
-}
 
 void solve() {
-    ll n; cin >> n;
+    string s1, s2; cin >> s1 >> s2;
+    ll n = s1.size();
+    ll t, q; cin >> t >> q;
 
-    ll row = find_row(0, n - 1, n, false, false);
-    ll col = find_row(0, n - 1, n, true, false);
+    vl unblock_schedule(q, -1);
+    ll ndiff = 0;
 
-    ndarray<char> query(n, n);
-
-    rep(i, 0, row - 1) {
-        query.set_row(i, '^');
-    }
-    rep(i, row + 1, n - 1) {
-        query.set_row(i, 'v');
+    rep(i, 0, n - 1) {
+        ndiff += s1[i] != s2[i];
     }
 
-    rep(i, 0, col - 1) {
-        query.set_col(i, '<');
-    }
-    rep(i, col + 1, n - 1) {
-        query.set_col(i, '>');
-    }
+    rep(qi, 0, q - 1) {
+        // Unblock stuff first
+        if (unblock_schedule[qi] >= 0) {
+            ll idx = unblock_schedule[qi];
+            ndiff += s1[idx] != s2[idx];
+        }
+        ll typ;
+        cin >> typ;
+        if (typ == 1) {
+            ll block_idx; cin >> block_idx;
+            block_idx--;
 
-    query(row, col) = '>';
+            if (qi + t < q) {
+                unblock_schedule[qi + t] = block_idx;
+            }
+            ndiff -= s1[block_idx] != s2[block_idx];
+        }
+        else if (typ == 2) {
+            ll sid1, sid2, idx1, idx2;
+            cin >> sid1 >> idx1 >> sid2 >> idx2;
 
-    print("?", row + 1, col + 1);
-    print(query);
+            idx1--;
+            idx2--;
 
-    ll x, y; cin >> x >> y;
-    row++; col++;
-    if (x == 0) {
-        print("!", row, col, '^');
-    }
-    else if (x == n + 1) {
-        print("!", row, col, 'v');
-    }
-    else if (y == 0) {
-        print("!", row, col, '<');
-    }
-    else if (y == n + 1) {
-        print("!", row, col, '>');
+            if (idx1 == idx2) {
+                if (sid1 == sid2) {
+                    continue;
+                }
+                swap(s1[idx1], s2[idx1]);
+            }
+            else {
+                // Different places
+                ndiff -= s1[idx1] != s2[idx1];
+                ndiff -= s1[idx2] != s2[idx2];
+
+                // Do the swap
+                string& ss1 = sid1 == 1 ? s1 : s2;
+                string& ss2 = sid2 == 1 ? s1 : s2;
+                swap(ss1[idx1], ss2[idx2]);
+
+
+                ndiff += s1[idx1] != s2[idx1];
+                ndiff += s1[idx2] != s2[idx2];
+            }
+        }
+        else if (typ == 3) {
+            print(ndiff == 0 ? "YES" : "NO");
+        }
     }
 }
 
 int main() {
     init();
+    int t; cin >> t;
+    cep(t) {
     solve();
+    }
     return 0;
 }

@@ -87,11 +87,22 @@ namespace nt {
 
         while (exponent > 0) {
             // If the exponent is odd, multiply the result by base
-            if (exponent & 1)
-                result = (result * base) % modulus;
+            if (exponent & 1) {
+                if (modulus > 0) {
+                    result = (result * base) % modulus;
+                }
+                else {
+                    result = result * base;
+                }
+            }
 
             // Square the base and reduce the exponent by half
-            base = (base * base) % modulus;
+            if (modulus > 0) {
+                base = (base * base) % modulus;
+            }
+            else {
+                base = base * base;
+            }
             exponent >>= 1;
         }
 

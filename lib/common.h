@@ -768,3 +768,4 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     }
     return os;
 }
+
