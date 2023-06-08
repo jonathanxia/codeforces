@@ -286,6 +286,7 @@ typedef vector<vector<int>> vvi;
 typedef vector<int> vi;
 
 typedef vector<vector<ll>> vvl;
+typedef vector<vector<string>> vvs;
 typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef pair<ll, ll> pl;
@@ -615,6 +616,17 @@ public:
             }
         }
         return subarray;
+    }
+
+    ndarray<T> transpose() {
+        ndarray<T> output(n_cols, n_rows);
+
+        rep(i, 0, n_rows - 1) {
+            rep(j, 0, n_cols - 1) {
+                output(j, i) = (*this)(i, j);
+            }
+        }
+        return output;
     }
 };
 
