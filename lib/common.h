@@ -109,6 +109,17 @@ namespace vv {
         return result;
     }
 
+    template <typename T, typename S>
+    vector<T> slice(const vector<T>& a, const vector<S> idx) {
+        int n = a.size();
+        int len = idx.size();
+        vector<T> result(len);
+        for (int i = 0; i < len; i++) {
+            result[i] = a[idx[i]];
+        }
+        return result;
+    }
+
     template <typename T>
     bool all(const vector<T>& a) {
         return std::all_of(a.begin(), a.end(), [](bool b){ return b; });
@@ -628,6 +639,16 @@ public:
         }
         return output;
     }
+
+    T sum() {
+        T tot(0);
+        rep(i, 0, n_rows - 1) {
+            rep(j, 0, n_cols - 1) {
+                tot += (*this)(i, j);
+            }
+        }
+        return tot;
+    }
 };
 
 typedef ndarray<ll> llarray;
@@ -688,6 +709,17 @@ void dprint(const T& t, const Args&... args) {
 
 template<typename K, typename V>
 std::ostream& operator<<(std::ostream& os, const unordered_map<K, V, custom_hash>& mp)
+{
+    os << "{ ";
+    for (const auto& p : mp) {
+        os << p.first << ": " << p.second << ", ";
+    }
+    os << "}";
+    return os;
+}
+
+template<typename K, typename V>
+std::ostream& operator<<(std::ostream& os, const map<K, V>& mp)
 {
     os << "{ ";
     for (const auto& p : mp) {
@@ -768,4 +800,3 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     }
     return os;
 }
-

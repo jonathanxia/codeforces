@@ -1,19 +1,27 @@
-// #include<lib/nt.h>
-// #include<lib/segment_tree.h>
 // #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
 #include <cmath>
 
+using namespace std;
+
 //  Definition of the macro.
 #define ass(a, b, x, y) (tie(a, b) = make_tuple(x, y));
 #define ordered(x, y, z) ((x) <= (y) && (y) <= (z))
 
+template <typename T>
+void chkmin(T& lhs, T rhs) {
+	lhs = min(lhs, rhs);
+}
+template <typename T>
+void chkmax(T& lhs, T rhs) {
+	lhs = max(lhs, rhs);
+}
+
 #define to_str to_string
 #define pb push_back
 
-using namespace std;
 
 typedef long long ll;
 
@@ -24,7 +32,7 @@ typedef long long ll;
 #define idep(i, u, d) for(i = u; i >= d; --i)
 #define srep(i, d, u, s) for(ll i = d; i <= u; i += s)
 #define cep(t) while(t--)
-#define foreach(i, c) for(auto i : c)
+#define foreach(i, c) for(auto& i : c)
 
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
@@ -56,8 +64,8 @@ namespace vv {
         return (it != vec.end());
     }
 
-    template <typename T>
-    int indexof(const vector<T>& a, const T& element) {
+    template <typename S, typename T>
+    int indexof(const vector<T>& a, const S& element) {
         for (int i = 0; i < a.size(); ++i) {
             if (a[i] == element) {
                 return i;
@@ -171,8 +179,8 @@ namespace vv {
         }
 
         std::sort(a.begin() + start, a.begin() + end + 1,
-                [&keyFunc](const T& a, const T& b) {
-                    return keyFunc(a) < keyFunc(b);
+                [&keyFunc](const T& x, const T& y) {
+                    return keyFunc(x) < keyFunc(y);
                 });
     }
 
@@ -279,6 +287,7 @@ typedef vector<vector<int>> vvi;
 typedef vector<int> vi;
 
 typedef vector<vector<ll>> vvl;
+typedef vector<vector<string>> vvs;
 typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef pair<ll, ll> pl;
@@ -291,6 +300,16 @@ typedef unordered_map<string, ll, custom_hash> umapstrl;
 typedef unordered_map<ll, string, custom_hash> umaplstr;
 
 typedef unordered_set<ll, custom_hash> uset;
+
+umapll operator+(const umapll& lhs, const umapll& rhs) {
+    umapll result = lhs;
+
+    for (const auto& pair : rhs) {
+        result[pair.first] += pair.second;
+    }
+
+    return result;
+}
 
 // List manipulation
 typedef priority_queue<ll, vl, greater<ll>> minheap;
@@ -435,11 +454,33 @@ namespace mset {
 
     template <typename T>
     T min(multiset<T>& ss) {
+        if (ss.empty()) {
+            throw out_of_range("Empty set min");
+        }
         return *(ss.begin());
     }
 
     template <typename T>
     T max(multiset<T>& ss) {
+        if (ss.empty()) {
+            throw out_of_range("Empty set max");
+        }
+        return *(ss.rbegin());
+    }
+
+    template <typename T>
+    T min(set<T>& ss) {
+        if (ss.empty()) {
+            throw out_of_range("Empty set min");
+        }
+        return *(ss.begin());
+    }
+
+    template <typename T>
+    T max(set<T>& ss) {
+        if (ss.empty()) {
+            throw out_of_range("Empty set max");
+        }
         return *(ss.rbegin());
     }
 }
@@ -506,21 +547,39 @@ public:
     }
 
     void fill(const T& value, int istart, int iend, int jstart, int jend) {
-        for (int i = istart; i < iend; i++)
+        for (int i = istart; i <= iend; i++)
         {
-            for (int j = jstart; j < jend; j++)
+            for (int j = jstart; j <= jend; j++)
             {
                 (*this)(i, j) = value;
             }
         }
     }
 
-    vector<T> get_row(int row, int cstart=0, int cend=-1) {
+    void set_row(int row, const vector<T>& ret, int cstart=0, int cend=-1) {
         if (cend == -1) {
             cend = n_cols;
         }
-        vector<T> ret(cend - cstart);
         rep(i, cstart, cend - 1) {
+            (*this)(row, i) = ret[i - cstart];
+        }
+    }
+
+    void set_row(int row, const T& ret, int cstart=0, int cend=-1) {
+        if (cend == -1) {
+            cend = n_cols;
+        }
+        rep(i, cstart, cend - 1) {
+            (*this)(row, i) = ret;
+        }
+    }
+
+    vector<T> get_row(int row, int cstart=0, int cend=-1) {
+        if (cend == -1) {
+            cend = n_cols - 1;
+        }
+        vector<T> ret(cend - cstart + 1);
+        rep(i, cstart, cend) {
             ret[i - cstart] = (*this)(row, i);
         }
         return ret;
@@ -528,25 +587,47 @@ public:
 
     vector<T> get_col(int col, int rstart=0, int rend=-1) {
         if (rend == -1) {
-            rend = n_rows;
+            rend = n_rows - 1;
         }
-        vector<T> ret(rend - rstart);
-        rep(i, rstart, rend - 1) {
+        vector<T> ret(rend - rstart + 1);
+        rep(i, rstart, rend) {
             ret[i - rstart] = (*this)(i, col);
         }
         return ret;
     }
 
+    void set_col(int col, const T& ret, int rstart=0, int rend=-1) {
+        if (rend == -1) {
+            rend = n_rows;
+        }
+        rep(i, rstart, rend - 1) {
+            (*this)(i, col) = ret;
+        }
+    }
+
+
+
     ndarray<T> slice(int istart, int iend, int jstart, int jend) {
         ndarray<T> subarray(iend - istart, jend - jstart);
-        for (int i = istart; i < iend; i++)
+        for (int i = istart; i <= iend; i++)
         {
-            for (int j = jstart; j < jend; j++)
+            for (int j = jstart; j <= jend; j++)
             {
                 subarray(i - istart, j - jstart) = (*this)(i, j);
             }
         }
         return subarray;
+    }
+
+    ndarray<T> transpose() {
+        ndarray<T> output(n_cols, n_rows);
+
+        rep(i, 0, n_rows - 1) {
+            rep(j, 0, n_cols - 1) {
+                output(j, i) = (*this)(i, j);
+            }
+        }
+        return output;
     }
 };
 
@@ -689,327 +770,148 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
-// Number Theory
-namespace nt {
-    vl primes;
-    vl isnotprime;
-    bool sieve_done = false;
+typedef long long ll;
+typedef long double ld;
+typedef complex<ld> cd;
 
-    void do_sieve(ll max_prime) {
-        isnotprime.resize(max_prime + 1);
-        rep(d, 2, max_prime) {
-            if (!isnotprime[d]) {
-                primes.push_back(d);
+typedef pair<int, int> pi;
+typedef pair<ll,ll> pl;
+typedef pair<ld,ld> pd;
 
-                int x = 2 * d;
-                while (x <= max_prime) {
-                    isnotprime[x] = true;
-                    x += d;
+typedef vector<int> vi;
+typedef vector<ld> vd;
+typedef vector<ll> vl;
+typedef vector<pi> vpi;
+typedef vector<pl> vpl;
+typedef vector<cd> vcd;
+
+template<class T> using pq = priority_queue<T>;
+template<class T> using pqg = priority_queue<T, vector<T>, greater<T>>;
+
+#define FOR(i, a, b) for (int i=a; i<(b); i++)
+#define F0R(i, a) for (int i=0; i<(a); i++)
+#define FORd(i,a,b) for (int i = (b)-1; i >= a; i--)
+#define F0Rd(i,a) for (int i = (a)-1; i >= 0; i--)
+#define trav(a,x) for (auto& a : x)
+#define uid(a, b) uniform_int_distribution<int>(a, b)(rng)
+
+#define sz(x) (int)(x).size()
+#define mp make_pair
+#define pb push_back
+#define f first
+#define s second
+#define lb lower_bound
+#define ub upper_bound
+#define all(x) x.begin(), x.end()
+#define ins insert
+
+template<class T> bool ckmin(T& a, const T& b) { return b < a ? a = b, 1 : 0; }
+template<class T> bool ckmax(T& a, const T& b) { return a < b ? a = b, 1 : 0; }
+
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+void __print(int x) {cerr << x;}
+void __print(long x) {cerr << x;}
+void __print(long long x) {cerr << x;}
+void __print(unsigned x) {cerr << x;}
+void __print(unsigned long x) {cerr << x;}
+void __print(unsigned long long x) {cerr << x;}
+void __print(float x) {cerr << x;}
+void __print(double x) {cerr << x;}
+void __print(long double x) {cerr << x;}
+void __print(char x) {cerr << '\'' << x << '\'';}
+void __print(const char *x) {cerr << '\"' << x << '\"';}
+void __print(const string &x) {cerr << '\"' << x << '\"';}
+void __print(bool x) {cerr << (x ? "true" : "false");}
+
+template<typename T, typename V>
+void __print(const pair<T, V> &x) {cerr << '{'; __print(x.first); cerr << ", "; __print(x.second); cerr << '}';}
+template<typename T>
+void __print(const T &x) {int f = 0; cerr << '{'; for (auto &i: x) cerr << (f++ ? ", " : ""), __print(i); cerr << "}";}
+void _print() {cerr << "]\n";}
+template <typename T, typename... V>
+void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v...);}
+#ifdef DEBUG
+#define dbg(x...) cerr << "\e[91m"<<__func__<<":"<<__LINE__<<" [" << #x << "] = ["; _print(x); cerr << "\e[39m" << endl;
+#else
+#define dbg(x...)
+#endif
+
+
+const int MOD = 1000000007;
+const char nl = '\n';
+const int MX = 100001;
+
+void solve() {
+    int N, M; cin >> N >> M;
+    bool vis[N+1][M+1]; F0R(i, N+1) F0R(j, M+1) vis[i][j] = false;
+    vis[0][0] = true;
+    int K; cin >> K;
+    vector<pair<int, pi>> vals(K);
+    F0R(i, K) cin >> vals[i].f >> vals[i].s.s >> vals[i].s.f;
+    sort(all(vals));
+    int p = 0;
+    FOR(t, 1, MOD) {
+        bool ok = false;
+        F0Rd(i, N+1) {
+            F0Rd(j, M+1) {
+                if (!vis[i][j]) continue;
+                ok = true;
+                if (i < N) vis[i+1][j] = true;
+                if (j < M) vis[i][j+1] = true;
+            }
+        }
+        print("POPULATED on time", t);
+        rep(i, 0, N) {
+            rep(j, 0, M) {
+                cout << vis[i][j] << " ";
+            }
+            cout << endl;
+        }
+        if (!ok) {
+            _print("Died on time ", t);
+            break;
+        }
+        while (p < K && vals[p].f == t) {
+            int c = vals[p].s.f;
+            if (vals[p].s.s == 1) {
+                F0R(i, M+1) {
+                    vis[c][i] = false;
+                }
+            } else {
+                F0R(i, N+1) {
+                    vis[i][c] = false;
                 }
             }
+            p++;
         }
-        sieve_done = true;
-    }
-
-    ll sum_digits(ll n, ll b) {
-        int sum = 0;
-        while (n > 0) {
-            sum += n % b;
-            n /= b;
-        }
-        return sum;
-    }
-
-    vl get_digits(ll n, ll b) {
-        vl ans;
-        while (n > 0) {
-            ans.push_back(n % b);
-            n /= b;
-        }
-
-        return ans;
-    }
-
-    ll digits_to_num(vl& digs, ll b) {
-        ll s = 0;
-        dep(i, digs.size() - 1, 0) {
-            s *= b;
-            s += digs[i];
-        }
-        return s;
-    }
-
-    ll mod(ll a, ll p) {
-        return (a % p + p) % p;
-    }
-
-    ll M = pow(10, 9) + 7;
-    // ll M = 998244353LL;
-    ll mod(ll a) {
-        return mod(a, M);
-    }
-
-    // Function to calculate (base^exponent) % modulus using repeated squaring
-    ll pow(ll base, ll exponent, ll modulus=M) {
-        ll result = 1;
-
-        while (exponent > 0) {
-            // If the exponent is odd, multiply the result by base
-            if (exponent & 1)
-                result = (result * base) % modulus;
-
-            // Square the base and reduce the exponent by half
-            base = (base * base) % modulus;
-            exponent >>= 1;
-        }
-
-        return result;
-    }
-
-    ll inv(ll x, ll y) {
-        ll p = y;
-
-        ll ax = 1;
-        ll ay = 0;
-        while (x > 0) {
-            ll q = y / x;
-            tie(ax, ay) = make_tuple(ay - q * ax, ax);
-            tie(x, y) = make_tuple(y % x, x);
-        }
-
-        return mod(ay, p);
-    }
-
-    ll mdiv(ll x, ll y) {
-        x = mod(x);
-        y = mod(y);
-        return mod(x * inv(y, M), M);
-    }
-
-    ll v_p(ll x, ll p) {
-        ll res = 0;
-        while (x % p == 0) {
-            ++res;
-            x /= p;
-        }
-        return res;
-    }
-
-    ll factorial(ll x) {
-        ll p = 1;
-        rep(i, 1, x) {
-            p *= i;
-            p = mod(p);
-        }
-        return p;
-    }
-
-    bool is_pow_of_2(ll n) {
-        return (n > 0) && ((n & (n - 1)) == 0);
-    }
-
-    ll phi(ll n) {
-        ll result = n;
-        if (!sieve_done) {
-            throw out_of_range("Sieve not done, please run do_sieve");
-        }
-
-        for (ll prime : primes) {
-            if (prime * prime > n)
-                break;
-            if (n % prime == 0) {
-                while (n % prime == 0) {
-                    n /= prime;
-                }
-                result -= result / prime;
+        print("ZAP on time", t);
+        rep(i, 0, N) {
+            rep(j, 0, M) {
+                cout << vis[i][j] << " ";
             }
+            cout << endl;
         }
 
-        if (n > 1) {
-            result -= result / n;
+        if (vis[N][M]) {
+            cout << t << nl; return;
         }
-
-        return result;
     }
+    cout << -1 << nl; return;
 
-    ll num_divisors(ll n) {
-        ll divisors = 1;
 
-        for (ll prime : primes) {
-            if (prime * prime > n)
-                break;
-
-            ll count = 0;
-            while (n % prime == 0) {
-                n /= prime;
-                count++;
-            }
-
-            divisors *= (count + 1);
-        }
-
-        if (n > 1) {
-            divisors *= 2;
-        }
-
-        return divisors;
-    }
-
-    ll sum_divisors(ll n) {
-        ll sum = 1;
-
-        for (ll prime : primes) {
-            if (prime * prime > n)
-                break;
-
-            if (n % prime == 0) {
-                ll factorSum = 1;
-                ll power = 1;
-                while (n % prime == 0) {
-                    n /= prime;
-                    power *= prime;
-                    factorSum += power;
-                }
-                sum *= factorSum;
-            }
-        }
-
-        if (n > 1) {
-            sum *= (n + 1);
-        }
-
-        return sum;
-    }
-
-    umapll primeFactorization(ll n) {
-        umapll factors;
-
-        for (ll prime : primes) {
-            if (prime * prime > n)
-                break;
-
-            ll exponent = 0;
-            while (n % prime == 0) {
-                n /= prime;
-                exponent++;
-            }
-
-            if (exponent > 0) {
-                factors[prime] = exponent;
-            }
-        }
-
-        if (n > 1) {
-            factors[n] = 1;
-        }
-
-        return factors;
-    }
 }
-
-namespace combo {
-    ll choose(ll n, ll k, ll m=-1) {
-        ll p = 1;
-        rep(i, 1, k) {
-            p = p * (n - k + i) / i;
-            if (m > 0) {
-                p = nt::mod(p, m);
-            }
-        }
-        return p;
-    }
-
-    vl precompute_choose(ll n1, ll n2, ll k, ll m=-1) {
-        vl result(n2 - n1 + 1);
-        ll idx = max(k - n1, 0LL);
-        if (idx > n2 - n1) {
-            return result;
-        }
-        if (n1 + idx == k) {
-            result[idx] = 1;
-        }
-        else {
-            result[idx] = choose(n1 + idx, k, m);
-        }
-        rep(i, idx + 1, n2 - n1) {
-            result[i] = result[i - 1] * (n1 + i) / (n1 + i - k);
-            if (m > 0) {
-                result[i] %= m;
-            }
-        }
-        return result;
-    }
-}
-
-class SegmentTree {
-public:
-    struct node
-    {
-        ll mx;
-        node() { mx = -1e9; }
-        node(ll val) { mx = val; }
-    };
-
-    node temp;
-
-    // MODIFY ME!
-    node merge(node l, node r)
-    {
-        temp.mx = max(l.mx, r.mx);
-        return temp;
-    }
-
-    ll n;
-    vector<node> t;
-
-    SegmentTree(ll sz) : t(2 * sz)
-    {
-        n = sz;
-        rep(i, 0, n - 1) t[i + n] = node();
-        dep(i, n - 1, 1) {
-            t[i] = merge(t[i << 1], t[i << 1 | 1]);
-        }
-    }
-
-    template<typename T>
-    SegmentTree(const vector<T> a) : t(2 * a.size()) {
-        n = a.size();
-        rep(i, 0, n - 1) t[i + n] = node(a[i]);
-        dep(i, n - 1, 1) {
-            t[i] = merge(t[i << 1], t[i << 1 | 1]);
-        }
-    }
-
-    void modify(ll p, const node& value)
-    {
-        for(t[p += n] = value; p >>= 1; )
-            t[p] = merge(t[p << 1], t[p << 1 | 1]);
-    }
-
-    node query(ll l, ll r)
-    {
-        node resl, resr;
-        r++;
-        for(l += n, r += n; l < r; l >>= 1, r >>= 1)
-        {
-            if(l & 1) resl = merge(resl, t[l++]);
-            if(r & 1) resr = merge(t[--r], resr);
-        }
-
-        return merge(resl, resr);
-    }
-};
-
-// int main() {
-//     vl a{1, 3, 4, 2, 5, 2};
-//     SegmentTree segtree(a);
-//     print("max(2, 4)=", segtree.query(2, 4).mx);
-//     segtree.modify(4, 3);
-//     print("max(2, 4)=", segtree.query(2, 4).mx);
-//     print("max(0, 0)=", segtree.query(0, 0).mx);
-//     return 0;
-// }
 
 int main() {
-    return 0;
+    ios_base::sync_with_stdio(0); cin.tie(0);
+
+    int T = 1;
+    cin >> T;
+    while(T--) {
+        solve();
+    }
+
+	return 0;
 }
+
+

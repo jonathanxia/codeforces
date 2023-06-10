@@ -110,6 +110,17 @@ namespace vv {
         return result;
     }
 
+    template <typename T, typename S>
+    vector<T> slice(const vector<T>& a, const vector<S> idx) {
+        int n = a.size();
+        int len = idx.size();
+        vector<T> result(len);
+        for (int i = 0; i < len; i++) {
+            result[i] = a[idx[i]];
+        }
+        return result;
+    }
+
     template <typename T>
     bool all(const vector<T>& a) {
         return std::all_of(a.begin(), a.end(), [](bool b){ return b; });
@@ -629,6 +640,16 @@ public:
         }
         return output;
     }
+
+    T sum() {
+        T tot(0);
+        rep(i, 0, n_rows - 1) {
+            rep(j, 0, n_cols - 1) {
+                tot += (*this)(i, j);
+            }
+        }
+        return tot;
+    }
 };
 
 typedef ndarray<ll> llarray;
@@ -689,6 +710,17 @@ void dprint(const T& t, const Args&... args) {
 
 template<typename K, typename V>
 std::ostream& operator<<(std::ostream& os, const unordered_map<K, V, custom_hash>& mp)
+{
+    os << "{ ";
+    for (const auto& p : mp) {
+        os << p.first << ": " << p.second << ", ";
+    }
+    os << "}";
+    return os;
+}
+
+template<typename K, typename V>
+std::ostream& operator<<(std::ostream& os, const map<K, V>& mp)
 {
     os << "{ ";
     for (const auto& p : mp) {
@@ -771,74 +803,103 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 }
 
 
-void solve() {
-    string s1, s2; cin >> s1 >> s2;
-    ll n = s1.size();
-    ll t, q; cin >> t >> q;
+void solve(ll g) {
+    ll n, m; cin >> n >> m;
+    ll r; cin >> r;
 
-    vl unblock_schedule(q, -1);
-    ll ndiff = 0;
 
-    rep(i, 0, n - 1) {
-        ndiff += s1[i] != s2[i];
+    llarray grid(n + 1, m + 1);
+    grid.fill(0);
+
+    grid(0, 0) = 1;
+
+    map<ll, vl> dirs;
+    map<ll, vl> coords;
+    rep(i, 0, r - 1) {
+        ll t, d, c; cin >> t >> d >> c;
+        dirs[t].pb(d);
+        coords[t].pb(c);
     }
 
-    rep(qi, 0, q - 1) {
-        // Unblock stuff first
-        if (unblock_schedule[qi] >= 0) {
-            ll idx = unblock_schedule[qi];
-            ndiff += s1[idx] != s2[idx];
-        }
-        ll typ;
-        cin >> typ;
-        if (typ == 1) {
-            ll block_idx; cin >> block_idx;
-            block_idx--;
 
-            if (qi + t < q) {
-                unblock_schedule[qi + t] = block_idx;
+    ll clock = 0;
+    dprint("grid=");
+    dprint(grid);
+    foreach(p, dirs) {
+        ll time = p.first;
+
+        // Can you win in time before the
+        // next buzz?
+        ll best_time = INT_MAX;
+        rep(i, 0, n) {
+            rep(j, 0, m) {
+                if (grid(i, j) && n - i + m - j < time - clock) {
+                    chkmin(best_time, n - i + m - j + clock);
+                }
             }
-            ndiff -= s1[block_idx] != s2[block_idx];
         }
-        else if (typ == 2) {
-            ll sid1, sid2, idx1, idx2;
-            cin >> sid1 >> idx1 >> sid2 >> idx2;
+        if (best_time < INT_MAX) {
+            print(best_time);
+            return;
+        }
 
-            idx1--;
-            idx2--;
-
-            if (idx1 == idx2) {
-                if (sid1 == sid2) {
+        ll dist = time - clock;
+        llarray old_grid(grid);
+        rep(i, 0, n) {
+            rep(j, 0, m) {
+                if (!old_grid(i, j)) {
                     continue;
                 }
-                swap(s1[idx1], s2[idx1]);
-            }
-            else {
-                // Different places
-                ndiff -= s1[idx1] != s2[idx1];
-                ndiff -= s1[idx2] != s2[idx2];
-
-                // Do the swap
-                string& ss1 = sid1 == 1 ? s1 : s2;
-                string& ss2 = sid2 == 1 ? s1 : s2;
-                swap(ss1[idx1], ss2[idx2]);
-
-
-                ndiff += s1[idx1] != s2[idx1];
-                ndiff += s1[idx2] != s2[idx2];
+                rep(x, i, min(i + dist, n)) {
+                    rep(y, j, min(j + dist - abs(x - i), m)) {
+                        grid(x, y) = 1;
+                    }
+                }
             }
         }
-        else if (typ == 3) {
-            print(ndiff == 0 ? "YES" : "NO");
+
+        dprint("Populated");
+        dprint("grid=");
+        dprint(grid);
+        // ZAP!
+        rep(ci, 0, p.second.size() - 1) {
+            if (dirs[time][ci] == 1) {
+                grid.set_row(coords[time][ci], 0);
+            }
+
+            if (dirs[time][ci] == 2) {
+                grid.set_col(coords[time][ci], 0);
+            }
+        }
+        dprint("ZAP on time", time);
+        dprint("grid=");
+        dprint(grid);
+
+        // Did we go extinct?
+        if (grid.sum() == 0) {
+            print(-1);
+            return;
+        }
+        clock = time;
+    }
+    // If we are still alive and survived all extinction
+    // events, then we can make it to the end
+    ll best_time = INT_MAX;
+    rep(i, 0, n) {
+        rep(j, 0, m) {
+            if (grid(i, j)) {
+                chkmin(best_time, n - i + m - j + clock);
+            }
         }
     }
+    print(best_time);
 }
 
 int main() {
     init();
     int t; cin >> t;
-    cep(t) {
-    solve();
+    rep(i, 1, t) {
+        solve(i);
     }
     return 0;
 }
