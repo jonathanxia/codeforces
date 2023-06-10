@@ -314,7 +314,12 @@ typedef unordered_map<ll, vl, custom_hash> umaplvl;
 typedef unordered_map<string, ll, custom_hash> umapstrl;
 typedef unordered_map<ll, string, custom_hash> umaplstr;
 
-typedef unordered_set<ll, custom_hash> uset;
+template <typename K, typename V>
+using umap = unordered_map<K, V, custom_hash>;
+
+typedef unordered_set<ll, custom_hash> usetl;
+template <typename K>
+using uset = unordered_set<K, custom_hash>;
 
 umapll operator+(const umapll& lhs, const umapll& rhs) {
     umapll result = lhs;
@@ -324,6 +329,21 @@ umapll operator+(const umapll& lhs, const umapll& rhs) {
     }
 
     return result;
+}
+
+template <typename Key, typename Value>
+Value mget(const std::unordered_map<Key, Value, custom_hash>& map, const Key& key) {
+    auto it = map.find(key);
+    if (it != map.end()) {
+        return it->second;
+    }
+    return Value{}; // Default-constructed value
+}
+
+template <typename K, typename V>
+void initmap(umap<K, V>& counts) {
+    counts.reserve(250000);
+    counts.max_load_factor(0.25);
 }
 
 // List manipulation

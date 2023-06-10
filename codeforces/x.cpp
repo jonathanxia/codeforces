@@ -315,7 +315,12 @@ typedef unordered_map<ll, vl, custom_hash> umaplvl;
 typedef unordered_map<string, ll, custom_hash> umapstrl;
 typedef unordered_map<ll, string, custom_hash> umaplstr;
 
-typedef unordered_set<ll, custom_hash> uset;
+template <typename K, typename V>
+using umap = unordered_map<K, V, custom_hash>;
+
+typedef unordered_set<ll, custom_hash> usetl;
+template <typename K>
+using uset = unordered_set<K, custom_hash>;
 
 umapll operator+(const umapll& lhs, const umapll& rhs) {
     umapll result = lhs;
@@ -325,6 +330,21 @@ umapll operator+(const umapll& lhs, const umapll& rhs) {
     }
 
     return result;
+}
+
+template <typename Key, typename Value>
+Value mget(const std::unordered_map<Key, Value, custom_hash>& map, const Key& key) {
+    auto it = map.find(key);
+    if (it != map.end()) {
+        return it->second;
+    }
+    return Value{}; // Default-constructed value
+}
+
+template <typename K, typename V>
+void initmap(umap<K, V>& counts) {
+    counts.reserve(250000);
+    counts.max_load_factor(0.25);
 }
 
 // List manipulation
@@ -807,44 +827,65 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
+const ll MX = 1000000;
+
 void solve() {
     ll n; cin >> n;
+    vl a(n);
+    vl b(n);
+    inp::array(a, n);
+    inp::array(b, n);
+    const ll K = smallest_st(x, x * x >= 2 * n, 0, MX);
 
-    vvpl graph(n);
-    rep(i, 0, n - 2) {
-        ll u, v; cin >> u >> v;
-        u--; v--;
-        graph[u].pb({v, i});
-        graph[v].pb({u, i});
+    vvi counts(K + 1, vi(n + 1));
+
+    rep(i, 0, n - 1) {
+        if (a[i] <= K) {
+            counts[a[i]][b[i]]++;
+        }
     }
 
-    vl time_drawn(n); // What time is vertex v drawn
-    time_drawn[0] = 0;
-
-    auto dfs = [&](auto&& self, ll node, ll parent, ll e0) -> void {
-        foreachp(child, edge, graph[node]) {
-            if (child == parent) {
-                continue;
+    ll ans = 0;
+    // Count how many such that a[i] = a[j]
+    rep(ai, 1, K) {
+        vi dd = counts[ai];
+        rep(bi, 1, n) {
+            ll num = dd[bi];
+            ll bj = ai * ai - bi;
+            if (bj == bi) {
+                ans += num * (num - 1) / 2;
             }
-            // Child is drawn if the e0 is smaller than
-            // e
-            if (edge > e0) {
-                time_drawn[child] = time_drawn[node];
+            else if (ordered(bi + 1, bj, n)) {
+                ans += num * counts[ai][bj];
             }
-            else {
-                time_drawn[child] = time_drawn[node] + 1;
-            }
-
-            self(self, child, node, edge);
         }
-    };
+    }
+    dprint("Counting distinct");
 
-    dfs(dfs, 0, -1, INT_MAX);
+    rep(i, 0, n - 1) {
+        // Something smaller than a[i]
+        rep(aj, 1, K) {
+            if (aj >= a[i]) {
+                break;
+            }
+            if (aj * a[i] > 2 * n) {
+                break;
+            }
 
-    print(vv::max(time_drawn));
+            ll bj = aj * a[i] - b[i];
+            if (bj > n) {
+                break;
+            }
+            if (ordered(1, bj, n)) {
+                ans += counts[aj][bj];
+            }
+        }
+    }
+
+    print(ans);
 }
 
-int main() {
+int32_t main() {
     init();
     int t; cin >> t;
     cep(t) {
