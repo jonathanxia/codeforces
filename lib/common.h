@@ -32,6 +32,7 @@ typedef long long ll;
 #define srep(i, d, u, s) for(ll i = d; i <= u; i += s)
 #define cep(t) while(t--)
 #define foreach(i, c) for(auto& i : c)
+#define foreachp(k, v, c) for (auto& [k, v] : c)
 
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {

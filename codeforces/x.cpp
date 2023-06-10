@@ -33,6 +33,7 @@ typedef long long ll;
 #define srep(i, d, u, s) for(ll i = d; i <= u; i += s)
 #define cep(t) while(t--)
 #define foreach(i, c) for(auto& i : c)
+#define foreachp(k, v, c) for (auto& [k, v] : c)
 
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
@@ -806,68 +807,48 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
-ll K = 320;
-ll K2 = 1000 - 2 * K;
-
 void solve() {
-    ll x; cin >> x;
+    ll n; cin >> n;
 
-    vl a(K);
-    a[0] = x;
+    vvpl graph(n);
+    rep(i, 0, n - 2) {
+        ll u, v; cin >> u >> v;
+        u--; v--;
+        graph[u].pb({v, i});
+        graph[v].pb({u, i});
+    }
 
-    rep(i, 1, K - 1) {
-        print("+ 1");
-        cin >> a[i];
-        if (a[i] == a[0]) {
-            print("!", i); return;
-        }
-    }
-    ll ptr = K - 1;
+    vl time_drawn(n); // What time is vertex v drawn
+    time_drawn[0] = 0;
 
-    // Sample random numbers
-    ll highest = 0;
-    rep(i, 0, K2 - 1) {
-        ll nxt = uid(0, pow(10, 6));
-        while (nxt == ptr) {
-            nxt = uid(0, pow(10, 6));
-        }
-        if (nxt > ptr) {
-            print("+", nxt - ptr);
-        }
-        else {
-            print("-", ptr - nxt);
-        }
-        cin >> x;
-        chkmax(highest, x);
-        ptr = nxt;
-    }
-    
-    // Move the pointer to the highest now
-    if (highest > ptr) {
-        print("+", highest - ptr);
-        cin >> x;
-    }
-    else if (highest < ptr) {
-        print("-", ptr - highest);
-        cin >> x;
-    }
-    ptr = highest;
-    // Just gotta go every K now
-    while (true) {
-        int idx = vv::indexof(a, x);
-        if (idx >= 0) {
-            print("!", ptr - idx);
-            return;
-        }
+    auto dfs = [&](auto&& self, ll node, ll parent, ll e0) -> void {
+        foreachp(child, edge, graph[node]) {
+            if (child == parent) {
+                continue;
+            }
+            // Child is drawn if the e0 is smaller than
+            // e
+            if (edge > e0) {
+                time_drawn[child] = time_drawn[node];
+            }
+            else {
+                time_drawn[child] = time_drawn[node] + 1;
+            }
 
-        ptr += K;
-        print("+", K);
-        cin >> x;
-    }
+            self(self, child, node, edge);
+        }
+    };
+
+    dfs(dfs, 0, -1, INT_MAX);
+
+    print(vv::max(time_drawn));
 }
 
 int main() {
     init();
-    solve();
+    int t; cin >> t;
+    cep(t) {
+        solve();
+    }
     return 0;
 }
