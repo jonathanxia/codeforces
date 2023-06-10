@@ -49,6 +49,10 @@ struct custom_hash {
     }
 };
 
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+#define uid(a, b) uniform_int_distribution<ll>(a, b)(rng)
+
 template <typename T>
 struct Identity {
     constexpr const T& operator()(const T& value) const {
@@ -802,104 +806,68 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
+ll K = 320;
+ll K2 = 1000 - 2 * K;
 
-void solve(ll g) {
-    ll n, m; cin >> n >> m;
-    ll r; cin >> r;
+void solve() {
+    ll x; cin >> x;
 
+    vl a(K);
+    a[0] = x;
 
-    llarray grid(n + 1, m + 1);
-    grid.fill(0);
-
-    grid(0, 0) = 1;
-
-    map<ll, vl> dirs;
-    map<ll, vl> coords;
-    rep(i, 0, r - 1) {
-        ll t, d, c; cin >> t >> d >> c;
-        dirs[t].pb(d);
-        coords[t].pb(c);
-    }
-
-
-    ll clock = 0;
-    dprint("grid=");
-    dprint(grid);
-    foreach(p, dirs) {
-        ll time = p.first;
-
-        // Can you win in time before the
-        // next buzz?
-        ll best_time = INT_MAX;
-        rep(i, 0, n) {
-            rep(j, 0, m) {
-                if (grid(i, j) && n - i + m - j < time - clock) {
-                    chkmin(best_time, n - i + m - j + clock);
-                }
-            }
+    rep(i, 1, K - 1) {
+        print("+ 1");
+        cin >> a[i];
+        if (a[i] == a[0]) {
+            print("!", i); return;
         }
-        if (best_time < INT_MAX) {
-            print(best_time);
+    }
+    ll ptr = K - 1;
+
+    // Sample random numbers
+    ll highest = 0;
+    rep(i, 0, K2 - 1) {
+        ll nxt = uid(0, pow(10, 6));
+        while (nxt == ptr) {
+            nxt = uid(0, pow(10, 6));
+        }
+        if (nxt > ptr) {
+            print("+", nxt - ptr);
+        }
+        else {
+            print("-", ptr - nxt);
+        }
+        cin >> x;
+        chkmax(highest, x);
+        ptr = nxt;
+    }
+    
+    // Move the pointer to the highest now
+    if (highest > ptr) {
+        print("+", highest - ptr);
+        cin >> x;
+    }
+    else if (highest < ptr) {
+        print("-", ptr - highest);
+        cin >> x;
+    }
+    ptr = highest;
+    // Just gotta go every K now
+    while (true) {
+        int idx = vv::indexof(a, x);
+        if (idx >= 0) {
+            print("!", ptr - idx);
             return;
         }
 
-        ll dist = time - clock;
-        llarray old_grid(grid);
-        rep(i, 0, n) {
-            rep(j, 0, m) {
-                if (!old_grid(i, j)) {
-                    continue;
-                }
-                rep(x, i, min(i + dist, n)) {
-                    rep(y, j, min(j + dist - abs(x - i), m)) {
-                        grid(x, y) = 1;
-                    }
-                }
-            }
-        }
-
-        dprint("Populated");
-        dprint("grid=");
-        dprint(grid);
-        // ZAP!
-        rep(ci, 0, p.second.size() - 1) {
-            if (dirs[time][ci] == 1) {
-                grid.set_row(coords[time][ci], 0);
-            }
-
-            if (dirs[time][ci] == 2) {
-                grid.set_col(coords[time][ci], 0);
-            }
-        }
-        dprint("ZAP on time", time);
-        dprint("grid=");
-        dprint(grid);
-
-        // Did we go extinct?
-        if (grid.sum() == 0) {
-            print(-1);
-            return;
-        }
-        clock = time;
+        ptr += K;
+        print("+", K);
+        cin >> x;
     }
-    // If we are still alive and survived all extinction
-    // events, then we can make it to the end
-    ll best_time = INT_MAX;
-    rep(i, 0, n) {
-        rep(j, 0, m) {
-            if (grid(i, j)) {
-                chkmin(best_time, n - i + m - j + clock);
-            }
-        }
-    }
-    print(best_time);
 }
 
 int main() {
     init();
-    int t; cin >> t;
-    rep(i, 1, t) {
-        solve(i);
-    }
+    solve();
     return 0;
 }

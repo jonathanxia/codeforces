@@ -48,6 +48,10 @@ struct custom_hash {
     }
 };
 
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+#define uid(a, b) uniform_int_distribution<ll>(a, b)(rng)
+
 template <typename T>
 struct Identity {
     constexpr const T& operator()(const T& value) const {

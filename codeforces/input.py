@@ -1,16 +1,19 @@
+# %%
 import numpy as np
-n, m = 3, 9
-r = 100
+import matplotlib.pyplot as plt
+n = 10 ** 6
+print(n)
+# %%
+d = np.arange(1, 10 ** 5)
 
-T = 5
+x = 1 - (d / n)
+plt.plot(d, x ** (1000 - 2 * np.sqrt(d)))
+# %%
+1000 - 2 * np.sqrt(1000)
+# %%
+k = 320
+d = ((1000 - k) / 2) ** 2
 
-print(1)
-print(n, m)
-print(r)
-
-for i in range(r):
-    d = np.random.randint(1, 3)
-    if d == 1:
-        print(np.random.randint(1, T), d, np.random.randint(1, n + 1))
-    if d == 2:
-        print(np.random.randint(1, T), d, np.random.randint(1, m + 1))
+print((1 - d / n) ** k)
+print("d=", d)
+# %%
