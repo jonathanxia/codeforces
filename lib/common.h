@@ -215,10 +215,13 @@ namespace vv {
     }
 
     template <typename T>
-    int argmax(const vector<T>& a) {
-        T best = a[0];
-        int best_idx = 0;
-        rep(i, 0, a.size() - 1) {
+    int argmax(const vector<T>& a, ll start=0, ll end=-1) {
+        if (end == -1) {
+            end = a.size() - 1;
+        }
+        T best = a[start];
+        int best_idx = start;
+        rep(i, start, end) {
             if (a[i] > best) {
                 best_idx = i;
                 best = a[i];
@@ -228,10 +231,13 @@ namespace vv {
     }
 
     template <typename T>
-    int argmin(const vector<T>& a) {
-        T best = a[0];
-        int best_idx = 0;
-        rep(i, 0, a.size() - 1) {
+    int argmin(const vector<T>& a, ll start=0, ll end=-1) {
+        T best = a[start];
+        int best_idx = start;
+        if (end == -1) {
+            end = a.size() - 1;
+        }
+        rep(i, start, end) {
             if (a[i] < best) {
                 best_idx = i;
                 best = a[i];

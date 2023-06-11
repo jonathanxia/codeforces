@@ -126,6 +126,9 @@ namespace nt {
     }
 
     ll mdiv(ll x, ll y, ll m=MOD) {
+        if (m <= 0) {
+            return x / y;
+        }
         x = mod(x);
         y = mod(y);
         return mod(x * inv(y, m), m);
