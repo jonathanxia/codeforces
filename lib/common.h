@@ -21,7 +21,6 @@ void chkmax(T& lhs, T rhs) {
 #define to_str to_string
 #define pb push_back
 
-
 typedef long long ll;
 
 // Looping

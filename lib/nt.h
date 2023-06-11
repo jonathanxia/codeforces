@@ -1,6 +1,5 @@
 #include <lib/common.h>
 
-// Number Theory
 namespace nt {
     vl primes;
     vl isnotprime;
@@ -72,17 +71,20 @@ namespace nt {
     }
 
     ll mod(ll a, ll p) {
-        return (a % p + p) % p;
+        if (p > 0) {
+            return (a % p + p) % p;
+        }
+        return a;
     }
 
-    ll M = std::pow(10, 9) + 7;
-    // ll M = 998244353LL;
+    // ll M = std::pow(10, 9) + 7;
+    ll MOD = 998244353LL;
     ll mod(ll a) {
-        return mod(a, M);
+        return mod(a, MOD);
     }
 
     // Function to calculate (base^exponent) % modulus using repeated squaring
-    ll pow(ll base, ll exponent, ll modulus=M) {
+    ll pow(ll base, ll exponent, ll modulus=MOD) {
         ll result = 1;
 
         while (exponent > 0) {
@@ -123,7 +125,7 @@ namespace nt {
         return mod(ay, p);
     }
 
-    ll mdiv(ll x, ll y, ll m=M) {
+    ll mdiv(ll x, ll y, ll m=MOD) {
         x = mod(x);
         y = mod(y);
         return mod(x * inv(y, m), m);
@@ -294,6 +296,19 @@ namespace combo {
             else {
                 result[i] = result[i - 1] * (n - i + 1) / i;
             }
+        }
+        return result;
+    }
+
+    using namespace nt;
+    vl precompute_catalan(ll n, ll m = MOD) {
+        vl result(n + 1);
+        result[0] = 1;
+        rep(i, 1, n) {
+            result[i] = nt::mod(result[i - 1] * 2 * i, m);
+            result[i] = nt::mod(result[i] * (2 * i - 1), m);
+            result[i] = nt::mdiv(result[i], i + 1, m);
+            result[i] = nt::mdiv(result[i], i, m);
         }
         return result;
     }
