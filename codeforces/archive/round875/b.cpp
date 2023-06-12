@@ -1,3 +1,4 @@
+// #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -289,6 +290,16 @@ typedef unordered_map<ll, string, custom_hash> umaplstr;
 
 typedef unordered_set<ll, custom_hash> uset;
 
+umapll operator+(const umapll& lhs, const umapll& rhs) {
+    umapll result = lhs;
+
+    for (const auto& pair : rhs) {
+        result[pair.first] += pair.second;
+    }
+
+    return result;
+}
+
 // List manipulation
 typedef priority_queue<ll, vl, greater<ll>> minheap;
 typedef priority_queue<ll, vl, less<ll>> maxheap;
@@ -459,22 +470,22 @@ public:
     ndarray(int n_rows_, int n_cols_) : n_rows(n_rows_), n_cols(n_cols_) {
         data = vector<T>(n_rows * n_cols);
     }
-    
+
     // Accessor function to get the number of rows
     int get_n_rows() const {
         return n_rows;
     }
-    
+
     // Accessor function to get the number of columns
     int get_n_cols() const {
         return n_cols;
     }
-    
+
     // Accessor function to get the data of the 2D array
     vector<T> get_data() const {
         return data;
     }
-    
+
     // Overload the () operator to access elements of the 2D array
     T& operator()(int i, int j) {
         if (i < 0 || i >= n_rows || j < 0 || j >= n_cols) {
@@ -482,7 +493,7 @@ public:
         }
         return data[i * n_cols + j];
     }
-    
+
     // Overload the () operator to access elements of the 2D array (const version)
     const T& operator()(int i, int j) const {
         if (i < 0 || i >= n_rows || j < 0 || j >= n_cols) {
@@ -496,7 +507,7 @@ public:
         n_rows = rows;
         n_cols = cols;
     }
-    
+
     // Fill the array with a particular value
     void fill(const T& value) {
         std::fill(data.begin(), data.end(), value);
@@ -686,29 +697,41 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
-void get_blocks(vl& a, vl& out, ll n) {
-    ll prev = -1;
-    ll cnt = 0;
-    rep(i, 0, n - 1) {
-        if (a[i] != prev) {
-            if (prev >= 0) {
-                out[prev] = max(out[prev], cnt);
-            }
-            cnt = 0;
-            prev = a[i];
+umapll blocks(vl& a, ll n) {
+    ll start_idx = 0;
+    ll end_idx = 0;
+
+    umapll ret;
+
+    while (start_idx < n) {
+        while (end_idx < n && a[start_idx] == a[end_idx]) {
+            end_idx++;
         }
+        ret[a[start_idx]] = max(ret[a[start_idx]], end_idx - start_idx);
+        start_idx = end_idx;
+        end_idx = start_idx;
     }
+    return ret;
 }
 
 void solve() {
     ll n; cin >> n;
     vl a(n);
-    inp::array(a, n);
-
     vl b(n);
+    inp::array(a, n);
     inp::array(b, n);
 
+    auto ba = blocks(a, n);
+    auto bb = blocks(b, n);
 
+    ba = ba + bb;
+
+    ll mxa = 0;
+    foreach(k, ba) {
+        mxa = max(k.second, mxa);
+    }
+
+    print(mxa);
 }
 
 int main() {
@@ -716,4 +739,5 @@ int main() {
     cep(t) {
         solve();
     }
+    return 0;
 }
