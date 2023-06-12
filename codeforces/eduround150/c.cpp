@@ -1,3 +1,4 @@
+// #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -871,4 +872,75 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
         }
     }
     return os;
+}
+
+void solve() {
+    string s; cin >> s;
+    ll n = len(s);
+
+    vl cvalues = {1, 10, 100, 1000, 10000};
+    umap<ll, vl> cumsums;
+
+    vl ss = LC(vl, cvalues[cc - 'A'], cc, s);
+
+    foreach(c, cvalues) { cumsums[c].pb(0); }
+
+    rep(i, 0, n - 1) {
+        ll v = ss[i];
+        foreach(c, cvalues) {
+            ll prev = cumsums[c].back();
+            if (v == c) {
+                cumsums[c].pb(v + prev);
+            }
+            else {
+                cumsums[c].pb(c < v ? 0 : prev);
+            }
+        }
+    }
+
+    vl ssmax = vv::cummax(ss, true);
+    ssmax.pb(0);
+
+    ll cur_value = 0;
+    rep(i, 0, n - 1) {
+        cur_value += (ss[i] < ssmax[i + 1]) ? -ss[i] : ss[i];
+    }
+
+    ll best_value = cur_value;
+
+    rep(i, 0, n - 1) {
+        // Consider switching i
+        ll v = ss[i];
+        foreach(c, cvalues) {
+            ll new_value = cur_value;
+
+            if (c == v) {
+                continue;
+            }
+            new_value -= (v < ssmax[i + 1]) ? -v : v;
+            new_value += (c < ssmax[i + 1]) ? -c : c;
+
+            // Change the signs of stuff before it
+            
+            foreach(c1, cvalues) {
+                new_value -= (c1 < max(v, ssmax[i + 1])) ? -cumsums[c1][i] : cumsums[c1][i];
+                new_value += (c1 < max(c, ssmax[i + 1])) ? -cumsums[c1][i] : cumsums[c1][i];
+            }
+
+            chkmax(best_value, new_value);
+        }
+    }
+
+    print(best_value);
+
+
+}
+
+int main() {
+    init();
+    int t; cin >> t;
+    cep(t) {
+        solve();
+    }
+    return 0;
 }

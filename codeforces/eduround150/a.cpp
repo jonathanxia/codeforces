@@ -1,3 +1,4 @@
+// #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -16,13 +17,6 @@ void chkmin(T& lhs, T rhs) {
 template <typename T>
 void chkmax(T& lhs, T rhs) {
 	lhs = max(lhs, rhs);
-}
-
-// Because unsigned sizes are absolutely stupid
-// Got burned on 1841C
-template <typename T>
-int len(const T& v) {
-    return int(v.size());
 }
 
 #define to_str to_string
@@ -89,7 +83,7 @@ namespace vv {
 
     template <typename S, typename T>
     int indexof(const vector<T>& a, const S& element) {
-        for (int i = 0; i < len(a); ++i) {
+        for (int i = 0; i < a.size(); ++i) {
             if (a[i] == element) {
                 return i;
             }
@@ -109,7 +103,7 @@ namespace vv {
     template <typename T>
     unordered_map<T, ll, custom_hash> counter(const vector<T>& a, ll start=0, ll end=-1) {
         if (end == -1) {
-            end = len(a) - 1;
+            end = a.size() - 1;
         }
         unordered_map<T, ll, custom_hash> result;
         rep(i, start, end) {
@@ -121,7 +115,7 @@ namespace vv {
 
     template <typename T>
     vector<T> slice(const vector<T>& a, int start=0, int end=-1) {
-        int n = len(a);
+        int n = a.size();
         if (end == -1) {
             end = n - 1;
         }
@@ -135,10 +129,10 @@ namespace vv {
 
     template <typename T, typename S>
     vector<T> slice(const vector<T>& a, const vector<S> idx) {
-        int n = len(a);
-        int ll = len(idx);
-        vector<T> result(ll);
-        for (int i = 0; i < ll; i++) {
+        int n = a.size();
+        int len = idx.size();
+        vector<T> result(len);
+        for (int i = 0; i < len; i++) {
             result[i] = a[idx[i]];
         }
         return result;
@@ -157,7 +151,7 @@ namespace vv {
     template <typename T>
     T sum(const vector<T>& a, int start=0, int end=-1) {
         if (end < 0) {
-            end = len(a) + end;
+            end = a.size() + end;
         }
         return std::accumulate(a.begin(), a.begin() + end + 1, T(0));
     }
@@ -165,7 +159,7 @@ namespace vv {
     template <typename T>
     T prod(const vector<T>& a, int start=0, int end=-1, ll mm = -1) {
         if (end < 0) {
-            end = len(a) + end;
+            end = a.size() + end;
         }
         T p(1);
         rep(i, start, end) {
@@ -180,7 +174,7 @@ namespace vv {
     template <typename T>
     T min(const vector<T>& a, int start=0, int end=-1) {
         if (end == -1) {
-            end = len(a) - 1;
+            end = a.size() - 1;
         }
 
         T ans = a[start];
@@ -193,7 +187,7 @@ namespace vv {
     template <typename T>
     T max(const vector<T>& a, int start=0, int end=-1) {
         if (end == -1) {
-            end = len(a) - 1;
+            end = a.size() - 1;
         }
 
         T ans = a[start];
@@ -206,9 +200,9 @@ namespace vv {
     template <typename T, typename KeyFunc = Identity<T>>
     void sort(vector<T>& a, int start = 0, int end = -1, KeyFunc keyFunc = Identity<T>{}) {
         if (end == -1) {
-            end = len(a) - 1;
+            end = a.size() - 1;
         }
-        if (start >= end || end >= len(a)) {
+        if (start >= end || end >= a.size()) {
             return;  // Invalid indices or empty range
         }
 
@@ -237,7 +231,7 @@ namespace vv {
     template <typename T>
     int argmax(const vector<T>& a, ll start=0, ll end=-1) {
         if (end == -1) {
-            end = len(a) - 1;
+            end = a.size() - 1;
         }
         T best = a[start];
         int best_idx = start;
@@ -255,7 +249,7 @@ namespace vv {
         T best = a[start];
         int best_idx = start;
         if (end == -1) {
-            end = len(a) - 1;
+            end = a.size() - 1;
         }
         rep(i, start, end) {
             if (a[i] < best) {
@@ -268,7 +262,7 @@ namespace vv {
 
     template <typename S, typename T>
     void fill(vector<T>& a, S elem) {
-        rep(i, 0, len(a) - 1) {
+        rep(i, 0, a.size() - 1) {
             a[i] = elem;
         }
     }
@@ -276,7 +270,7 @@ namespace vv {
     template <typename T>
     vector<T> cumsum(const vector<T>& a) {
         vector<T> ret(a);
-        rep(i, 1, len(a) - 1) {
+        rep(i, 1, a.size() - 1) {
             ret[i] += ret[i - 1];
         }
         return ret;
@@ -285,14 +279,13 @@ namespace vv {
     template <typename T>
     vector<T> cummax(const vector<T>& a, bool reverse=false) {
         vector<T> ret(a);
-        ll n = len(a);
         if (reverse) {
-            dep(i, n - 2, 0) {
+            dep(i, a.size() - 2, 0) {
                 ret[i] = std::max(ret[i + 1], ret[i]);
             }
         }
         else {
-            rep(i, 1, n - 1)
+            rep(i, 1, a.size() - 1)
             {
                 ret[i] = std::max(ret[i], ret[i - 1]);
             }
@@ -303,14 +296,13 @@ namespace vv {
     template <typename T>
     vector<T> cummin(const vector<T>& a, bool reverse=false) {
         vector<T> ret(a);
-        ll n = len(a);
         if (reverse) {
-            dep(i, n - 2, 0) {
+            dep(i, a.size() - 2, 0) {
                 ret[i] = std::min(ret[i + 1], ret[i]);
             }
         }
         else {
-            rep(i, 1, n - 1)
+            rep(i, 1, a.size() - 1)
             {
                 ret[i] = std::min(ret[i], ret[i - 1]);
             }
@@ -742,11 +734,7 @@ void init() {
 
 template<typename T>
 void print(const T& t) {
-    #ifdef INTERACTIVE
     std::cout << t << std::endl;
-    #else
-    std::cout << t << "\n";
-    #endif
 }
 
 template<typename T, typename... Args>
@@ -871,4 +859,30 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
         }
     }
     return os;
+}
+
+void solve() {
+    ll n; cin >> n;
+
+    if (n >= 5) {
+        print("Alice");
+    }
+    else if (n == 1) {
+        print("Alice");
+    }
+    else if (n == 2) {
+        print("Bob");
+    }
+    else if (n == 3 || n == 4) {
+        print("Bob");
+    }
+
+}
+
+int main() {
+    int t; cin >> t;
+    cep(t) {
+        solve();
+    }
+    return 0;
 }
