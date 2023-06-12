@@ -24,11 +24,11 @@ void chkmax(T& lhs, T rhs) {
 typedef long long ll;
 
 // Looping
-#define rep(i, d, u) for(ll i = d; i <= u; ++i)
-#define dep(i, u, d) for(ll i = u; i >= d; --i)
-#define irep(i, d, u) for(i = d; i <= u; ++i)
-#define idep(i, u, d) for(i = u; i >= d; --i)
-#define srep(i, d, u, s) for(ll i = d; i <= u; i += s)
+#define rep(i, d, u) for(ll i = (d); i <= (u); ++i)
+#define dep(i, u, d) for(ll i = (u); i >= (d); --i)
+#define irep(i, d, u) for(i = (d); i <= (u); ++i)
+#define idep(i, u, d) for(i = (u); i >= (d); --i)
+#define srep(i, d, u, s) for(ll i = (d); i <= (u); i += s)
 #define cep(t) while(t--)
 #define foreach(i, c) for(auto& i : c)
 #define foreachp(k, v, c) for (auto& [k, v] : c)
@@ -42,9 +42,22 @@ struct custom_hash {
         return x ^ (x >> 31);
     }
 
-    size_t operator()(uint64_t x) const {
+    size_t do_hash(uint64_t x) const {
         static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
         return splitmix64(x + FIXED_RANDOM);
+    }
+
+    size_t operator()(uint64_t x) const {
+        return do_hash(x);
+    }
+
+    template <typename T1, typename T2, typename T3, typename T4>
+    size_t operator()(const std::pair<std::pair<T1, T2>, std::pair<T3, T4>>& key) const {
+        auto h1 = (*this)(key.first.first);
+        auto h2 = (*this)(key.first.second);
+        auto h3 = (*this)(key.second.first);
+        auto h4 = (*this)(key.second.second);
+        return splitmix64(h1 ^ h2 ^ h3 ^ h4);
     }
 };
 
@@ -703,6 +716,13 @@ namespace inp {
             cin >> arr[i];
         }
     }
+
+    void array1(vl& arr, int n) {
+        rep(i, 1, n) {
+            cin >> arr[i];
+        }
+    }
+
 }
 
 // Printing
@@ -736,6 +756,15 @@ void dprint(const T& t, const Args&... args) {
     print(args...);
     #endif
 }
+
+// Fancy variable debugging, stolen from:
+// https://codeforces.com/blog/entry/79024
+#ifndef ONLINE_JUDGE
+int recur_depth = 0;
+#define dbg(x) {++recur_depth; auto x_=x; --recur_depth; cerr<<string(recur_depth, '\t')<<"\e[91m"<<__func__<<":"<<__LINE__<<"\t"<<#x<<" = "<<x_<<"\e[39m"<<endl;}
+#else
+#define dbg(x)
+#endif
 
 template<typename K, typename V>
 std::ostream& operator<<(std::ostream& os, const unordered_map<K, V, custom_hash>& mp)

@@ -54,7 +54,7 @@ public:
     template <typename T>
     LazySegmentTree(const vector<T>& arr) : a(arr), lazy(4 * arr.size()), tr(4 * arr.size()) {
         n = a.size();
-        init(0, n, 0);
+        init(0, n - 1, 0);
     }
 
 	void update(int qL, int qR, ll val, int l, int r, int idx) {
