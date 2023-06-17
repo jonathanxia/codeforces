@@ -1,5 +1,5 @@
-// #include<lib/2dsegment_tree.h>
 // #include<lib/common.h>
+// #include<lib/sparsetable.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -20,17 +20,24 @@ void chkmax(T& lhs, T rhs) {
 	lhs = max(lhs, rhs);
 }
 
+// Because unsigned sizes are absolutely stupid
+// Got burned on 1841C
+template <typename T>
+int len(const T& v) {
+    return int(v.size());
+}
+
 #define to_str to_string
 #define pb push_back
 
 typedef long long ll;
 
 // Looping
-#define rep(i, d, u) for(ll i = d; i <= u; ++i)
-#define dep(i, u, d) for(ll i = u; i >= d; --i)
-#define irep(i, d, u) for(i = d; i <= u; ++i)
-#define idep(i, u, d) for(i = u; i >= d; --i)
-#define srep(i, d, u, s) for(ll i = d; i <= u; i += s)
+#define rep(i, d, u) for(ll i = (d); i <= (u); ++i)
+#define dep(i, u, d) for(ll i = (u); i >= (d); --i)
+#define irep(i, d, u) for(i = (d); i <= (u); ++i)
+#define idep(i, u, d) for(i = (u); i >= (d); --i)
+#define srep(i, d, u, s) for(ll i = (d); i <= (u); i += s)
 #define cep(t) while(t--)
 #define foreach(i, c) for(auto& i : c)
 #define foreachp(k, v, c) for (auto& [k, v] : c)
@@ -44,9 +51,13 @@ struct custom_hash {
         return x ^ (x >> 31);
     }
 
-    size_t operator()(uint64_t x) const {
+    size_t do_hash(uint64_t x) const {
         static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
         return splitmix64(x + FIXED_RANDOM);
+    }
+
+    size_t operator()(uint64_t x) const {
+        return do_hash(x);
     }
 
     template <typename T1, typename T2, typename T3, typename T4>
@@ -80,7 +91,7 @@ namespace vv {
 
     template <typename S, typename T>
     int indexof(const vector<T>& a, const S& element) {
-        for (int i = 0; i < a.size(); ++i) {
+        for (int i = 0; i < len(a); ++i) {
             if (a[i] == element) {
                 return i;
             }
@@ -100,7 +111,7 @@ namespace vv {
     template <typename T>
     unordered_map<T, ll, custom_hash> counter(const vector<T>& a, ll start=0, ll end=-1) {
         if (end == -1) {
-            end = a.size() - 1;
+            end = len(a) - 1;
         }
         unordered_map<T, ll, custom_hash> result;
         rep(i, start, end) {
@@ -112,7 +123,7 @@ namespace vv {
 
     template <typename T>
     vector<T> slice(const vector<T>& a, int start=0, int end=-1) {
-        int n = a.size();
+        int n = len(a);
         if (end == -1) {
             end = n - 1;
         }
@@ -126,10 +137,10 @@ namespace vv {
 
     template <typename T, typename S>
     vector<T> slice(const vector<T>& a, const vector<S> idx) {
-        int n = a.size();
-        int len = idx.size();
-        vector<T> result(len);
-        for (int i = 0; i < len; i++) {
+        int n = len(a);
+        int ll = len(idx);
+        vector<T> result(ll);
+        for (int i = 0; i < ll; i++) {
             result[i] = a[idx[i]];
         }
         return result;
@@ -148,7 +159,7 @@ namespace vv {
     template <typename T>
     T sum(const vector<T>& a, int start=0, int end=-1) {
         if (end < 0) {
-            end = a.size() + end;
+            end = len(a) + end;
         }
         return std::accumulate(a.begin(), a.begin() + end + 1, T(0));
     }
@@ -156,7 +167,7 @@ namespace vv {
     template <typename T>
     T prod(const vector<T>& a, int start=0, int end=-1, ll mm = -1) {
         if (end < 0) {
-            end = a.size() + end;
+            end = len(a) + end;
         }
         T p(1);
         rep(i, start, end) {
@@ -171,7 +182,7 @@ namespace vv {
     template <typename T>
     T min(const vector<T>& a, int start=0, int end=-1) {
         if (end == -1) {
-            end = a.size() - 1;
+            end = len(a) - 1;
         }
 
         T ans = a[start];
@@ -184,7 +195,7 @@ namespace vv {
     template <typename T>
     T max(const vector<T>& a, int start=0, int end=-1) {
         if (end == -1) {
-            end = a.size() - 1;
+            end = len(a) - 1;
         }
 
         T ans = a[start];
@@ -197,9 +208,9 @@ namespace vv {
     template <typename T, typename KeyFunc = Identity<T>>
     void sort(vector<T>& a, int start = 0, int end = -1, KeyFunc keyFunc = Identity<T>{}) {
         if (end == -1) {
-            end = a.size() - 1;
+            end = len(a) - 1;
         }
-        if (start >= end || end >= a.size()) {
+        if (start >= end || end >= len(a)) {
             return;  // Invalid indices or empty range
         }
 
@@ -228,7 +239,7 @@ namespace vv {
     template <typename T>
     int argmax(const vector<T>& a, ll start=0, ll end=-1) {
         if (end == -1) {
-            end = a.size() - 1;
+            end = len(a) - 1;
         }
         T best = a[start];
         int best_idx = start;
@@ -246,7 +257,7 @@ namespace vv {
         T best = a[start];
         int best_idx = start;
         if (end == -1) {
-            end = a.size() - 1;
+            end = len(a) - 1;
         }
         rep(i, start, end) {
             if (a[i] < best) {
@@ -259,7 +270,7 @@ namespace vv {
 
     template <typename S, typename T>
     void fill(vector<T>& a, S elem) {
-        rep(i, 0, a.size() - 1) {
+        rep(i, 0, len(a) - 1) {
             a[i] = elem;
         }
     }
@@ -267,7 +278,7 @@ namespace vv {
     template <typename T>
     vector<T> cumsum(const vector<T>& a) {
         vector<T> ret(a);
-        rep(i, 1, a.size() - 1) {
+        rep(i, 1, len(a) - 1) {
             ret[i] += ret[i - 1];
         }
         return ret;
@@ -276,13 +287,14 @@ namespace vv {
     template <typename T>
     vector<T> cummax(const vector<T>& a, bool reverse=false) {
         vector<T> ret(a);
+        ll n = len(a);
         if (reverse) {
-            dep(i, a.size() - 2, 0) {
+            dep(i, n - 2, 0) {
                 ret[i] = std::max(ret[i + 1], ret[i]);
             }
         }
         else {
-            rep(i, 1, a.size() - 1)
+            rep(i, 1, n - 1)
             {
                 ret[i] = std::max(ret[i], ret[i - 1]);
             }
@@ -293,13 +305,14 @@ namespace vv {
     template <typename T>
     vector<T> cummin(const vector<T>& a, bool reverse=false) {
         vector<T> ret(a);
+        ll n = len(a);
         if (reverse) {
-            dep(i, a.size() - 2, 0) {
+            dep(i, n - 2, 0) {
                 ret[i] = std::min(ret[i + 1], ret[i]);
             }
         }
         else {
-            rep(i, 1, a.size() - 1)
+            rep(i, 1, n - 1)
             {
                 ret[i] = std::min(ret[i], ret[i - 1]);
             }
@@ -714,6 +727,13 @@ namespace inp {
             cin >> arr[i];
         }
     }
+
+    void array1(vl& arr, int n) {
+        rep(i, 1, n) {
+            cin >> arr[i];
+        }
+    }
+
 }
 
 // Printing
@@ -724,7 +744,11 @@ void init() {
 
 template<typename T>
 void print(const T& t) {
+    #ifdef INTERACTIVE
     std::cout << t << std::endl;
+    #else
+    std::cout << t << "\n";
+    #endif
 }
 
 template<typename T, typename... Args>
@@ -747,6 +771,15 @@ void dprint(const T& t, const Args&... args) {
     print(args...);
     #endif
 }
+
+// Fancy variable debugging, stolen from:
+// https://codeforces.com/blog/entry/79024
+#ifndef ONLINE_JUDGE
+int recur_depth = 0;
+#define dbg(x) {++recur_depth; auto x_=x; --recur_depth; cerr<<string(recur_depth, '\t')<<"\e[91m"<<__func__<<":"<<__LINE__<<"\t"<<#x<<" = "<<x_<<"\e[39m"<<endl;}
+#else
+#define dbg(x)
+#endif
 
 template<typename K, typename V>
 std::ostream& operator<<(std::ostream& os, const unordered_map<K, V, custom_hash>& mp)
@@ -842,217 +875,107 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
-#include <iostream>
-#include <vector>
-#include <functional>
-#include <limits>
-
-class SegmentTree2D {
-private:
-    int n, m;
-    std::vector<std::vector<long long>> grid;
-    std::vector<std::vector<long long>> tree;
-    std::vector<std::vector<long long>> lazy;
-    std::function<long long(long long, long long)> updateOp;
-    std::function<long long(long long, long long)> queryOp;
-    long long neutralElement;
-
-    void buildY(int vx, int lx, int rx, int vy, int ly, int ry) {
-        if (ly == ry) {
-            if (lx == rx) {
-                tree[vx][vy] = grid[lx][ly];
-            } else {
-                tree[vx][vy] = queryOp(tree[vx * 2][vy], tree[vx * 2 + 1][vy]);
-            }
-        } else {
-            int my = (ly + ry) / 2;
-            buildY(vx, lx, rx, vy * 2, ly, my);
-            buildY(vx, lx, rx, vy * 2 + 1, my + 1, ry);
-            tree[vx][vy] = queryOp(tree[vx][vy * 2], tree[vx][vy * 2 + 1]);
-        }
-    }
-
-    void buildX(int vx, int lx, int rx) {
-        if (lx != rx) {
-            int mx = (lx + rx) / 2;
-            buildX(vx * 2, lx, mx);
-            buildX(vx * 2 + 1, mx + 1, rx);
-        }
-        buildY(vx, lx, rx, 1, 0, m - 1);
-    }
-
-    long long queryY(int vx, int vy, int tly, int try_, int ly, int ry) {
-        if (ly > ry) {
-            return neutralElement;
-        }
-        if (lazy[vx][vy] != 0) {
-            tree[vx][vy] = updateOp(tree[vx][vy], lazy[vx][vy] * (try_ - tly + 1));
-            if (tly != try_) {
-                lazy[vx][vy * 2] = updateOp(lazy[vx][vy * 2], lazy[vx][vy]);
-                lazy[vx][vy * 2 + 1] = updateOp(lazy[vx][vy * 2 + 1], lazy[vx][vy]);
-            }
-            lazy[vx][vy] = 0;
-        }
-        if (tly >= ly && try_ <= ry) {
-            return tree[vx][vy];
-        }
-        if (tly > ry || try_ < ly) {
-            return neutralElement;
-        }
-        int tmy = (tly + try_) / 2;
-        return queryOp(queryY(vx, vy * 2, tly, tmy, ly, ry), queryY(vx, vy * 2 + 1, tmy + 1, try_, ly, ry));
-    }
-
-    long long queryX(int vx, int tlx, int trx, int lx, int rx, int ly, int ry) {
-        if (lx > rx) {
-            return neutralElement;
-        }
-        if (lazy[vx][1] != 0) {
-            tree[vx][1] = updateOp(tree[vx][1], lazy[vx][1] * (trx - tlx + 1));
-            if (tlx != trx) {
-                lazy[vx * 2][1] = updateOp(lazy[vx * 2][1], lazy[vx][1]);
-                lazy[vx * 2 + 1][1] = updateOp(lazy[vx * 2 + 1][1], lazy[vx][1]);
-            }
-            lazy[vx][1] = 0;
-        }
-        if (tlx >= lx && trx <= rx) {
-            return queryY(vx, 1, 0, m - 1, ly, ry);
-        }
-        if (tlx > rx || trx < lx) {
-            return neutralElement;
-        }
-        int tmx = (tlx + trx) / 2;
-        return queryOp(queryX(vx * 2, tlx, tmx, lx, rx, ly, ry), queryX(vx * 2 + 1, tmx + 1, trx, lx, rx, ly, ry));
-    }
-
-    void updateY(int vx, int lx, int rx, int vy, int ly, int ry, long long val) {
-        if (ly > ry) {
-            return;
-        }
-        if (ly == tly && ry == try_) {
-            tree[vx][vy] = updateOp(tree[vx][vy], val * (try_ - tly + 1));
-            if (tly != try_) {
-                lazy[vx][vy * 2] = updateOp(lazy[vx][vy * 2], val);
-                lazy[vx][vy * 2 + 1] = updateOp(lazy[vx][vy * 2 + 1], val);
-            }
-        } else {
-            int tmy = (tly + try_) / 2;
-            updateY(vx, lx, rx, vy * 2, ly, std::min(ry, tmy), val);
-            updateY(vx, lx, rx, vy * 2 + 1, std::max(ly, tmy + 1), ry, val);
-            tree[vx][vy] = queryOp(tree[vx][vy * 2], tree[vx][vy * 2 + 1]);
-        }
-    }
-
-    void updateX(int vx, int lx, int rx, int tlx, int trx, int ly, int ry, long long val) {
-        if (lx > rx) {
-            return;
-        }
-        if (lx == tlx && rx == trx) {
-            updateY(vx, lx, rx, 1, ly, ry, val);
-        } else {
-            int tmx = (tlx + trx) / 2;
-            updateX(vx * 2, lx, std::min(rx, tmx), tlx, tmx, ly, ry, val);
-            updateX(vx * 2 + 1, std::max(lx, tmx + 1), rx, tmx + 1, trx, ly, ry, val);
-            updateY(vx, lx, rx, 1, ly, ry, val);
-        }
-    }
-
+class SparseTable {
 public:
-    SegmentTree2D(const std::vector<std::vector<long long>>& grid, std::function<long long(long long, long long)> updateOp,
-                  std::function<long long(long long, long long)> queryOp, long long neutralElement)
-        : updateOp(std::move(updateOp)), queryOp(std::move(queryOp)), neutralElement(neutralElement) {
-        this->grid = grid;
-        n = grid.size();
-        m = grid[0].size();
-        tree.resize(4 * n, std::vector<long long>(4 * m, neutralElement));
-        lazy.resize(4 * n, std::vector<long long>(4 * m, 0));
-        buildX(1, 0, n - 1);
+    vector<vector<ll>> table;
+    vector<ll> logTable;
+    vector<ll> arrSize;
+    function<ll(ll, ll)> operation;
+
+    SparseTable(const vector<ll>& arr, function<ll(ll, ll)> op) {
+        ll n = arr.size();
+        ll logn = log2(n) + 1;
+
+        table.resize(n, vector<ll>(logn));
+        logTable.resize(n + 1);
+        arrSize.resize(n + 1);
+        operation = op;
+
+        // Precompute logarithm values and array sizes
+        for (int i = 2; i <= n; i++) {
+            logTable[i] = logTable[i / 2] + 1;
+            arrSize[i] = arrSize[i / 2] + (i & 1);
+        }
+
+        // Initialize the first column of the table
+        for (int i = 0; i < n; i++) {
+            table[i][0] = arr[i];
+        }
+
+        // Compute the rest of the table using dynamic programming
+        for (int j = 1; (1 << j) <= n; j++) {
+            for (int i = 0; (i + (1 << j) - 1) < n; i++) {
+                table[i][j] = operation(table[i][j - 1], table[i + (1 << (j - 1))][j - 1]);
+            }
+        }
     }
 
-    void update(int lx, int ly, int rx, int ry, long long val) {
-        updateX(1, 0, n - 1, lx, rx, ly, ry, val);
-    }
-
-    long long query(int lx, int ly, int rx, int ry) {
-        return queryX(1, 0, n - 1, lx, rx, ly, ry);
+    ll query(int left, int right) {
+        ll k = logTable[right - left + 1];
+        ll len = arrSize[right - left + 1];
+        return operation(table[left][k], table[right - (1 << k) + 1][k]);
     }
 };
 
+// int main() {
+//     SparseTable st({3, 5, 1, 4, 2}, [](ll a, ll b) {return min(a, b);});
+//     print(st.query(2, 4));
+// }
+
+class Solution {
+public:
+    vector<int> maximumSumQueries(vector<int>& nums1, vector<int>& nums2, vector<vector<int>>& queries) {
+        ll n = len(nums1);
+        ll q = len(queries);
+
+        // Form a pareto front
+        auto idx = vv::argsort(nums1);
+        vi x1 = vv::slice(nums1, idx);
+        vi x2 = vv::slice(nums2, idx);
+
+        vi y1;
+        vi y2;
+        vi m2 = vv::cummax(x2, true);
+        rep(i, 0, n - 1) {
+            if (m2[i] == x2[i]) {
+                y1.pb(x1[i]);
+                y2.pb(x2[i]);
+            }
+        }
+
+        n = len(y1);
+        vl sums = RC(vl, y1[i] + y2[i], i, 0, n - 1);
+
+        SparseTable st(sums, [](ll a, ll b) { return max(a, b); });
+
+        vi output;
+        rep(qi, 0, q - 1) {
+            ll ans = -1;
+            ll i1 = smallest_st(x, y1[x] >= queries[qi][0], 0, n - 1);
+            ll i2 = largest_st(x, y2[x] >= queries[qi][1], 0, n - 1);
+            if (i1 >= n || i2 < 0) {
+                output.pb(-1);
+                continue;
+            }
+
+            if (i1 > i2) {
+                output.pb(-1);
+                continue;
+            }
+
+            output.pb(st.query(i1, i2));
+        }
+        return output;
+    }
+};
+
+#ifdef DEBUG
 int main() {
-    // Example usage: Using multiplication operation
-    std::vector<std::vector<long long>> grid = {
-        {1, 2, 3},
-        {4, 5, 6},
-        {7, 8, 9}
-    };
-
-    // Custom multiplication operation
-    auto multiplyOp = [](long long a, long long b) { return a * b; };
-    long long neutralElement = 1;  // Neutral element for multiplication is 1
-
-    SegmentTree2D tree(grid, multiplyOp, multiplyOp, neutralElement);
-
-    // Update range (1, 1) - (2, 2) by multiplying with 10
-    tree.update(1, 1, 2, 2, 10);
-
-    // Query product in range (0, 0) - (2, 2)
-    long long product = tree.query(0, 0, 2, 2);
-    std::cout << "Product: " << product << std::endl;  // Output: Product: 181440
-
+    Solution s;
+    vi nums1 = {4, 3, 1, 2};
+    vi nums2 = {2, 4, 9, 5};
+    vvi queries = {{4, 1}, {1, 3}, {2, 5}};
+    print(s.maximumSumQueries(nums1, nums2, queries));
     return 0;
 }
-
-
-// void solve() {
-//     ll n, m, q;
-//     cin >> n >> m >> q;
-
-//     vl a(n);
-//     vl b(m);
-//     LazySegmentTree xst(a);
-//     LazySegmentTree yst(b);
-
-//     umap<pair<pl, pl>, ll> loc_to_id;
-
-//     cep(q) {
-//         ll t, r1, c1, r2, c2;
-//         cin >> t >> r1 >> c1 >> r2 >> c2;
-//         r1--; c1--; r2--; c2--;
-
-//         if (t == 1) {
-//             ll loc_id = uid(0, LONG_LONG_MAX);
-//             loc_to_id[{{r1, c1}, {r2, c2}}] = loc_id;
-
-//             xst.update(r1, r2, loc_id);
-//             yst.update(c1, c2, loc_id);
-//         }
-//         else if (t == 2) {
-//             ll loc_id = loc_to_id[{{r1, c1}, {r2, c2}}];
-//             xst.update(r1, r2, loc_id);
-//             yst.update(c1, c2, loc_id);
-//             loc_to_id.erase({{r1, c1}, {r2, c2}});
-//         }
-//         else {
-//             ll x1 = xst.query(r1, r1).sum;
-//             ll x2 = xst.query(r2, r2).sum;
-//             ll y1 = yst.query(c1, c1).sum;
-//             ll y2 = yst.query(c2, c2).sum;
-
-//             if (x1 == x2 && y1 == y2) {
-//                 print("Yes");
-//             }
-//             else {
-//                 print("No");
-//             }
-//         }
-//     }
-// }
-
-// int32_t main() {
-//     init();
-//     int t = 1;
-//     cep(t) {
-//         solve();
-//     }
-//     return 0;
-// }
+#endif

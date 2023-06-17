@@ -878,16 +878,27 @@ void solve() {
     ll n; cin >> n;
     vl a(n);
     inp::array(a, n);
-    ll m; cin >> m;
 
-    vl height = LC(vl, n - x, x, a);
+    string s;
+    cin >> s;
 
-    ll ans = 0;
-    rep(i, 0, n - 2) {
-        ans += min(height[i], height[i + 1]);
+    vl assign(51, 'Z'); // char to num
+    rep(i, 0, n - 1) {
+        if (assign[a[i]] == 'Z') {
+            assign[a[i]] = s[i];
+            continue;
+        }
+
+        if (assign[a[i]] == s[i]) {
+            continue;
+        }
+        if (assign[a[i]] != s[i]) {
+            print("NO");
+            return;
+        }
     }
-    print(ans);
 
+    print("YES");
 }
 
 int main() {

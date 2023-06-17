@@ -875,19 +875,42 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 }
 
 void solve() {
-    ll n; cin >> n;
+    ll n, q; cin >> n >> q;
     vl a(n);
     inp::array(a, n);
-    ll m; cin >> m;
 
-    vl height = LC(vl, n - x, x, a);
+    vl counts(2, 0);
+    vl sums(2, 0);
 
-    ll ans = 0;
-    rep(i, 0, n - 2) {
-        ans += min(height[i], height[i + 1]);
+    foreach(ai, a) {
+        counts[ai % 2]++;
+        sums[ai % 2] += ai;
     }
-    print(ans);
 
+
+    rep(qi, 0, q - 1) {
+        ll t, x;
+        cin >> t >> x;
+
+        ll increase = counts[t] * x;
+        if (x % 2 == 0) {
+            // Keeps it the same
+            sums[t] += increase;
+        }
+
+        if (x % 2 == 1) {
+            // Merge that stuff
+            counts[1 - t] += counts[t];
+            sums[1 - t] += increase + sums[t];
+            sums[t] = 0;
+            counts[t] = 0;
+        }
+
+        dprint("sums=", sums);
+        dprint("counts=", counts);
+
+        print(sums[0] + sums[1]);
+    }
 }
 
 int main() {

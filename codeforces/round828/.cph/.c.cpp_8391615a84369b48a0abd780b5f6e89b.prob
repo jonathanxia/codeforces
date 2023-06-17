@@ -1,0 +1,1 @@
+{"name":"Local: c","url":"/home/jonathan/Desktop/code/codeforces/round828/c.cpp","tests":[{"id":1687027224692,"input":"6\n5 r\nrggry\n1 g\ng\n3 r\nrrg\n5 y\nyrrgy\n7 r\nrgrgyrg\n9 y\nrrrgyyygy","output":"3\n0\n2\n4\n1\n4"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/jonathan/Desktop/code/codeforces/round828/c.cpp","group":"local","local":true}

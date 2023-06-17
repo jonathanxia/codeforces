@@ -21,7 +21,7 @@ void chkmax(T& lhs, T rhs) {
 // Because unsigned sizes are absolutely stupid
 // Got burned on 1841C
 template <typename T>
-int len(const T& v) {
+inline int len(const T& v) {
     return int(v.size());
 }
 
@@ -125,9 +125,9 @@ namespace vv {
         if (end == -1) {
             end = n - 1;
         }
-        int len = end - start + 1;
-        vector<T> result(len);
-        for (int i = 0; i < len; i++) {
+        int length = end - start + 1;
+        vector<T> result(length);
+        for (int i = 0; i < length; i++) {
             result[i] = a[start + i];
         }
         return result;

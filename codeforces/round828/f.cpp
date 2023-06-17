@@ -876,18 +876,33 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 
 void solve() {
     ll n; cin >> n;
-    vl a(n);
-    inp::array(a, n);
-    ll m; cin >> m;
+    vl p(n);
+    inp::array(p, n);
 
-    vl height = LC(vl, n - x, x, a);
+    vl indices(n);
 
-    ll ans = 0;
-    rep(i, 0, n - 2) {
-        ans += min(height[i], height[i + 1]);
+    rep(i, 0, n - 1) {
+        indices[p[i]] = i;
     }
-    print(ans);
 
+    ll L = indices[0];
+    ll R = indices[0];
+    ll ans = 0;
+    rep(k, 0, n - 1) {
+        chkmin(L, indices[k]);
+        chkmax(R, indices[k]);
+        // Can we get a length 2 * k + 1 and 2 * k solution?
+        rep(j, 2 * k + 1, 2 * k + 2) {
+            ll leftmost = max(R - j + 1, 0LL);
+            ll rightmost = min(n - j, L);
+            if (rightmost >= leftmost) {
+                ans += rightmost - leftmost + 1;
+                dprint("len=", j, rightmost - leftmost + 1);
+            }
+        }
+    }
+
+    print(ans);
 }
 
 int main() {

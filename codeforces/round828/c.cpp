@@ -876,18 +876,32 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
 
 void solve() {
     ll n; cin >> n;
-    vl a(n);
-    inp::array(a, n);
-    ll m; cin >> m;
+    char c; cin >> c;
+    string s; cin >> s;
 
-    vl height = LC(vl, n - x, x, a);
+    s = s + s;
 
+    if (c == 'g') {
+        print(0);
+        return;
+    }
+
+    int gi = -1;
     ll ans = 0;
-    rep(i, 0, n - 2) {
-        ans += min(height[i], height[i + 1]);
+    rep(i, 0, n - 1) {
+        if (s[i] != c) {
+            continue;
+        }
+        // Find the first gi for me please
+        if (i > gi) {
+            gi = i;
+            while (s[gi] != 'g') {
+                gi++;
+            }
+        }
+        chkmax(ans, gi - i);
     }
     print(ans);
-
 }
 
 int main() {
