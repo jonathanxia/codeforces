@@ -78,7 +78,8 @@ namespace nt {
     }
 
     // ll M = std::pow(10, 9) + 7;
-    ll MOD = 998244353LL;
+    // ll MOD = 998244353LL;
+    ll MOD = pow(10, 9) + 7;
     ll mod(ll a) {
         return mod(a, MOD);
     }

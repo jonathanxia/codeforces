@@ -1,5 +1,6 @@
 // #include<lib/common.h>
-// #include<lib/sparsetable.h>
+// #include<lib/nt.h>
+// #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -23,7 +24,7 @@ void chkmax(T& lhs, T rhs) {
 // Because unsigned sizes are absolutely stupid
 // Got burned on 1841C
 template <typename T>
-int len(const T& v) {
+inline int len(const T& v) {
     return int(v.size());
 }
 
@@ -127,9 +128,9 @@ namespace vv {
         if (end == -1) {
             end = n - 1;
         }
-        int len = end - start + 1;
-        vector<T> result(len);
-        for (int i = 0; i < len; i++) {
+        int length = end - start + 1;
+        vector<T> result(length);
+        for (int i = 0; i < length; i++) {
             result[i] = a[start + i];
         }
         return result;
@@ -476,9 +477,7 @@ namespace str {
     }
 
     int stoi(char ch) {
-        string mystr(1, ch);
-        int num = stoi(mystr);
-        return num;
+        return int(ch - '0');
     }
 
     string slice(const string& s, int start, int end) {
@@ -728,6 +727,12 @@ namespace inp {
         }
     }
 
+    void array(vi& arr, int n) {
+        rep(i, 0, n - 1) {
+            cin >> arr[i];
+        }
+    }
+
     void array1(vl& arr, int n) {
         rep(i, 1, n) {
             cin >> arr[i];
@@ -875,107 +880,425 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
     return os;
 }
 
-class SparseTable {
-public:
-    vector<vector<ll>> table;
-    vector<ll> logTable;
-    vector<ll> arrSize;
-    function<ll(ll, ll)> operation;
+namespace nt {
+    vl primes;
+    vl isnotprime;
+    bool sieve_done = false;
 
-    SparseTable(const vector<ll>& arr, function<ll(ll, ll)> op) {
-        ll n = arr.size();
-        ll logn = log2(n) + 1;
+    void do_sieve(ll max_prime) {
+        isnotprime.resize(max_prime + 1);
+        rep(d, 2, max_prime) {
+            if (!isnotprime[d]) {
+                primes.push_back(d);
 
-        table.resize(n, vector<ll>(logn));
-        logTable.resize(n + 1);
-        arrSize.resize(n + 1);
-        operation = op;
+                int x = 2 * d;
+                while (x <= max_prime) {
+                    isnotprime[x] = true;
+                    x += d;
+                }
+            }
+        }
+        sieve_done = true;
+    }
 
-        // Precompute logarithm values and array sizes
-        for (int i = 2; i <= n; i++) {
-            logTable[i] = logTable[i / 2] + 1;
-            arrSize[i] = arrSize[i / 2] + (i & 1);
+    bool is_prime(ll n) {
+        // Checks if n is prime
+        if (n <= 1) {
+            return false;
         }
 
-        // Initialize the first column of the table
-        for (int i = 0; i < n; i++) {
-            table[i][0] = arr[i];
+        ll p = *prev(primes.end());
+        if (p * p < n) {
+            throw out_of_range("Generate more primes please");
         }
 
-        // Compute the rest of the table using dynamic programming
-        for (int j = 1; (1 << j) <= n; j++) {
-            for (int i = 0; (i + (1 << j) - 1) < n; i++) {
-                table[i][j] = operation(table[i][j - 1], table[i + (1 << (j - 1))][j - 1]);
+        ll i = 0;
+        while (primes[i] * primes[i] <= n) {
+            if (n % primes[i] == 0) {
+                return false;
+            }
+            i++;
+        }
+        return true;
+    }
+
+    ll sum_digits(ll n, ll b) {
+        int sum = 0;
+        while (n > 0) {
+            sum += n % b;
+            n /= b;
+        }
+        return sum;
+    }
+
+    vl get_digits(ll n, ll b) {
+        vl ans;
+        while (n > 0) {
+            ans.push_back(n % b);
+            n /= b;
+        }
+
+        return ans;
+    }
+
+    ll digits_to_num(vl& digs, ll b) {
+        ll s = 0;
+        dep(i, digs.size() - 1, 0) {
+            s *= b;
+            s += digs[i];
+        }
+        return s;
+    }
+
+    ll mod(ll a, ll p) {
+        if (p > 0) {
+            return (a % p + p) % p;
+        }
+        return a;
+    }
+
+    // ll M = std::pow(10, 9) + 7;
+    // ll MOD = 998244353LL;
+    ll MOD = pow(10, 9) + 7;
+    ll mod(ll a) {
+        return mod(a, MOD);
+    }
+
+    // Function to calculate (base^exponent) % modulus using repeated squaring
+    ll pow(ll base, ll exponent, ll modulus=MOD) {
+        ll result = 1;
+
+        while (exponent > 0) {
+            // If the exponent is odd, multiply the result by base
+            if (exponent & 1) {
+                if (modulus > 0) {
+                    result = (result * base) % modulus;
+                }
+                else {
+                    result = result * base;
+                }
+            }
+
+            // Square the base and reduce the exponent by half
+            if (modulus > 0) {
+                base = (base * base) % modulus;
+            }
+            else {
+                base = base * base;
+            }
+            exponent >>= 1;
+        }
+
+        return result;
+    }
+
+    ll inv(ll x, ll y) {
+        ll p = y;
+
+        ll ax = 1;
+        ll ay = 0;
+        while (x > 0) {
+            ll q = y / x;
+            tie(ax, ay) = make_tuple(ay - q * ax, ax);
+            tie(x, y) = make_tuple(y % x, x);
+        }
+
+        return mod(ay, p);
+    }
+
+    ll mdiv(ll x, ll y, ll m=MOD) {
+        if (m <= 0) {
+            return x / y;
+        }
+        x = mod(x);
+        y = mod(y);
+        return mod(x * inv(y, m), m);
+    }
+
+    ll v_p(ll x, ll p) {
+        ll res = 0;
+        while (x % p == 0) {
+            ++res;
+            x /= p;
+        }
+        return res;
+    }
+
+    ll factorial(ll x) {
+        ll p = 1;
+        rep(i, 1, x) {
+            p *= i;
+            p = mod(p);
+        }
+        return p;
+    }
+
+    bool is_pow_of_2(ll n) {
+        return (n > 0) && ((n & (n - 1)) == 0);
+    }
+
+    ll phi(ll n) {
+        ll result = n;
+        if (!sieve_done) {
+            throw out_of_range("Sieve not done, please run do_sieve");
+        }
+
+        for (ll prime : primes) {
+            if (prime * prime > n)
+                break;
+            if (n % prime == 0) {
+                while (n % prime == 0) {
+                    n /= prime;
+                }
+                result -= result / prime;
+            }
+        }
+
+        if (n > 1) {
+            result -= result / n;
+        }
+
+        return result;
+    }
+
+    ll num_divisors(ll n) {
+        ll divisors = 1;
+
+        for (ll prime : primes) {
+            if (prime * prime > n)
+                break;
+
+            ll count = 0;
+            while (n % prime == 0) {
+                n /= prime;
+                count++;
+            }
+
+            divisors *= (count + 1);
+        }
+
+        if (n > 1) {
+            divisors *= 2;
+        }
+
+        return divisors;
+    }
+
+    ll sum_divisors(ll n) {
+        ll sum = 1;
+
+        for (ll prime : primes) {
+            if (prime * prime > n)
+                break;
+
+            if (n % prime == 0) {
+                ll factorSum = 1;
+                ll power = 1;
+                while (n % prime == 0) {
+                    n /= prime;
+                    power *= prime;
+                    factorSum += power;
+                }
+                sum *= factorSum;
+            }
+        }
+
+        if (n > 1) {
+            sum *= (n + 1);
+        }
+
+        return sum;
+    }
+
+    umapll primeFactorization(ll n) {
+        umapll factors;
+
+        for (ll prime : primes) {
+            if (prime * prime > n)
+                break;
+
+            ll exponent = 0;
+            while (n % prime == 0) {
+                n /= prime;
+                exponent++;
+            }
+
+            if (exponent > 0) {
+                factors[prime] = exponent;
+            }
+        }
+
+        if (n > 1) {
+            factors[n] = 1;
+        }
+
+        return factors;
+    }
+}
+
+namespace combo {
+    ll choose(ll n, ll k, ll m=-1) {
+        ll p = 1;
+        rep(i, 1, k) {
+            p = p * (n - k + i) / i;
+            if (m > 0) {
+                p = nt::mod(p, m);
+            }
+        }
+        return p;
+    }
+
+    vl precompute_choose(ll n1, ll n2, ll k, ll m=-1) {
+        vl result(n2 - n1 + 1);
+        ll idx = max(k - n1, 0LL);
+        if (idx > n2 - n1) {
+            return result;
+        }
+        if (n1 + idx == k) {
+            result[idx] = 1;
+        }
+        else {
+            result[idx] = choose(n1 + idx, k, m);
+        }
+        rep(i, idx + 1, n2 - n1) {
+            result[i] = result[i - 1] * (n1 + i) / (n1 + i - k);
+            if (m > 0) {
+                result[i] %= m;
+            }
+        }
+        return result;
+    }
+
+    vl precompute_choose2(ll n, ll k1, ll k2, ll m = -1) {
+        vl result(k2 - k1 + 1);
+        result[0] = choose(n, k1, m=m);
+        rep(i, k1 + 1, k2) {
+            if (m > 0) {
+                result[i] = nt::mdiv(
+                    result[i - 1] * (n - i + 1), i, m);
+            }
+            else {
+                result[i] = result[i - 1] * (n - i + 1) / i;
+            }
+        }
+        return result;
+    }
+
+    using namespace nt;
+    vl precompute_catalan(ll n, ll m = MOD) {
+        vl result(n + 1);
+        result[0] = 1;
+        rep(i, 1, n) {
+            result[i] = nt::mod(result[i - 1] * 2 * i, m);
+            result[i] = nt::mod(result[i] * (2 * i - 1), m);
+            result[i] = nt::mdiv(result[i], i + 1, m);
+            result[i] = nt::mdiv(result[i], i, m);
+        }
+        return result;
+    }
+}
+
+using namespace nt;
+
+ll get_ans(ll lowertarget, ll target, ll n, const vl& lower_bounds, const vl& upper_bounds) {
+    dbg(lowertarget);
+    dbg(target);
+    dbg(lower_bounds);
+    dbg(upper_bounds);
+
+    if (target < 0) {
+        return 0;
+    }
+
+    // Do some godsent dp
+    llarray ans(n + 1, target + 1);
+    ans(0, 0) = 1;
+
+    rep(num, 1, n) {
+        rep(t, 0, target) {
+            rep(x, lower_bounds[num - 1], upper_bounds[num - 1]) {
+                if (t - x >= 0) {
+                    ans(num, t) += ans(num - 1, t - x);
+                }
+                ans(num, t) = mod(ans(num, t));
             }
         }
     }
 
-    ll query(int left, int right) {
-        ll k = logTable[right - left + 1];
-        ll len = arrSize[right - left + 1];
-        return operation(table[left][k], table[right - (1 << k) + 1][k]);
+    ll tot = 0;
+    rep(t, max(lowertarget, 0LL), target) {
+        tot = mod(tot + ans(n, t));
     }
-};
 
-// int main() {
-//     SparseTable st({3, 5, 1, 4, 2}, [](ll a, ll b) {return min(a, b);});
-//     print(st.query(2, 4));
-// }
+    dbg(tot);
+    dprint("");
+    return tot;
+}
+
+using namespace str;
 
 class Solution {
 public:
-    vector<int> maximumSumQueries(vector<int>& nums1, vector<int>& nums2, vector<vector<int>>& queries) {
-        ll n = len(nums1);
-        ll q = len(queries);
-
-        // Form a pareto front
-        auto idx = vv::argsort(nums1);
-        vi x1 = vv::slice(nums1, idx);
-        vi x2 = vv::slice(nums2, idx);
-
-        vi y1;
-        vi y2;
-        vi m2 = vv::cummax(x2, true);
-        rep(i, 0, n - 1) {
-            if (m2[i] == x2[i]) {
-                y1.pb(x1[i]);
-                y2.pb(x2[i]);
-            }
+    int count(string num1, string num2, int min_sum, int max_sum) {
+        ll n = 22;
+        ll tot = 0;
+        ll z = len(num1);
+        rep(i, 0, n - z - 1) {
+            num1 = "0" + num1;
+        }
+        z = len(num2);
+        rep(i, 0, n - z - 1) {
+            num2 = "0" + num2;
         }
 
-        n = len(y1);
-        vl sums = RC(vl, y1[i] + y2[i], i, 0, n - 1);
-
-        SparseTable st(sums, [](ll a, ll b) { return max(a, b); });
-
-        vi output;
-        rep(qi, 0, q - 1) {
-            ll ans = -1;
-            ll i1 = smallest_st(x, y1[x] >= queries[qi][0], 0, n - 1);
-            ll i2 = largest_st(x, y2[x] >= queries[qi][1], 0, n - 1);
-            if (i1 >= n || i2 < 0) {
-                output.pb(-1);
-                continue;
+        ll start = 0;
+        irep(start, 0, n - 1) {
+            if (num1[start] != num2[start]) {
+                break;
             }
-
-            if (i1 > i2) {
-                output.pb(-1);
-                continue;
-            }
-
-            output.pb(st.query(i1, i2));
+            min_sum -= stoi(num1[start]);
+            max_sum -= stoi(num2[start]);
         }
-        return output;
+
+        if (start == n) {
+            return ordered(min_sum, 0, max_sum);
+        }
+
+        // Check current digit
+        ll m = n - start - 1;
+        vl low(m);
+        vl up(m, 9);
+        rep(i, start + 1, n - 1) {
+            low[i - start - 1] = str::stoi(num1[i]);
+        }
+        tot = mod(tot + get_ans(min_sum - str::stoi(num1[start]),
+                                max_sum - str::stoi(num1[start]),
+                                m, low, up));
+        
+        // Check everything in between
+        rep(digit, str::stoi(num1[start]) + 1, str::stoi(num2[start]) - 1) {
+            vv::fill(low, 0);
+            vv::fill(up, 9);
+            tot = mod(tot + get_ans(min_sum - digit, max_sum - digit, m, low, up));
+        }
+
+        // Check last digit
+        vv::fill(low, 0);
+        up = RC(vl, str::stoi(num2[i]), i, start + 1, n - 1);
+        ll dig = str::stoi(num2[start]);
+        tot = mod(tot + get_ans(min_sum - dig, max_sum - dig, m, low, up));
+
+        return tot;
     }
 };
 
 #ifdef DEBUG
 int main() {
+    string num1, num2;
+    int min_sum, max_sum;
+    cin >> num1 >> num2 >> min_sum >> max_sum;
     Solution s;
-    vi nums1 = {4, 3, 1, 2};
-    vi nums2 = {2, 4, 9, 5};
-    vvi queries = {{4, 1}, {1, 3}, {2, 5}};
-    print(s.maximumSumQueries(nums1, nums2, queries));
+    print(s.count(num1, num2, min_sum, max_sum));
     return 0;
 }
 #endif

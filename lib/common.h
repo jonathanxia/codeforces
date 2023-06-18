@@ -474,9 +474,7 @@ namespace str {
     }
 
     int stoi(char ch) {
-        string mystr(1, ch);
-        int num = stoi(mystr);
-        return num;
+        return int(ch - '0');
     }
 
     string slice(const string& s, int start, int end) {
@@ -721,6 +719,12 @@ namespace inp {
     }
 
     void array(vl& arr, int n) {
+        rep(i, 0, n - 1) {
+            cin >> arr[i];
+        }
+    }
+
+    void array(vi& arr, int n) {
         rep(i, 0, n - 1) {
             cin >> arr[i];
         }

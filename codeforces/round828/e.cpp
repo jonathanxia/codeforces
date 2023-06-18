@@ -1238,70 +1238,70 @@ void solve() {
     vl da = nt::divisors(a);
     vl db = nt::divisors(b);
 
-    foreach(a1, da) {
-        ll a2 = a / a1;
+    //     ll a2 = a / a1;
 
-        ll l1 = a2 + 1;
-        ll r1 = c / a1;
+    //     ll l1 = a2 + 1;
+    //     ll r1 = c / a1;
 
-        ll l2 = b / a2 + 1;
-        ll r2 = d / a2;
+    //     ll l2 = b / a2 + 1;
+    //     ll r2 = d / a2;
 
-        // Street math, see if we get lucky with one of them
-        int idx1 = largest_st(z, db[z] <= r1 - l1 + 1, 0, len(db) - 1);
-        int idx2 = largest_st(z, db[z] <= r2 - l2 + 1, 0, len(db) - 1);
+    //     // Street math, see if we get lucky with one of them
+    //     int idx1 = largest_st(z, db[z] <= r1 - l1 + 1, 0, len(db) - 1);
+    //     int idx2 = largest_st(z, db[z] <= r2 - l2 + 1, 0, len(db) - 1);
         
-        if (idx1 >= 0 && idx2 >= 0 && db[idx1] * db[idx2] >= b) {
-            ll b1 = db[idx1];
+    //     if (idx1 >= 0 && idx2 >= 0 && db[idx1] * db[idx2] >= b) {
+    //         ll b1 = db[idx1];
+    //         ll b2 = b / b1;
+    //         ll x0 = a1 * b1;
+    //         ll y0 = a2 * b2;
+    //         print((c / x0) * x0, (d / y0) * y0);
+    //         return;
+    //     }
+
+    //     if (r1 - l1 < r2 - l2) {
+    //         rep(zz, l1, r1) {
+    //             foreach(b1, db) {
+    //                 if (zz % b1 == 0) {
+    //                     ll b2 = b / b1;
+    //                     if (ordered(l2, b2, r2)) {
+    //                         ll x0 = a1 * b1;
+    //                         ll y0 = a2 * b2;
+    //                         print((c / x0) * x0, (d / y0) * y0);
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     (r1 - l1 < r2 - l2) {
+    //         rep(zz, l1, r1) {
+    //             foreach(b1, db) {
+    //                 if (zz % b1 == 0) {
+    //                     ll b2 = b / b1;
+    //                     if (ordered(l2, b2, r2)) {
+    //                         ll x0 = a1 * b1;
+    //                         ll y0 = a2 * b2;
+    //                         print((c / x0) * x0, (d / y0) * y0);
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    foreach(a1, da) {
+        foreach(b1, db) {
+            ll a2 = a / a1;
             ll b2 = b / b1;
+
             ll x0 = a1 * b1;
             ll y0 = a2 * b2;
-            print((c / x0) * x0, (d / y0) * y0);
-            return;
-        }
 
-        if (r1 - l1 < r2 - l2) {
-            rep(zz, l1, r1) {
-                foreach(b1, db) {
-                    if (zz % b1 == 0) {
-                        ll b2 = b / b1;
-                        if (ordered(l2, b2, r2)) {
-                            ll x0 = a1 * b1;
-                            ll y0 = a2 * b2;
-                            print((c / x0) * x0, (d / y0) * y0);
-                        }
-                    }
-                }
+            if (a / x0 < c / x0 && b / y0 < d / y0) {
+                print((c / x0) * x0, (d / y0) * y0);
+                return;
             }
         }
-
-        (r1 - l1 < r2 - l2) {
-            rep(zz, l1, r1) {
-                foreach(b1, db) {
-                    if (zz % b1 == 0) {
-                        ll b2 = b / b1;
-                        if (ordered(l2, b2, r2)) {
-                            ll x0 = a1 * b1;
-                            ll y0 = a2 * b2;
-                            print((c / x0) * x0, (d / y0) * y0);
-                        }
-                    }
-                }
-            }
-        }
-
-        // foreach(b1, db) {
-        //     ll a2 = a / a1;
-        //     ll b2 = b / b1;
-
-        //     ll x0 = a1 * b1;
-        //     ll y0 = a2 * b2;
-
-        //     if (a / x0 < c / x0 && b / y0 < d / y0) {
-        //         print((c / x0) * x0, (d / y0) * y0);
-        //         return;
-        //     }
-        // }
     }
 
     print(-1, -1);
