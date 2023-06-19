@@ -1061,6 +1061,23 @@ namespace nt {
         return result;
     }
 
+    vl divisors(ll n) {
+        vl out;
+        ll i = 1;
+        while (i * i <= n) {
+            if (n % i == 0) {
+                out.pb(i);
+                if (i * i != n) {
+                    out.pb(n / i);
+                }
+            }
+            i++;
+        }
+        vv::sort(out);
+ 
+        return out;
+    }
+
     ll num_divisors(ll n) {
         ll divisors = 1;
 
@@ -1266,15 +1283,8 @@ public:
 
         // Check current digit
         ll m = n - start - 1;
-        vl low(m);
-        vl up(m, 9);
-        rep(i, start + 1, n - 1) {
-            low[i - start - 1] = str::stoi(num1[i]);
-        }
-        tot = mod(tot + get_ans(min_sum - str::stoi(num1[start]),
-                                max_sum - str::stoi(num1[start]),
-                                m, low, up));
-        
+        tot = mod(tot + this->count(num1, ));
+       
         // Check everything in between
         rep(digit, str::stoi(num1[start]) + 1, str::stoi(num2[start]) - 1) {
             vv::fill(low, 0);
@@ -1287,6 +1297,7 @@ public:
         up = RC(vl, str::stoi(num2[i]), i, start + 1, n - 1);
         ll dig = str::stoi(num2[start]);
         tot = mod(tot + get_ans(min_sum - dig, max_sum - dig, m, low, up));
+
 
         return tot;
     }

@@ -1,1 +1,0 @@
-{"name":"Local: a","url":"/home/jonathan/Desktop/code/codeforces/eduround150/a.cpp","tests":[{"id":1686580551147,"input":"2\n3\n6","output":"Bob\nAlice"},{"id":1686581050595,"input":"1\n4","output":"Bob"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/jonathan/Desktop/code/codeforces/eduround150/a.cpp","group":"local","local":true}

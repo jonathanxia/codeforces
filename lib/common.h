@@ -9,13 +9,13 @@ using namespace std;
 #define ass(a, b, x, y) (tie(a, b) = make_tuple(x, y));
 #define ordered(x, y, z) ((x) <= (y) && (y) <= (z))
 
-template <typename T>
-void chkmin(T& lhs, T rhs) {
-	lhs = min(lhs, rhs);
+template <typename T, typename S>
+void chkmin(T& lhs, S rhs) {
+	lhs = min(lhs, T(rhs));
 }
-template <typename T>
-void chkmax(T& lhs, T rhs) {
-	lhs = max(lhs, rhs);
+template <typename T, typename S>
+void chkmax(T& lhs, S rhs) {
+	lhs = max(lhs, T(rhs));
 }
 
 // Because unsigned sizes are absolutely stupid
@@ -135,7 +135,6 @@ namespace vv {
 
     template <typename T, typename S>
     vector<T> slice(const vector<T>& a, const vector<S> idx) {
-        int n = len(a);
         int ll = len(idx);
         vector<T> result(ll);
         for (int i = 0; i < ll; i++) {
@@ -222,7 +221,7 @@ namespace vv {
     vector<int> argsort(const vector<T>& a) {
         // Initialize original index positions
         vector<int> indices(a.size());
-        for (int i = 0; i < indices.size(); ++i) {
+        for (int i = 0; i < len(indices); ++i) {
             indices[i] = i;
         }
 
