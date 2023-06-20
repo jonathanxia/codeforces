@@ -37,7 +37,6 @@ public:
 
     ll query(int left, int right) {
         ll k = logTable[right - left + 1];
-        ll len = arrSize[right - left + 1];
         return operation(table[left][k], table[right - (1 << k) + 1][k]);
     }
 };

@@ -542,6 +542,22 @@ namespace mset {
         }
         return *(ss.rbegin());
     }
+
+    template <typename T, typename V>
+    T min(map<T, V>& ss) {
+        if (ss.empty()) {
+            throw out_of_range("Empty set min");
+        }
+        return (ss.begin())->first;
+    }
+
+    template <typename T, typename V>
+    T max(map<T, V>& ss) {
+        if (ss.empty()) {
+            throw out_of_range("Empty set max");
+        }
+        return (ss.rbegin())->first;
+    }
 }
 
 
