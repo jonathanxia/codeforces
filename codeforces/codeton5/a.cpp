@@ -1,3 +1,4 @@
+// #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -632,7 +633,7 @@ void dprint(const T& t, const Args&... args) {
 // https://codeforces.com/blog/entry/79024
 #ifndef ONLINE_JUDGE
 int recur_depth = 0;
-#define dbg(x) {++recur_depth; auto x_=x; --recur_depth; cout<<string(recur_depth, '\t')<<__func__<<":"<<__LINE__<<"\t"<<#x<<" = "<<x_<<endl;}
+#define dbg(x) {++recur_depth; auto x_=x; --recur_depth; cerr<<string(recur_depth, '\t')<<__func__<<":"<<__LINE__<<"\t"<<#x<<" = "<<x_<<endl;}
 #else
 #define dbg(x)
 #endif
@@ -715,4 +716,31 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
     }
     os << "}";
     return os;
+}
+
+void solve() {
+    ll n, m; cin >> n >> m;
+
+    vl a(n);
+    vl b(m);
+    inp::array(a, n); inp::array(b, m);
+
+    ll sa = vv::sum(a); ll sb = vv::sum(b);
+    if (sa > sb) {
+        print("Tsondu");
+    }
+    else if (sa < sb) {
+        print("Tenzing");
+    }
+    else {
+        print("Draw");
+    }
+}
+
+int main() {
+    int t; cin >> t;
+    cep(t) {
+        solve();
+    }
+    return 0;
 }

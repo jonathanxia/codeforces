@@ -1,3 +1,4 @@
+// #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -715,4 +716,49 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
     }
     os << "}";
     return os;
+}
+
+void solve() {
+    ll n; cin >> n;
+    vl a(n); inp::array(a, n);
+
+    vl prev_index(n, -1);
+    vl indices(n + 1, -1);
+    rep(i, 0, n - 1) {
+        prev_index[i] = indices[a[i]];        
+        indices[a[i]] = i;
+    }
+
+    vl answer(n);
+    answer[0] = 0;
+
+    rep(i, 1, n - 1) {
+        // Consider removing a[i]. Do you have a corresponding thing?
+        if (prev_index[i] == -1) {
+            answer[i] = answer[i - 1];
+            continue;
+        }
+
+        // Consider taking and not taking
+        ll pidx = prev_index[i];
+        chkmax(answer[i], answer[pidx] + i - pidx);
+        if (pidx > 0) {
+            chkmax(answer[i], answer[pidx - 1] + i - pidx + 1);
+        }
+        else {
+            chkmax(answer[i], i + 1);
+        }
+        chkmax(answer[i], answer[i - 1]);
+    }
+
+    dbg(answer);
+    print(answer[n - 1]);
+}
+
+int main() {
+    int t; cin >> t;
+    cep(t) {
+        solve();
+    }
+    return 0;
 }

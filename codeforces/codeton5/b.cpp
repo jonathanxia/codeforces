@@ -1,3 +1,4 @@
+// #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -632,7 +633,7 @@ void dprint(const T& t, const Args&... args) {
 // https://codeforces.com/blog/entry/79024
 #ifndef ONLINE_JUDGE
 int recur_depth = 0;
-#define dbg(x) {++recur_depth; auto x_=x; --recur_depth; cout<<string(recur_depth, '\t')<<__func__<<":"<<__LINE__<<"\t"<<#x<<" = "<<x_<<endl;}
+#define dbg(x) {++recur_depth; auto x_=x; --recur_depth; cerr<<string(recur_depth, '\t')<<__func__<<":"<<__LINE__<<"\t"<<#x<<" = "<<x_<<endl;}
 #else
 #define dbg(x)
 #endif
@@ -715,4 +716,56 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
     }
     os << "}";
     return os;
+}
+
+void solve() {
+    ll n, x; cin >> n >> x;
+
+    vl a(n);
+    vl b(n);
+    vl c(n);
+    inp::array(a, n); inp::array(b, n); inp::array(c, n);
+
+    if (x == 0) {
+        print("Yes");
+        return;
+    }
+
+    rep(i, 1, n - 1) {
+        a[i] |= a[i - 1];
+        b[i] |= b[i - 1];
+        c[i] |= c[i - 1];
+    }
+
+    // Check for first digit in which we are screwed
+    ll ai = 0, bi = 0 , ci = 0;
+    while (ai < n && (a[ai] & (~x)) == 0) {
+        ai++;
+    }
+    while (bi < n && (b[bi] & (~x)) == 0) {
+        bi++;
+    }
+    while (ci < n && (c[ci] & (~x)) == 0) {
+        ci++;
+    }
+
+    auto access = [](vl& arr, ll i) -> ll {
+        if (i >= 0) {
+            return arr[i];
+        }
+        else {
+            return 0;
+        }
+    };
+    ll final_value = access(a, ai - 1) | access(b, bi - 1) | access(c, ci - 1);
+
+    print(final_value == x ? "Yes" : "No");
+}
+
+int main() {
+    int t; cin >> t;
+    cep(t) {
+        solve();
+    }
+    return 0;
 }

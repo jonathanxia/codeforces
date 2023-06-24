@@ -1,3 +1,5 @@
+// #include<lib/dsu.h>
+// #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -715,4 +717,219 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
     }
     os << "}";
     return os;
+}
+
+class PersistantVector {
+public:
+    vl data;
+    stack<umapll> snapshots;
+
+    PersistantVector(int size) : data(size, 0) {
+        snapshots.push(umapll());
+    }
+
+    const ll operator[](int idx) const {
+        return data[idx];
+    }
+
+    void set(int idx, ll value) {
+        auto& ss = snapshots.top();
+        if (!ss.count(idx)) {
+            ss[idx] = data[idx];
+        }
+
+        data[idx] = value;
+    }
+
+    void commit() {
+        snapshots.push(umapll());
+    }
+
+    void revert() {
+        auto dd = snapshots.top();
+        snapshots.pop();
+
+        foreach(k, dd) {
+            data[k.first] = k.second;
+        }
+    }
+};
+
+class DSU {
+public:
+    PersistantVector parent;
+    PersistantVector rank;
+
+    DSU(int size) : parent(size), rank(size) {
+        for (int i = 0; i < size; ++i) {
+            parent.set(i, i);
+            rank.set(i, 0);
+        }
+    }
+
+    int find(int x) {
+        if (parent[x] != x) {
+            parent.set(x, find(parent[x])); // Path compression
+        }
+        return parent[x];
+    }
+
+    void unite(int x, int y) {
+        int rootX = find(x);
+        int rootY = find(y);
+        if (rootX != rootY) {
+            if (rank[rootX] < rank[rootY]) {
+                parent.set(rootX, rootY);
+            } else if (rank[rootX] > rank[rootY]) {
+                parent.set(rootY, rootX);
+            } else {
+                parent.set(rootY, rootX);
+                rank.set(rootX, rank[rootX] + 1);
+            }
+        }
+
+    }
+
+    void commit() {
+        parent.commit();
+        rank.commit();
+    }
+
+    void revert() {
+        parent.revert();
+        rank.revert();
+    }
+};
+
+void solve() {
+    ll n, m; cin >> n >> m;
+
+    vl u(m);
+    vl v(m);
+    vl y(m);
+
+    rep(i, 0, m - 1) {
+        cin >> u[i] >> v[i] >> y[i];
+        u[i]--;
+        v[i]--;
+    }
+
+    vi s_idx = vv::argsort(y);
+    u = vv::slice(u, s_idx);
+    v = vv::slice(v, s_idx);
+    y = vv::slice(y, s_idx);
+
+    // check if some guy is unconstrained
+    vb present(n, false);
+    rep(i, 0, m - 1) {
+        present[u[i]] = true;
+        present[v[i]] = true;
+    }
+    rep(i, 0, n - 1) {
+        if (!present[i]) {
+            print("inf");
+            return;
+        }
+    }
+
+    // Check if the graph is connected
+    vvl graph(n);
+    rep(i, 0, m - 1) {
+        graph[u[i]].pb(v[i]);
+        graph[v[i]].pb(u[i]);
+    }
+
+    vb visited(n);
+    auto dfs1 = [&](auto&& self, ll node) -> void {
+        visited[node] = true;
+        foreach(child, graph[node]) {
+            if (visited[child]) { continue; }
+            self(self, child);
+        }
+    };
+
+    dfs1(dfs1, n - 1);
+    bool is_connected = vv::all(visited);
+    if (!is_connected) {
+        print("inf");
+        return;
+    }
+
+    // OK the graph is connected, find that MST
+    DSU dsu(n);
+
+    vector<vector<pl>> tree(n);
+    ll ans = 0;
+    rep(i, 0, m - 1) {
+        int a, b;
+        a = u[i];
+        b = v[i];
+
+        ll myu = dsu.find(a);
+        ll myv = dsu.find(b);
+        if (myu == myv) {
+            continue;
+        }
+
+        tree[a].pb({b, y[i]});
+        tree[b].pb({a, y[i]});
+        dsu.unite(a, b);
+    }
+
+
+    string mystr;
+    rep(i, 0, n - 1) {
+        mystr += "0";
+    }
+
+    auto printdfs = [&](auto&& self, ll node, ll parent) -> void {
+        foreach(p, tree[node]) {
+            ll child = p.first;
+            ll edge_length = p.second;
+            if (child == parent) {
+                continue;
+            }
+            self(self, child, node);
+            // Don't print if 1 is not there lmao
+            if (mystr[0] == '1') {
+                // print(mystr, edge_length);
+                ans += edge_length;
+            }
+        }
+
+        mystr[node] = '1';
+    };
+
+    printdfs(printdfs, n - 1, -1);
+    print(n - 1, ans);
+
+    string mystr2;
+    rep(i, 0, n - 1) {
+        mystr2 += "0";
+    }
+    auto printdfs2 = [&](auto&& self, ll node, ll parent) -> void {
+        foreach(p, tree[node]) {
+            ll child = p.first;
+            ll edge_length = p.second;
+            if (child == parent) {
+                continue;
+            }
+            self(self, child, node);
+            // Don't print if 1 is not there lmao
+            if (mystr2[0] == '1') {
+                print(mystr2, edge_length);
+                // ans += edge_length;
+            }
+        }
+
+        mystr2[node] = '1';
+    };
+
+    printdfs2(printdfs2, n - 1, -1);
+
+}
+
+int main() {
+    solve();
+    return 0;
 }
