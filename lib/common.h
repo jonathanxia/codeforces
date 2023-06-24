@@ -58,13 +58,9 @@ struct custom_hash {
         return do_hash(x);
     }
 
-    template <typename T1, typename T2, typename T3, typename T4>
-    size_t operator()(const std::pair<std::pair<T1, T2>, std::pair<T3, T4>>& key) const {
-        auto h1 = (*this)(key.first.first);
-        auto h2 = (*this)(key.first.second);
-        auto h3 = (*this)(key.second.first);
-        auto h4 = (*this)(key.second.second);
-        return splitmix64(h1 ^ h2 ^ h3 ^ h4);
+    template <typename T1, typename T2>
+    size_t operator()(const std::pair<T1, T2>& key) const {
+        return (*this)(((*this)(key.first) * 37) ^ (*this)(key.second));
     }
 };
 
