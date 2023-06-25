@@ -1,5 +1,5 @@
-// #include<lib/common.h>
 // #include<lib/nt.h>
+// #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -770,17 +770,19 @@ namespace nt {
         return sum;
     }
 
-    vl get_digits(ll n, ll b) {
+    vl get_digits(ll n, ll b, ll pad=-1) {
         vl ans;
         while (n > 0) {
             ans.push_back(n % b);
             n /= b;
         }
-
+        while (len(ans) < pad) {
+            ans.pb(0);
+        }
         return ans;
     }
 
-    ll digits_to_num(vl& digs, ll b) {
+    ll digits_to_num(const vl& digs, ll b) {
         ll s = 0;
         dep(i, digs.size() - 1, 0) {
             s *= b;
@@ -798,7 +800,8 @@ namespace nt {
 
     // ll M = std::pow(10, 9) + 7;
     // ll MOD = 998244353LL;
-    ll MOD = pow(10, 9) + 7;
+    // ll MOD = pow(10, 9) + 7;
+    ll MOD = ll(std::pow(10LL, 18)) + 3;
     ll mod(ll a) {
         return mod(a, MOD);
     }
@@ -1038,32 +1041,71 @@ namespace combo {
 }
 using namespace nt;
 
+pl func(ll prior_low, ll prior_high, const vl& lower, const vl& upper) {
+    if (prior_low == 0 && prior_high == 9) {
+        vl new_lower(lower);
+        reverse(new_lower.begin(), new_lower.end());
+        return {9LL, digits_to_num(new_lower, 10)};
+    }
+    if (len(lower) == 0) {
+        return {prior_high - prior_low, 0};
+    }
+    ll n = len(lower);
+    if (lower[0] == upper[0]) {
+        ll dig = lower[0];
+        chkmin(prior_low, dig);
+        chkmax(prior_high, dig);
+        pl ret = func(prior_low, prior_high, vv::slice(lower, 1), vv::slice(upper, 1));
+        return {ret.first, dig * pow(10LL, n - 1) + ret.second};
+    }
+    // Now we know lower[0] < upper[0] for sure
+    pl ans = {10, -1};
+
+    vl new_upper(n - 1, 9);
+    ll dig = lower[0];
+    pl ret = func(min(prior_low, dig), max(prior_high, dig), vv::slice(lower, 1), new_upper);
+    ret.second += dig * pow(10LL, n - 1);
+    chkmin(ans, ret);
+
+    vl new_lower(n - 1, 0);
+    dig = upper[0];
+    ret = func(min(prior_low, dig), max(prior_high, dig), new_lower, vv::slice(upper, 1));
+    ret.second += dig * pow(10LL, n - 1);
+    chkmin(ans, ret);
+
+    // Check everything in between, but this should be fast, because we can set it to anything
+    // we want
+    ll all_ones = ll(pow(10LL, n - 1) - 1) / 9;
+    rep(dig2, lower[0] + 1, upper[0] - 1) {
+        ret = {
+            max(prior_high, dig2) - min(prior_low, dig2),
+            dig2 * pow(10LL, n - 1) + all_ones * dig2
+        };
+        chkmin(ans, ret);
+    }
+    return ans;
+}
+
 void solve() {
-    ll a, b, c, k; cin >> a >> b >> c >> k;
+    ll L, R; cin >> L >> R;
 
-    if (c > max(a, b) + 1) {
-        print(-1);
+    vl left_digits = get_digits(L, 10);
+    vl right_digits = get_digits(R, 10);
+    // No more leading zeros, but they might have different number of digits
+    pl ans = {10, -1};
+    if (len(left_digits) < len(right_digits)) {
+        ll hi = pow(10LL, ll(len(left_digits))) - 1;
+        print(hi);
         return;
     }
-    if (c < max(a, b)) {
-        print(-1);
-        return;
+
+    reverse(left_digits.begin(), left_digits.end());
+    reverse(right_digits.begin(), right_digits.end());
+
+    rep(initial_digit, 0, 9) {
+        chkmin(ans, func(initial_digit, initial_digit, left_digits, right_digits));
     }
-
-    ll smallest_a = pow(10, c) - pow(10, b) + 1;
-    if (smallest_a > pow(10, a + 1) - 1) {
-        print(-1);
-        return;
-    }
-    smallest_a = max(pow(10, a), smallest_a);
-    
-    ll smallest_b = max(10, c) - smallest_a;
-
-    ll n0 = max(10, b) - smallest_b;
-
-    ll n = largest_st(x, x * (x + 1) / 2 - n0 * (n0 - 1) / 2 <= k, 0, k);
-
-    
+    print(ans.second);
 }
 
 int main() {
