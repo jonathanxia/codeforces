@@ -487,6 +487,14 @@ namespace str {
 
         return result;
     }
+
+    string fill(const string& s, int num) {
+        string ret = "";
+        for (int i = 0; i < num; i++) {
+            ret += s;
+        }
+        return ret;
+    }
 }
 
 namespace mset {

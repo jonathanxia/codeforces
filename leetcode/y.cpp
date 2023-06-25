@@ -1,4 +1,5 @@
 // #include<lib/common.h>
+// #include<lib/nt.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -330,7 +331,6 @@ typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef pair<ll, ll> pl;
 typedef vector<vector<pl>> vvpl;
-typedef vector<pl> vpl;
 
 // Maps
 typedef unordered_map<ll, ll, custom_hash> umapll;
@@ -719,75 +719,385 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
     return os;
 }
 
-class Solution {
-public:
-    vector<int> survivedRobotsHealths(vector<int>& positions, vector<int>& healths, string directions) {
-        ll n = len(healths);
-        vi dirs(n); 
-        rep(i, 0, n - 1) {
-            dirs[i] = directions[i] == 'R' ? 1 : -1;
-        }
-        vi s_idx = vv::argsort(positions);
-        healths = vv::slice(healths, s_idx);
-        dirs = vv::slice(dirs, s_idx);
+namespace nt {
+    vl primes;
+    vl isnotprime;
+    bool sieve_done = false;
 
-        vpl remaining_healths;
-        vl forward_healths(n);
-        dep(i, n - 1, 0) {
-            if (dirs[i] == -1) {
-                remaining_healths.pb({healths[i], i});
-                continue;
-            }
-            ll my_health = healths[i];
-            while (my_health > 0 && remaining_healths.size()) {
-                auto pp = remaining_healths.back();
-                if (my_health > pp.first) {
-                    remaining_healths.pop_back();
-                    my_health--;
+    void do_sieve(ll max_prime) {
+        isnotprime.resize(max_prime + 1);
+        rep(d, 2, max_prime) {
+            if (!isnotprime[d]) {
+                primes.push_back(d);
+
+                int x = 2 * d;
+                while (x <= max_prime) {
+                    isnotprime[x] = true;
+                    x += d;
                 }
-                else if (my_health == pp.first) {
-                    remaining_healths.pop_back();
-                    my_health = 0;
+            }
+        }
+        sieve_done = true;
+    }
+
+    bool is_prime(ll n) {
+        // Checks if n is prime
+        if (n <= 1) {
+            return false;
+        }
+
+        ll p = *prev(primes.end());
+        if (p * p < n) {
+            throw out_of_range("Generate more primes please");
+        }
+
+        ll i = 0;
+        while (primes[i] * primes[i] <= n) {
+            if (n % primes[i] == 0) {
+                return false;
+            }
+            i++;
+        }
+        return true;
+    }
+
+    ll sum_digits(ll n, ll b) {
+        int sum = 0;
+        while (n > 0) {
+            sum += n % b;
+            n /= b;
+        }
+        return sum;
+    }
+
+    vl get_digits(ll n, ll b, ll pad=-1) {
+        vl ans;
+        while (n > 0) {
+            ans.push_back(n % b);
+            n /= b;
+        }
+        while (len(ans) < pad) {
+            ans.pb(0);
+        }
+        return ans;
+    }
+
+    ll digits_to_num(const vl& digs, ll b) {
+        ll s = 0;
+        dep(i, digs.size() - 1, 0) {
+            s *= b;
+            s += digs[i];
+        }
+        return s;
+    }
+
+    ll mod(ll a, ll p) {
+        if (p > 0) {
+            return (a % p + p) % p;
+        }
+        return a;
+    }
+
+    // ll M = std::pow(10, 9) + 7;
+    // ll MOD = 998244353LL;
+    ll MOD = ll(pow(10, 9)) + 7;
+    ll mod(ll a) {
+        return mod(a, MOD);
+    }
+
+    // Function to calculate (base^exponent) % modulus using repeated squaring
+    ll pow(ll base, ll exponent, ll modulus=MOD) {
+        ll result = 1;
+
+        while (exponent > 0) {
+            // If the exponent is odd, multiply the result by base
+            if (exponent & 1) {
+                if (modulus > 0) {
+                    result = (result * base) % modulus;
                 }
                 else {
-                    ll nidx = len(remaining_healths) - 1;
-                    remaining_healths[nidx].first--;
-                    my_health = 0;
+                    result = result * base;
                 }
             }
-            // Did I live?
-            forward_healths[i] = my_health;
+
+            // Square the base and reduce the exponent by half
+            if (modulus > 0) {
+                base = (base * base) % modulus;
+            }
+            else {
+                base = base * base;
+            }
+            exponent >>= 1;
         }
 
-        // Actually collect people's health now
-        rep(i, 0, n - 1) {
-            healths[i] = forward_healths[i];
-        }
-        foreachp(k, v, remaining_healths) {
-            healths[v] = k;
+        return result;
+    }
+
+    ll inv(ll x, ll y) {
+        ll p = y;
+
+        ll ax = 1;
+        ll ay = 0;
+        while (x > 0) {
+            ll q = y / x;
+            tie(ax, ay) = make_tuple(ay - q * ax, ax);
+            tie(x, y) = make_tuple(y % x, x);
         }
 
-        // Sorted version, now undo the sort
-        vl new_healths(n);
-        rep(i, 0, n - 1) {
-            new_healths[s_idx[i]] = healths[i];
+        return mod(ay, p);
+    }
+
+    ll mdiv(ll x, ll y, ll m=MOD) {
+        if (m <= 0) {
+            return x / y;
         }
-        vi output;
-        rep(i, 0, n - 1) {
-            if (new_healths[i] > 0) {
-                output.pb(new_healths[i]);
+        x = mod(x);
+        y = mod(y);
+        return mod(x * inv(y, m), m);
+    }
+
+    ll v_p(ll x, ll p) {
+        ll res = 0;
+        while (x % p == 0) {
+            ++res;
+            x /= p;
+        }
+        return res;
+    }
+
+    ll factorial(ll x) {
+        ll p = 1;
+        rep(i, 1, x) {
+            p *= i;
+            p = mod(p);
+        }
+        return p;
+    }
+
+    bool is_pow_of_2(ll n) {
+        return (n > 0) && ((n & (n - 1)) == 0);
+    }
+
+    ll phi(ll n) {
+        ll result = n;
+        if (!sieve_done) {
+            throw out_of_range("Sieve not done, please run do_sieve");
+        }
+
+        for (ll prime : primes) {
+            if (prime * prime > n)
+                break;
+            if (n % prime == 0) {
+                while (n % prime == 0) {
+                    n /= prime;
+                }
+                result -= result / prime;
             }
         }
-        return output;
+
+        if (n > 1) {
+            result -= result / n;
+        }
+
+        return result;
+    }
+
+    ll num_divisors(ll n) {
+        ll divisors = 1;
+
+        for (ll prime : primes) {
+            if (prime * prime > n)
+                break;
+
+            ll count = 0;
+            while (n % prime == 0) {
+                n /= prime;
+                count++;
+            }
+
+            divisors *= (count + 1);
+        }
+
+        if (n > 1) {
+            divisors *= 2;
+        }
+
+        return divisors;
+    }
+
+    ll sum_divisors(ll n) {
+        ll sum = 1;
+
+        for (ll prime : primes) {
+            if (prime * prime > n)
+                break;
+
+            if (n % prime == 0) {
+                ll factorSum = 1;
+                ll power = 1;
+                while (n % prime == 0) {
+                    n /= prime;
+                    power *= prime;
+                    factorSum += power;
+                }
+                sum *= factorSum;
+            }
+        }
+
+        if (n > 1) {
+            sum *= (n + 1);
+        }
+
+        return sum;
+    }
+
+    umapll primeFactorization(ll n) {
+        umapll factors;
+
+        for (ll prime : primes) {
+            if (prime * prime > n)
+                break;
+
+            ll exponent = 0;
+            while (n % prime == 0) {
+                n /= prime;
+                exponent++;
+            }
+
+            if (exponent > 0) {
+                factors[prime] = exponent;
+            }
+        }
+
+        if (n > 1) {
+            factors[n] = 1;
+        }
+
+        return factors;
+    }
+}
+
+namespace combo {
+    ll choose(ll n, ll k, ll m=-1) {
+        ll p = 1;
+        rep(i, 1, k) {
+            p = p * (n - k + i) / i;
+            if (m > 0) {
+                p = nt::mod(p, m);
+            }
+        }
+        return p;
+    }
+
+    vl precompute_choose(ll n1, ll n2, ll k, ll m=-1) {
+        vl result(n2 - n1 + 1);
+        ll idx = max(k - n1, 0LL);
+        if (idx > n2 - n1) {
+            return result;
+        }
+        if (n1 + idx == k) {
+            result[idx] = 1;
+        }
+        else {
+            result[idx] = choose(n1 + idx, k, m);
+        }
+        rep(i, idx + 1, n2 - n1) {
+            result[i] = result[i - 1] * (n1 + i) / (n1 + i - k);
+            if (m > 0) {
+                result[i] %= m;
+            }
+        }
+        return result;
+    }
+
+    vl precompute_choose2(ll n, ll k1, ll k2, ll m = -1) {
+        vl result(k2 - k1 + 1);
+        result[0] = choose(n, k1, m=m);
+        rep(i, k1 + 1, k2) {
+            if (m > 0) {
+                result[i] = nt::mdiv(
+                    result[i - 1] * (n - i + 1), i, m);
+            }
+            else {
+                result[i] = result[i - 1] * (n - i + 1) / i;
+            }
+        }
+        return result;
+    }
+
+    using namespace nt;
+    vl precompute_catalan(ll n, ll m = MOD) {
+        vl result(n + 1);
+        result[0] = 1;
+        rep(i, 1, n) {
+            result[i] = nt::mod(result[i - 1] * 2 * i, m);
+            result[i] = nt::mod(result[i] * (2 * i - 1), m);
+            result[i] = nt::mdiv(result[i], i + 1, m);
+            result[i] = nt::mdiv(result[i], i, m);
+        }
+        return result;
+    }
+}
+
+class Solution {
+public:
+    int numberOfGoodSubarraySplits(vector<int>& nums) {
+        ll n = len(nums);
+        bool all_zero = true;
+        foreach(no, nums) {
+            if (no == 1) {
+                all_zero = false;
+            }
+        }
+        if (all_zero) {return 0;}
+        vl left_index(n, -1);
+        vl right_index(n, n);
+        rep(i, 1, n - 1) {
+            if (nums[i - 1]) {
+                left_index[i] = i - 1;
+            }
+            else {
+                left_index[i] = left_index[i - 1];
+            }
+        }
+
+        dep(i, n - 2, 0) {
+            if (nums[i + 1]) {
+                right_index[i] = i + 1;
+            }
+            else {
+                right_index[i] = right_index[i + 1];
+            }
+        }
+
+        vl ans(n + 1);
+        ans[0] = 1;
+        rep(i, 1, n) {
+            // Do we include a[i - 1] or not?
+            if (nums[i - 1] == 0) {
+                ans[i] = ans[i - 1];
+                continue;
+            }
+            // nums[i - 1] is actually 1, so we see how many times we can include it
+            ll left = left_index[i - 1];
+            if (left < 0) {
+                ans[i] = 1;
+            }
+            else {
+                ans[i] = ans[left + 1] * (i - left - 1);
+                ans[i] = nt::mod(ans[i]);
+            }
+        }
+        return ans[n];
+
     }
 };
 
 #ifdef DEBUG
 int main() {
     Solution s;
-    vi a = {5, 4, 3, 2, 1};
-    vi b = {2, 17, 9, 15, 10};
-    print(s.survivedRobotsHealths(a, b, "RRRRR"));
+    vi nums = {0, 1, 0, 0, 1};
+    print(s.numberOfGoodSubarraySplits(nums));
     return 0;
 }
 #endif

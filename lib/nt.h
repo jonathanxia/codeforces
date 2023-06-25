@@ -51,17 +51,19 @@ namespace nt {
         return sum;
     }
 
-    vl get_digits(ll n, ll b) {
+    vl get_digits(ll n, ll b, ll pad=-1) {
         vl ans;
         while (n > 0) {
             ans.push_back(n % b);
             n /= b;
         }
-
+        while (len(ans) < pad) {
+            ans.pb(0);
+        }
         return ans;
     }
 
-    ll digits_to_num(vl& digs, ll b) {
+    ll digits_to_num(const vl& digs, ll b) {
         ll s = 0;
         dep(i, digs.size() - 1, 0) {
             s *= b;
@@ -79,7 +81,7 @@ namespace nt {
 
     // ll M = std::pow(10, 9) + 7;
     // ll MOD = 998244353LL;
-    ll MOD = pow(10, 9) + 7;
+    ll MOD = ll(pow(10, 9)) + 7;
     ll mod(ll a) {
         return mod(a, MOD);
     }
