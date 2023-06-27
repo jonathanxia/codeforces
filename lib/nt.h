@@ -100,6 +100,10 @@ namespace nt {
                     result = result * base;
                 }
             }
+            exponent >>= 1;
+            if (exponent == 0) {
+                break;
+            }
 
             // Square the base and reduce the exponent by half
             if (modulus > 0) {
@@ -108,7 +112,6 @@ namespace nt {
             else {
                 base = base * base;
             }
-            exponent >>= 1;
         }
 
         return result;

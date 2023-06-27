@@ -116,7 +116,7 @@ namespace vv {
     }
 
     template <typename T>
-    vector<T> slice(const vector<T>& a, int start=0, int end=-1) {
+    vector<T> slc(const vector<T>& a, int start=0, int end=-1) {
         int n = len(a);
         if (end == -1) {
             end = n - 1;
@@ -130,7 +130,7 @@ namespace vv {
     }
 
     template <typename T, typename S>
-    vector<T> slice(const vector<T>& a, const vector<S> idx) {
+    vector<T> slc(const vector<T>& a, const vector<S> idx) {
         int ll = len(idx);
         vector<T> result(ll);
         for (int i = 0; i < ll; i++) {
@@ -207,7 +207,7 @@ namespace vv {
             return;  // Invalid indices or empty range
         }
 
-        std::sort(a.begin() + start, a.begin() + end + 1,
+        std::stable_sort(a.begin() + start, a.begin() + end + 1,
                 [&keyFunc](const T& x, const T& y) {
                     return keyFunc(x) < keyFunc(y);
                 });
@@ -222,9 +222,8 @@ namespace vv {
         }
 
         // Sort the indices based on comparing array values
-        sort(indices.begin(), indices.end(), [&](int i1, int i2) {
-            return a[i1] < a[i2];
-        });
+        std::stable_sort(indices.begin(), indices.end(), [&](int i1, int i2)
+                         { return a[i1] < a[i2]; });
 
         return indices;
     }
@@ -472,7 +471,7 @@ namespace str {
         return int(ch - '0');
     }
 
-    string slice(const string& s, int start, int end) {
+    string slc(const string& s, int start, int end) {
         return s.substr(start, end - start);
     }
 

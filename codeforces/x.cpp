@@ -1,4 +1,3 @@
-// #include<lib/nt.h>
 // #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
@@ -118,7 +117,7 @@ namespace vv {
     }
 
     template <typename T>
-    vector<T> slice(const vector<T>& a, int start=0, int end=-1) {
+    vector<T> slc(const vector<T>& a, int start=0, int end=-1) {
         int n = len(a);
         if (end == -1) {
             end = n - 1;
@@ -132,7 +131,7 @@ namespace vv {
     }
 
     template <typename T, typename S>
-    vector<T> slice(const vector<T>& a, const vector<S> idx) {
+    vector<T> slc(const vector<T>& a, const vector<S> idx) {
         int ll = len(idx);
         vector<T> result(ll);
         for (int i = 0; i < ll; i++) {
@@ -209,7 +208,7 @@ namespace vv {
             return;  // Invalid indices or empty range
         }
 
-        std::sort(a.begin() + start, a.begin() + end + 1,
+        std::stable_sort(a.begin() + start, a.begin() + end + 1,
                 [&keyFunc](const T& x, const T& y) {
                     return keyFunc(x) < keyFunc(y);
                 });
@@ -224,9 +223,8 @@ namespace vv {
         }
 
         // Sort the indices based on comparing array values
-        sort(indices.begin(), indices.end(), [&](int i1, int i2) {
-            return a[i1] < a[i2];
-        });
+        std::stable_sort(indices.begin(), indices.end(), [&](int i1, int i2)
+                         { return a[i1] < a[i2]; });
 
         return indices;
     }
@@ -474,7 +472,7 @@ namespace str {
         return int(ch - '0');
     }
 
-    string slice(const string& s, int start, int end) {
+    string slc(const string& s, int start, int end) {
         return s.substr(start, end - start);
     }
 
@@ -488,6 +486,14 @@ namespace str {
         }
 
         return result;
+    }
+
+    string fill(const string& s, int num) {
+        string ret = "";
+        for (int i = 0; i < num; i++) {
+            ret += s;
+        }
+        return ret;
     }
 }
 
@@ -719,80 +725,53 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
     return os;
 }
 
-
-using namespace nt;
-
-pl func(ll prior_low, ll prior_high, const vl& lower, const vl& upper) {
-    if (prior_low == 0 && prior_high == 9) {
-        vl new_lower(lower);
-        reverse(new_lower.begin(), new_lower.end());
-        return {9LL, digits_to_num(new_lower, 10)};
-    }
-    if (len(lower) == 0) {
-        return {prior_high - prior_low, 0};
-    }
-    ll n = len(lower);
-    if (lower[0] == upper[0]) {
-        ll dig = lower[0];
-        chkmin(prior_low, dig);
-        chkmax(prior_high, dig);
-        pl ret = func(prior_low, prior_high, vv::slice(lower, 1), vv::slice(upper, 1));
-        return {ret.first, dig * pow(10LL, n - 1) + ret.second};
-    }
-    // Now we know lower[0] < upper[0] for sure
-    pl ans = {10, -1};
-
-    vl new_upper(n - 1, 9);
-    ll dig = lower[0];
-    pl ret = func(min(prior_low, dig), max(prior_high, dig), vv::slice(lower, 1), new_upper);
-    ret.second += dig * pow(10LL, n - 1);
-    chkmin(ans, ret);
-
-    vl new_lower(n - 1, 0);
-    dig = upper[0];
-    ret = func(min(prior_low, dig), max(prior_high, dig), new_lower, vv::slice(upper, 1));
-    ret.second += dig * pow(10LL, n - 1);
-    chkmin(ans, ret);
-
-    // Check everything in between, but this should be fast, because we can set it to anything
-    // we want
-    ll all_ones = ll(pow(10LL, n - 1) - 1) / 9;
-    rep(dig2, lower[0] + 1, upper[0] - 1) {
-        ret = {
-            max(prior_high, dig2) - min(prior_low, dig2),
-            dig2 * pow(10LL, n - 1) + all_ones * dig2
-        };
-        chkmin(ans, ret);
-    }
-    return ans;
-}
-
 void solve() {
-    ll L, R; cin >> L >> R;
+    ll n, m; cin >> n >> m;
 
-    vl left_digits = get_digits(L, 10);
-    vl right_digits = get_digits(R, 10);
-    // No more leading zeros, but they might have different number of digits
-    pl ans = {10, -1};
-    if (len(left_digits) < len(right_digits)) {
-        ll hi = pow(10LL, ll(len(left_digits))) - 1;
-        print(hi);
-        return;
+    vvpl graph(n);
+    rep(i, 0, m - 1) {
+        ll u, v, y; cin >> u >> v >> y;
+        u--; v--;
+        graph[u].pb({v, y}); graph[v].pb({u, y});
     }
 
-    reverse(left_digits.begin(), left_digits.end());
-    reverse(right_digits.begin(), right_digits.end());
+    // Run dijkstra on the graph
+    vl dist(n, LONG_LONG_MAX);
+    vb processed(n);
+    set<pl> stuff;
+    stuff.insert({0, 0});
+    while (!stuff.empty()) {
+        auto [distance, node] = mset::min(stuff);
+        stuff.erase({distance, node});
 
-    rep(initial_digit, 0, 9) {
-        chkmin(ans, func(initial_digit, initial_digit, left_digits, right_digits));
+        if (processed[node]) continue;
+        processed[node] = true;
+        dist[node] = distance;
+        if (node == n - 1) {
+            break;
+        }
+        
+        foreachp(child, edge, graph[node]) {
+            if (processed[child]) {continue;}
+            stuff.insert({distance + edge, child});
+        }
     }
-    print(ans.second);
+    if (dist[n - 1] == LONG_LONG_MAX) {
+        print("inf"); return;
+    }
+    vi s_idx = vv::argsort(dist);
+    print(dist[n - 1], vv::indexof(s_idx, n - 1));
+
+    string plays(n, '0');
+    rep(si, 0, n - 2) {
+        plays[s_idx[si]] = '1';
+        ll amount = dist[s_idx[si + 1]] - dist[s_idx[si]];
+        print(plays, amount);
+        if (s_idx[si + 1] == n - 1) break;
+    }
 }
 
 int main() {
-    int t; cin >> t;
-    cep(t) {
-        solve();
-    }
+    solve();
     return 0;
 }
