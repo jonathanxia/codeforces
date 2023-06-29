@@ -28,6 +28,7 @@ inline int len(const T& v) {
 
 #define to_str to_string
 #define pb push_back
+#define mp make_pair
 
 typedef long long ll;
 
@@ -329,6 +330,7 @@ typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef pair<ll, ll> pl;
 typedef vector<vector<pl>> vvpl;
+typedef vector<pl> vpl;
 
 // Maps
 typedef unordered_map<ll, ll, custom_hash> umapll;
@@ -500,7 +502,11 @@ namespace str {
 namespace mset {
     template <typename S, typename T>
     void mset_del(S& ss, T x) {
-        ss.erase(ss.find(x));
+        auto it = ss.find(x);
+        if (it == ss.end()) {
+            throw std::out_of_range("element not found");
+        }
+        ss.erase(it);
     }
 
     template <typename S, typename T>
@@ -725,53 +731,36 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
     return os;
 }
 
+template<typename T>
+istream& operator>>(istream& input, vector<T>& vec) {
+    for (auto& element : vec) {
+        input >> element;
+    }
+    return input;
+}
+
+#define INTERACTIVE
+
 void solve() {
-    ll n, m; cin >> n >> m;
+    ll n; cin >> n;
+    
+    print("+", n + 1);
+    int x; cin >> x;
+    if (x == -2) {return;}
+    print("+", n);
+    int x; cin >> x;
+    if (x == -2) {return;}
 
-    vvpl graph(n);
-    rep(i, 0, m - 1) {
-        ll u, v, y; cin >> u >> v >> y;
-        u--; v--;
-        graph[u].pb({v, y}); graph[v].pb({u, y});
-    }
-
-    // Run dijkstra on the graph
-    vl dist(n, LONG_LONG_MAX);
-    vb processed(n);
-    set<pl> stuff;
-    stuff.insert({0, 0});
-    while (!stuff.empty()) {
-        auto [distance, node] = mset::min(stuff);
-        stuff.erase({distance, node});
-
-        if (processed[node]) continue;
-        processed[node] = true;
-        dist[node] = distance;
-        if (node == n - 1) {
-            break;
-        }
-        
-        foreachp(child, edge, graph[node]) {
-            if (processed[child]) {continue;}
-            stuff.insert({distance + edge, child});
-        }
-    }
-    if (dist[n - 1] == LONG_LONG_MAX) {
-        print("inf"); return;
-    }
-    vi s_idx = vv::argsort(dist);
-    print(dist[n - 1], vv::indexof(s_idx, n - 1));
-
-    string plays(n, '0');
-    rep(si, 0, n - 2) {
-        plays[s_idx[si]] = '1';
-        ll amount = dist[s_idx[si + 1]] - dist[s_idx[si]];
-        print(plays, amount);
-        if (s_idx[si + 1] == n - 1) break;
+    pl farthest = {-1, -1};
+    rep(i, 2, n) {
+        print("?", 1, i);
+        int r; cin >> r;
+        chkmax(farthest, mp(r, i));
     }
 }
 
 int main() {
-    solve();
+    init(); int t; cin >> t;
+    cep(t) {solve();}
     return 0;
 }

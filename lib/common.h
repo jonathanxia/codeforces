@@ -27,6 +27,7 @@ inline int len(const T& v) {
 
 #define to_str to_string
 #define pb push_back
+#define mp make_pair
 
 typedef long long ll;
 
@@ -328,6 +329,7 @@ typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef pair<ll, ll> pl;
 typedef vector<vector<pl>> vvpl;
+typedef vector<pl> vpl;
 
 // Maps
 typedef unordered_map<ll, ll, custom_hash> umapll;
@@ -499,7 +501,11 @@ namespace str {
 namespace mset {
     template <typename S, typename T>
     void mset_del(S& ss, T x) {
-        ss.erase(ss.find(x));
+        auto it = ss.find(x);
+        if (it == ss.end()) {
+            throw std::out_of_range("element not found");
+        }
+        ss.erase(it);
     }
 
     template <typename S, typename T>
@@ -722,4 +728,12 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
     }
     os << "}";
     return os;
+}
+
+template<typename T>
+istream& operator>>(istream& input, vector<T>& vec) {
+    for (auto& element : vec) {
+        input >> element;
+    }
+    return input;
 }
