@@ -1,5 +1,5 @@
-// #include<lib/sparsetable.h>
 // #include<lib/common.h>
+// #include<lib/lazy_segment_tree.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -385,15 +385,6 @@ typedef priority_queue<ll, vl, less<ll>> maxheap;
     lcret; \
 })
 
-#define RCC(typ, expr, x, lo, hi, cond) ({ \
-    typ lcret; \
-    rep(x, lo, hi) {\
-        if (cond) \
-        lcret.push_back(expr); \
-    } \
-    lcret; \
-})
-
 #define LC(typ, expr, x, arr) ({ \
     typ lcret; \
     foreach(x, arr) {\
@@ -401,8 +392,6 @@ typedef priority_queue<ll, vl, less<ll>> maxheap;
     } \
     lcret; \
 })
-
-
 
 int dx[4] = {1, 0, -1, 0};
 int dy[4] = {0, 1, 0, -1};
@@ -741,92 +730,250 @@ istream& operator>>(istream& input, vector<T>& vec) {
     return input;
 }
 
-class SparseTable {
-public:
-    vector<vector<ll>> table;
-    vector<ll> logTable;
-    vector<ll> arrSize;
-    function<ll(ll, ll)> operation;
+struct node {
+    ll data;
+    bool is_empty;
 
-    SparseTable(const vector<ll>& arr, function<ll(ll, ll)> op) {
-        ll n = arr.size();
-        ll logn = log2(n) + 1;
-
-        table.resize(n, vector<ll>(logn));
-        logTable.resize(n + 1);
-        arrSize.resize(n + 1);
-        operation = op;
-
-        // Precompute logarithm values and array sizes
-        for (int i = 2; i <= n; i++) {
-            logTable[i] = logTable[i / 2] + 1;
-            arrSize[i] = arrSize[i / 2] + (i & 1);
-        }
-
-        // Initialize the first column of the table
-        for (int i = 0; i < n; i++) {
-            table[i][0] = arr[i];
-        }
-
-        // Compute the rest of the table using dynamic programming
-        for (int j = 1; (1 << j) <= n; j++) {
-            for (int i = 0; (i + (1 << j) - 1) < n; i++) {
-                table[i][j] = operation(table[i][j - 1], table[i + (1 << (j - 1))][j - 1]);
-            }
-        }
+    node() {
+        data = 0;
+        is_empty = true;
     }
-
-    ll query(int left, int right) {
-        ll k = logTable[right - left + 1];
-        return operation(table[left][k], table[right - (1 << k) + 1][k]);
+    node(ll val) {
+        data = val;
+        is_empty = false;
     }
 };
 
-// int main() {
-//     SparseTable st({3, 5, 1, 4, 2}, [](ll a, ll b) {return min(a, b);});
-//     print(st.query(2, 4));
-// }
+struct lazynode {
+    ll data;
+    bool is_empty;
 
-#define METHOD sumImbalanceNumbers
+    lazynode() {
+        data = 0;
+        is_empty = true;
+    }
+    lazynode(ll val) {
+        data = val;
+        is_empty = false;
+    }
+};
+
+std::ostream& operator<<(std::ostream& os, const node& mp)
+{
+    os << mp.data;
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const lazynode& mp)
+{
+    os << mp.data;
+    return os;
+}
+
+
+class LazySegmentTree {
+public:
+    ll n;
+    vl a;
+    function<node(node, node)>             merge;
+    function<node(node, int, lazynode)>    apply;
+    function<lazynode(lazynode, lazynode)> lazymerge;
+
+	vector<lazynode> lazy;
+	vector<node> tr;
+
+    node truemerge(node node1, node node2) {
+        if (node1.is_empty) {
+            return node2;
+        }
+        if (node2.is_empty) {
+            return node1;
+        }
+        return merge(node1, node2);
+    }
+
+    node trueapply(node node1, int num, lazynode node2) {
+        if (node2.is_empty) {
+            return node1;
+        }
+        return apply(node1, num, node2);
+    }
+
+    lazynode truelazymerge(lazynode node1, lazynode node2) {
+        if (node2.is_empty) {
+            return node1;
+        }
+        return lazymerge(node1, node2);
+    }
+
+    // CHANGE ME!
+	void push(int l, int r, int idx) {
+		if(!lazy[idx].is_empty) {
+            tr[idx] = trueapply(tr[idx], r - l + 1, lazy[idx]);
+
+			if(l != r) {
+				lazy[2 * idx + 1] = truelazymerge(lazy[2 * idx + 1], lazy[idx]);
+				lazy[2 * idx + 2] = truelazymerge(lazy[2 * idx + 2], lazy[idx]);
+			}
+
+			lazy[idx] = lazynode();
+		}
+	}
+
+
+	void init(int l, int r, int idx) {
+		if(l == r) {
+			tr[idx] = node(a[l]);
+			return;
+		}
+
+		int mid = (l + r) >> 1;
+		init(l, mid, 2 * idx + 1);
+		init(mid + 1, r, 2 * idx + 2);
+
+		tr[idx] = truemerge(tr[2 * idx + 1], tr[2 * idx + 2]);
+	}
+
+    template <typename T>
+    LazySegmentTree(
+        const vector<T>& arr,
+        function<node(node, node)> op,
+        function<node(node, int, lazynode)> applyop,
+        function<lazynode(lazynode, lazynode)> lazyop
+
+    ) : a(arr), lazy(4 * arr.size()), tr(4 * arr.size())
+    {
+        merge = op;
+        apply = applyop;
+        lazymerge = lazyop;
+        n = a.size();
+        init(0, n - 1, 0);
+    }
+
+	void update(int qL, int qR, ll val, int l, int r, int idx) {
+		push(l, r, idx);
+
+		if(qL > r || l > qR) {
+			return;
+		}
+
+		if(qL <= l && r <= qR) {
+			lazy[idx] = truelazymerge(lazy[idx], lazynode(val));
+			push(l, r, idx);
+			return;
+		}
+
+		int mid = (l + r) >> 1;
+		update(qL, qR, val, l, mid, 2 * idx + 1);
+		update(qL, qR, val, mid + 1, r, 2 * idx + 2);
+
+		tr[idx] = truemerge(tr[2 * idx + 1], tr[2 * idx + 2]);
+	}
+
+    void update(int qL, int qR, ll val) {
+        update(qL, qR, val, 0, n - 1, 0);
+    }
+
+	node query(int qL, int qR, int l, int r, int idx) {
+		push(l, r, idx);
+
+		if(l > qR || r < qL) {
+			return node();
+		}
+
+		if(qL <= l && r <= qR) {
+			return tr[idx];
+		}
+
+		int mid = (l + r) >> 1;
+		return truemerge(query(qL, qR, l, mid, 2 * idx + 1), query(qL, qR, mid + 1, r, 2 * idx + 2));
+	}
+
+    node query(int qL, int qR) {
+        return query(qL, qR, 0, n - 1, 0);
+    }
+};
+
+node assign_apply(node n1, int num, lazynode n2) {
+    return node(n2.data);
+}
+lazynode assign_lazy_merge(lazynode n1, lazynode n2) {
+    return lazynode(n2.data);
+}
+node nmin(node n1, node n2) {
+    return node(min(n1.data, n2.data));
+}
+
+class MinSegmentTree : public LazySegmentTree {
+public:
+    template <typename T>
+    MinSegmentTree(const vector<T>& v) : LazySegmentTree(
+        v,
+        nmin,
+        assign_apply,
+        assign_lazy_merge
+    )
+    {}
+};
+
+class MaxSegmentTree : public LazySegmentTree {
+public:
+    template <typename T>
+    MaxSegmentTree(const vector<T>& v) : LazySegmentTree(
+        v,
+        [](node n1, node n2) {
+            return node(max(n1.data, n2.data));
+        },
+        [](node n1, int num, lazynode n2) {
+            // Assuming assignment updates
+            return node(n2.data);
+        },
+        [](lazynode n1, lazynode n2) {
+            return lazynode(n2.data);
+        }
+    )
+    {}
+};
+
+class SumSegmentTree : public LazySegmentTree {
+public:
+    template <typename T>
+    SumSegmentTree(const vector<T>& v) : LazySegmentTree(
+        v,
+        [](node n1, node n2) {
+            return node(n1.data + n2.data);
+        },
+        [](node n1, int num, lazynode n2) {
+            // Assuming assignment updates
+            return node(n2.data * num);
+        },
+        [](lazynode n1, lazynode n2) {
+            return lazynode(n2.data);
+        }
+    )
+    {}
+};
+
+
+#define METHOD continuousSubarrays
 
 class Solution {
 public:
-    int sumImbalanceNumbers(vector<int>& nums) {
-        ll n = len(nums);        
-        ll tot = 0;
-        rep(i, 0, n - 1) {
-            // Start from i, go backwards
-            set<ll> stuff;
-            ll cnt = 0;
-            stuff.insert(nums[i]);
-            dep(j, i - 1, 0) {
-                if (stuff.count(nums[j]) > 0) { tot += cnt; continue;}
-                stuff.insert(nums[j]);
-                auto it = stuff.find(nums[j]);
-
-                auto nxt = next(it);
-                if (nxt == stuff.end() && it == stuff.begin()) { tot += cnt; continue;}
-                if (nxt == stuff.end()) {
-                    // I put it at the end, so just jiggle jiggle it
-                    auto p = prev(it);
-                    cnt += (nums[j] - *p) > 1;
-                }
-                else if (it == stuff.begin()) {
-                    // Tragedy strategy
-                    cnt += (*nxt - nums[j]) > 1;
-                }
-                else {
-                    // Stuff on both sides! great!
-                    cnt--;
-                    cnt += (*nxt - nums[j] > 1);
-                    auto p = prev(it);
-                    cnt += (nums[j] - *p > 1);
-                }
-                tot += cnt;
-            }
+    long long continuousSubarrays(vector<int>& nums) {
+        ll n = len(nums);
+        vl num2(n);
+        rep(i, 0, n -1 ) {
+            num2[i] = nums[i];
         }
+        MinSegmentTree stlo(num2);
+        MaxSegmentTree sthi(num2);
 
-        return tot;
+        ll ans = 0;
+        rep(i, 0, n - 1) {
+            ll idx = smallest_st(x, sthi.query(x, i).data - stlo.query(x, i).data <= 2, 0, i);
+            ans += i - idx + 1;
+        }
+        return ans;
     }
 };
 
@@ -835,7 +982,8 @@ public:
 #ifdef DEBUG
 int main() {
     Solution s;
-    vi x = {1, 3, 3, 3, 5};
+    ll y = 1000000000;
+    vi x(300000, y);
     print(s.METHOD(x));
     return 0;
 }

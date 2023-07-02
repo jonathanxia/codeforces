@@ -1,4 +1,5 @@
 // #include<lib/common.h>
+// #include<lib/lazy_segment_tree.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -29,6 +30,7 @@ inline int len(const T& v) {
 #define to_str to_string
 #define pb push_back
 #define mp make_pair
+#define ALL(x) (x).begin(), (x).end()
 
 typedef long long ll;
 
@@ -383,15 +385,6 @@ typedef priority_queue<ll, vl, less<ll>> maxheap;
     lcret; \
 })
 
-#define RCC(typ, expr, x, lo, hi, cond) ({ \
-    typ lcret; \
-    rep(x, lo, hi) {\
-        if (cond) \
-        lcret.push_back(expr); \
-    } \
-    lcret; \
-})
-
 #define LC(typ, expr, x, arr) ({ \
     typ lcret; \
     foreach(x, arr) {\
@@ -399,8 +392,6 @@ typedef priority_queue<ll, vl, less<ll>> maxheap;
     } \
     lcret; \
 })
-
-
 
 int dx[4] = {1, 0, -1, 0};
 int dy[4] = {0, 1, 0, -1};
@@ -739,13 +730,14 @@ istream& operator>>(istream& input, vector<T>& vec) {
     return input;
 }
 
-
-void solve() {
-}
-
-
 int main() {
-    init(); int t; cin >> t;
-    cep(t) solve();
+    vl v = {0, 1, 2, 3, 4, 5, 6, 7};
+    SumSegmentTree st(v);
+
+    print(st.query(2, 4));
+    st.update(2, 6, 100);
+    print(st.query(2, 4));
+    st.update(2, 2, -1);
+    print(st.query(2, 4));
     return 0;
 }
