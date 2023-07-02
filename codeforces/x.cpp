@@ -1,5 +1,4 @@
 // #include<lib/common.h>
-// #include<lib/lazy_segment_tree.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -730,14 +729,28 @@ istream& operator>>(istream& input, vector<T>& vec) {
     return input;
 }
 
-int main() {
-    vl v = {0, 1, 2, 3, 4, 5, 6, 7};
-    SumSegmentTree st(v);
+void solve() {
+    ll n; cin >> n;
+    string s; cin >> s;
 
-    print(st.query(2, 4));
-    st.update(2, 6, 100);
-    print(st.query(2, 4));
-    st.update(2, 2, -1);
-    print(st.query(2, 4));
+    using namespace str;
+    ll cnt = 0;
+    rep(i, 0, n - 1) {
+        cnt += s[i] == 'W';
+    }
+    ll ans = cnt;
+    rep(i, 1, n - 1) {
+        // i -> i + n
+        cnt -= s[i - 1] == 'W';
+        cnt += s[i + n - 1] == 'W';
+
+        chkmax(ans, cnt);
+    }
+    print(ans);
+}
+
+int main() {
+    init();
+    solve();
     return 0;
 }
