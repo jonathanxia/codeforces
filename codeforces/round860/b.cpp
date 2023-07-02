@@ -1,4 +1,3 @@
-// #include<lib/sparsetable.h>
 // #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
@@ -30,7 +29,6 @@ inline int len(const T& v) {
 #define to_str to_string
 #define pb push_back
 #define mp make_pair
-#define ALL(x) (x).begin(), (x).end()
 
 typedef long long ll;
 
@@ -741,102 +739,38 @@ istream& operator>>(istream& input, vector<T>& vec) {
     return input;
 }
 
-class SparseTable {
-public:
-    vector<vector<ll>> table;
-    vector<ll> logTable;
-    vector<ll> arrSize;
-    function<ll(ll, ll)> operation;
+void solve() {
+    ll m; cin >> m;
+    vl n(m);
+    vvl a(m);
+    rep(i, 0, m - 1) {
+        cin >> n[i];
+        a[i].resize(n[i]);
+        cin >> a[i];
+    }
 
-    SparseTable(const vector<ll>& arr, function<ll(ll, ll)> op) {
-        ll n = arr.size();
-        ll logn = log2(n) + 1;
-
-        table.resize(n, vector<ll>(logn));
-        logTable.resize(n + 1);
-        arrSize.resize(n + 1);
-        operation = op;
-
-        // Precompute logarithm values and array sizes
-        for (int i = 2; i <= n; i++) {
-            logTable[i] = logTable[i / 2] + 1;
-            arrSize[i] = arrSize[i / 2] + (i & 1);
-        }
-
-        // Initialize the first column of the table
-        for (int i = 0; i < n; i++) {
-            table[i][0] = arr[i];
-        }
-
-        // Compute the rest of the table using dynamic programming
-        for (int j = 1; (1 << j) <= n; j++) {
-            for (int i = 0; (i + (1 << j) - 1) < n; i++) {
-                table[i][j] = operation(table[i][j - 1], table[i + (1 << (j - 1))][j - 1]);
+    vl output(m);
+    set<ll> illegal;
+    dep(i, m - 1, 0) {
+        // Pick somebody from the end
+        bool found = false;
+        foreach(x, a[i]) {
+            if (illegal.count(x) == 0) {
+                // Yay!
+                output[i] = x;
+                found = true;
             }
+            illegal.insert(x);
+        }
+        if (!found) {
+            print(-1); return;
         }
     }
+    print(output);
+}
 
-    ll query(int left, int right) {
-        ll k = logTable[right - left + 1];
-        return operation(table[left][k], table[right - (1 << k) + 1][k]);
-    }
-};
-
-// int main() {
-//     SparseTable st({3, 5, 1, 4, 2}, [](ll a, ll b) {return min(a, b);});
-//     print(st.query(2, 4));
-// }
-
-#define METHOD sumImbalanceNumbers
-
-class Solution {
-public:
-    int sumImbalanceNumbers(vector<int>& nums) {
-        ll n = len(nums);        
-        ll tot = 0;
-        rep(i, 0, n - 1) {
-            // Start from i, go backwards
-            set<ll> stuff;
-            ll cnt = 0;
-            stuff.insert(nums[i]);
-            dep(j, i - 1, 0) {
-                if (stuff.count(nums[j]) > 0) { tot += cnt; continue;}
-                stuff.insert(nums[j]);
-                auto it = stuff.find(nums[j]);
-
-                auto nxt = next(it);
-                if (nxt == stuff.end() && it == stuff.begin()) { tot += cnt; continue;}
-                if (nxt == stuff.end()) {
-                    // I put it at the end, so just jiggle jiggle it
-                    auto p = prev(it);
-                    cnt += (nums[j] - *p) > 1;
-                }
-                else if (it == stuff.begin()) {
-                    // Tragedy strategy
-                    cnt += (*nxt - nums[j]) > 1;
-                }
-                else {
-                    // Stuff on both sides! great!
-                    cnt--;
-                    cnt += (*nxt - nums[j] > 1);
-                    auto p = prev(it);
-                    cnt += (nums[j] - *p > 1);
-                }
-                tot += cnt;
-            }
-        }
-
-        return tot;
-    }
-};
-
-
-
-#ifdef DEBUG
 int main() {
-    Solution s;
-    vi x = {1, 3, 3, 3, 5};
-    print(s.METHOD(x));
+    init(); int t; cin >> t;
+    cep(t) solve();
     return 0;
 }
-#endif

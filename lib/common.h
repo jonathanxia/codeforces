@@ -28,6 +28,7 @@ inline int len(const T& v) {
 #define to_str to_string
 #define pb push_back
 #define mp make_pair
+#define ALL(x) (x).begin(), (x).end()
 
 typedef long long ll;
 
@@ -382,15 +383,6 @@ typedef priority_queue<ll, vl, less<ll>> maxheap;
     lcret; \
 })
 
-#define RCC(typ, expr, x, lo, hi, cond) ({ \
-    typ lcret; \
-    rep(x, lo, hi) {\
-        if (cond) \
-        lcret.push_back(expr); \
-    } \
-    lcret; \
-})
-
 #define LC(typ, expr, x, arr) ({ \
     typ lcret; \
     foreach(x, arr) {\
@@ -398,8 +390,6 @@ typedef priority_queue<ll, vl, less<ll>> maxheap;
     } \
     lcret; \
 })
-
-
 
 int dx[4] = {1, 0, -1, 0};
 int dy[4] = {0, 1, 0, -1};

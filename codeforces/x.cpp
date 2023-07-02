@@ -739,28 +739,13 @@ istream& operator>>(istream& input, vector<T>& vec) {
     return input;
 }
 
-#define INTERACTIVE
 
 void solve() {
-    ll n; cin >> n;
-    
-    print("+", n + 1);
-    int x; cin >> x;
-    if (x == -2) {return;}
-    print("+", n);
-    int x; cin >> x;
-    if (x == -2) {return;}
-
-    pl farthest = {-1, -1};
-    rep(i, 2, n) {
-        print("?", 1, i);
-        int r; cin >> r;
-        chkmax(farthest, mp(r, i));
-    }
 }
+
 
 int main() {
     init(); int t; cin >> t;
-    cep(t) {solve();}
+    cep(t) solve();
     return 0;
 }
