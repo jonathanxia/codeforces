@@ -1,4 +1,4 @@
-#include <lib/common.h>
+#include "common.h"
 
 class SparseTable {
 public:
@@ -7,7 +7,8 @@ public:
     vector<ll> arrSize;
     function<ll(ll, ll)> operation;
 
-    SparseTable(const vector<ll>& arr, function<ll(ll, ll)> op) {
+    SparseTable(const vector<ll>& arr, function<ll(ll, ll)> op)
+    {
         ll n = arr.size();
         ll logn = log2(n) + 1;
 
@@ -35,7 +36,8 @@ public:
         }
     }
 
-    ll query(int left, int right) {
+    ll query(int left, int right)
+    {
         ll k = logTable[right - left + 1];
         return operation(table[left][k], table[right - (1 << k) + 1][k]);
     }
