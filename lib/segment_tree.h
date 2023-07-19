@@ -1,9 +1,8 @@
-#include <lib/common.h>
+#include "common.h"
 
 class SegmentTree {
 public:
-    struct node
-    {
+    struct node {
         ll mx;
         node() { mx = -1e9; }
         node(ll val) { mx = val; }
@@ -21,27 +20,32 @@ public:
     ll n;
     vector<node> t;
 
-    SegmentTree(ll sz) : t(2 * sz)
+    SegmentTree(ll sz)
+        : t(2 * sz)
     {
         n = sz;
-        rep(i, 0, n - 1) t[i + n] = node();
-        dep(i, n - 1, 1) {
+        repi(i, 0, n - 1) t[i + n] = node();
+        dep(i, n - 1, 1)
+        {
             t[i] = merge(t[i << 1], t[i << 1 | 1]);
         }
     }
 
-    template<typename T>
-    SegmentTree(const vector<T> a) : t(2 * a.size()) {
+    template <typename T>
+    SegmentTree(const vector<T> a)
+        : t(2 * a.size())
+    {
         n = a.size();
-        rep(i, 0, n - 1) t[i + n] = node(a[i]);
-        dep(i, n - 1, 1) {
+        repi(i, 0, n - 1) t[i + n] = node(a[i]);
+        dep(i, n - 1, 1)
+        {
             t[i] = merge(t[i << 1], t[i << 1 | 1]);
         }
     }
 
     void modify(ll p, const node& value)
     {
-        for(t[p += n] = value; p >>= 1; )
+        for (t[p += n] = value; p >>= 1;)
             t[p] = merge(t[p << 1], t[p << 1 | 1]);
     }
 
@@ -49,10 +53,11 @@ public:
     {
         node resl, resr;
         r++;
-        for(l += n, r += n; l < r; l >>= 1, r >>= 1)
-        {
-            if(l & 1) resl = merge(resl, t[l++]);
-            if(r & 1) resr = merge(t[--r], resr);
+        for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
+            if (l & 1)
+                resl = merge(resl, t[l++]);
+            if (r & 1)
+                resr = merge(t[--r], resr);
         }
 
         return merge(resl, resr);
