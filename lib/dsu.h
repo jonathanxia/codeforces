@@ -1,65 +1,48 @@
-#include<lib/common.h>
-#include <lib/persistent.h>
+#include <lib/common.h>
 
-class DSU {
-public:
-    PersistentVector parent;
-    PersistentVector rank;
-    PersistentVector largest;
-    PersistentVector smallest;
-    PersistentVector sz;
-
-    DSU(int size) : parent(size), rank(size), largest(size), smallest(size), sz(size) {
-        for (int i = 0; i < size; ++i) {
-            parent.set(i, i);
-            rank.set(i, 0);
-            largest.set(i, i);
-            smallest.set(i, i);
-            sz.set(i, 1);
+struct DSU
+{
+    // Construct DSU, where n is the total number of nodes
+    // smart_union determines whether a unite() operation always unites
+    // smaller to larger
+    DSU(ll n, bool smart_union = true)
+        : m_link(n), m_size(n, 1), m_smart{smart_union}
+    {
+        walk(i, m_link)
+        {
+            m_link[i] = i;
         }
     }
-
-    int find(int x) {
-        if (parent[x] != x) {
-            parent.set(x, find(parent[x])); // Path compression
-        }
-        return parent[x];
+    // Return representative of x
+    ll find(ll x)
+    {
+        while (x != m_link[x])
+            x = m_link[x];
+        return x;
     }
-
-    void unite(int x, int y) {
-        int rootX = find(x);
-        int rootY = find(y);
-        if (rootX != rootY) {
-            if (rank[rootX] < rank[rootY]) {
-                parent.set(rootX, rootY);
-
-                largest.set(rootY, max(largest[rootY], largest[rootX]));
-                smallest.set(rootY, min(smallest[rootY], smallest[rootX]));
-                sz.set(rootY, sz[rootY] + sz[rootX]);
-            } else if (rank[rootX] > rank[rootY]) {
-                parent.set(rootY, rootX);
-
-                largest.set(rootX, max(largest[rootX], largest[rootY]));
-                smallest.set(rootX, min(smallest[rootX], smallest[rootY]));
-                sz.set(rootX, sz[rootX] + sz[rootY]);
-            } else {
-                parent.set(rootY, rootX);
-                rank.set(rootX, rank[rootX] + 1);
-
-                largest.set(rootX, max(largest[rootX], largest[rootY]));
-                smallest.set(rootX, min(smallest[rootX], smallest[rootY]));
-                sz.set(rootX, sz[rootX] + sz[rootY]);
-            }
-        }
+    // Return whether a and b are in the same set
+    ll same(ll a, ll b)
+    {
+        return find(a) == find(b);
     }
-
-    void commit() {
-        parent.commit();
-        rank.commit();
+    // Unites the sets of a and b
+    void unite(ll a, ll b)
+    {
+        a = find(a);
+        b = find(b);
+        if (a == b) // a and b are already in the same set!
+            return;
+        if (m_smart && m_size[a] < m_size[b])
+            swap(a, b);
+        m_size[a] += m_size[b];
+        m_link[b] = a;
     }
-
-    void revert() {
-        parent.revert();
-        rank.revert();
+    // Finds size of the set containing x
+    ll get_size(ll x)
+    {
+        return m_size[find(x)];
     }
+    vl m_link;
+    vl m_size;
+    bool m_smart;
 };
