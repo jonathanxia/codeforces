@@ -535,21 +535,24 @@ void initmap(umap<K, V>& counts)
 typedef priority_queue<ll, vl, greater<ll>> minheap;
 typedef priority_queue<ll, vl, less<ll>> maxheap;
 
-#define RC(typ, expr, x, lo, hi) ({ \
-    typ lcret;                      \
-    rep(x, lo, hi)                  \
-    {                               \
-        lcret.push_back(expr);      \
-    }                               \
-    lcret;                          \
-})
-
-#define LC(typ, expr, x, arr) ({ \
-    typ lcret;                   \
-    foreach (x, arr) {           \
+#define RC(expr, x, lo, hi) ({   \
+    ll x = lo;                   \
+    using RC_t = decltype(expr); \
+    vector<RC_t> lcret;          \
+    irep(x, lo, hi)              \
+    {                            \
         lcret.push_back(expr);   \
     }                            \
     lcret;                       \
+})
+
+#define LC(expr, x, arr) ({                 \
+    using LC_t = decltype(arr)::value_type; \
+    vector<LC_t> lcret;                     \
+    foreach (x, arr) {                      \
+        lcret.push_back(expr);              \
+    }                                       \
+    lcret;                                  \
 })
 
 int dx[4] = { 1, 0, -1, 0 };
