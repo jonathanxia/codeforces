@@ -143,42 +143,44 @@ int dx[4] = {1, 0, -1, 0};
 int dy[4] = {0, 1, 0, -1};
 
 // Binary Search
-#define largest_st(bbbmid, cond, lo, hi) ({ \
-    ll bbbl = (lo), bbbr = (hi), bbbans = (hi); \
-    ll bbbmid; \
-    while (bbbl <= bbbr) { \
-        bbbmid = (bbbl + bbbr) / 2; \
-        if ((cond)) { \
-            bbbans = bbbmid; \
-            bbbl = bbbmid + 1; \
-        } else { \
-            bbbr = bbbmid - 1; \
-        } \
-    } \
-    bbbmid = bbbans; \
-    if (!((cond))) { \
-        bbbans = (lo)-1; \
-    } \
-    bbbans; \
+// NOTE: lo and hi are inclusive;
+// Eg. largest_st(x, a[x] < 5, 0, 10) will search for x between [0, 10]
+#define largest_st(mid, cond, lo, hi) ({                          \
+    ll BISEARCH_l = (lo), BISEARCH_r = (hi), BISEARCH_ans = (hi); \
+    ll mid;                                                       \
+    while (BISEARCH_l <= BISEARCH_r) {                            \
+        mid = (BISEARCH_l + BISEARCH_r) / 2;                      \
+        if ((cond)) {                                             \
+            BISEARCH_ans = (mid);                                 \
+            BISEARCH_l = (mid) + 1;                               \
+        } else {                                                  \
+            BISEARCH_r = (mid)-1;                                 \
+        }                                                         \
+    }                                                             \
+    mid = BISEARCH_ans;                                           \
+    if (!((cond))) {                                              \
+        BISEARCH_ans = (lo)-1;                                    \
+    }                                                             \
+    BISEARCH_ans;                                                 \
 })
 
-#define smallest_st(mid, cond, lo, hi) ({ \
-    ll bbbl = (lo), bbbr = (hi), bbbans = (hi); \
-    ll mid; \
-    while (bbbl <= bbbr) { \
-        mid = (bbbl + bbbr) / 2; \
-        if ((cond)) { \
-            bbbans = mid; \
-            bbbr = mid - 1; \
-        } else { \
-            bbbl = mid + 1; \
-        } \
-    } \
-    mid = bbbans; \
-    if (!((cond))) { \
-        bbbans = (hi) + 1; \
-    } \
-    bbbans; \
+#define smallest_st(mid, cond, lo, hi) ({                         \
+    ll BISEARCH_l = (lo), BISEARCH_r = (hi), BISEARCH_ans = (hi); \
+    ll mid;                                                       \
+    while (BISEARCH_l <= BISEARCH_r) {                            \
+        mid = (BISEARCH_l + BISEARCH_r) / 2;                      \
+        if ((cond)) {                                             \
+            BISEARCH_ans = (mid);                                 \
+            BISEARCH_r = (mid)-1;                                 \
+        } else {                                                  \
+            BISEARCH_l = (mid) + 1;                               \
+        }                                                         \
+    }                                                             \
+    mid = BISEARCH_ans;                                           \
+    if (!((cond))) {                                              \
+        BISEARCH_ans = (hi) + 1;                                  \
+    }                                                             \
+    BISEARCH_ans;                                                 \
 })
 
 // Strings
