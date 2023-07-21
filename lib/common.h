@@ -536,7 +536,7 @@ typedef priority_queue<ll, vl, greater<ll>> minheap;
 typedef priority_queue<ll, vl, less<ll>> maxheap;
 
 #define RC(expr, x, lo, hi) ({   \
-    ll x = lo;                   \
+    ll x;                        \
     using RC_t = decltype(expr); \
     vector<RC_t> lcret;          \
     irep(x, lo, hi)              \
