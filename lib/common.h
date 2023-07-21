@@ -546,13 +546,16 @@ typedef priority_queue<ll, vl, less<ll>> maxheap;
     lcret;                       \
 })
 
-#define LC(expr, x, arr) ({                 \
-    using LC_t = decltype(arr)::value_type; \
-    vector<LC_t> lcret;                     \
-    foreach (x, arr) {                      \
-        lcret.push_back(expr);              \
-    }                                       \
-    lcret;                                  \
+#define LC(expr, x, arr) ({                                 \
+    using LCx_t = decltype(arr)::value_type;                \
+    LCx_t x;                                                \
+    using LCexpr_t = decltype(expr);                        \
+    vector<LCexpr_t> lcret;                                 \
+    foreach (i, arr) {                                      \
+        x = i; /*Using i and then x = i pacifies -Wshadow*/ \
+        lcret.push_back(expr);                              \
+    }                                                       \
+    lcret;                                                  \
 })
 
 int dx[4] = { 1, 0, -1, 0 };
