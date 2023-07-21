@@ -123,24 +123,31 @@ void initmap(umap<K, V>& counts) {
     counts.max_load_factor(0.25);
 }
 
-#define RC(typ, expr, x, lo, hi) ({ \
-    typ lcret; \
-    rep(x, lo, hi) {\
-        lcret.push_back(expr); \
-    } \
-    lcret; \
+#define RC(expr, x, lo, hi) ({                                \
+    ll x;                                                     \
+    using RC_t = std::remove_reference<decltype(expr)>::type; \
+    vector<RC_t> lcret;                                       \
+    irep(x, lo, hi)                                           \
+    {                                                         \
+        lcret.push_back(expr);                                \
+    }                                                         \
+    lcret;                                                    \
 })
 
-#define LC(typ, expr, x, arr) ({ \
-    typ lcret; \
-    foreach(x, arr) {\
-        lcret.push_back(expr); \
-    } \
-    lcret; \
+#define LC(expr, x, arr) ({                                          \
+    using LCx_t = decltype(arr)::value_type;                         \
+    LCx_t x;                                                         \
+    using LCexpr_t = std::remove_reference<decltype(expr)>::type;    \
+    vector<LCexpr_t> lcret;                                          \
+    foreach (LC_i, arr) {                                            \
+        x = LC_i; /*Using LC_i and then x = LC_i pacifies -Wshadow*/ \
+        lcret.push_back(expr);                                       \
+    }                                                                \
+    lcret;                                                           \
 })
 
-int dx[4] = {1, 0, -1, 0};
-int dy[4] = {0, 1, 0, -1};
+int dx[4] = { 1, 0, -1, 0 };
+int dy[4] = { 0, 1, 0, -1 };
 
 // Binary Search
 // NOTE: lo and hi are inclusive;
