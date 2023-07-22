@@ -40,17 +40,14 @@ class DSU {
 public:
     PersistantVector parent;
     PersistantVector rank;
-    PersistantVector is_alive;
-    ll num_alive;
-    stack<ll> num_alive_snaps;
+    vl data;
 
-    DSU(int size) : parent(size), rank(size), is_alive(size) {
+    DSU(int size) : parent(size), rank(size), data(size) {
         for (int i = 0; i < size; ++i) {
             parent.set(i, i);
-            is_alive.set(i, true);
             rank.set(i, 0);
+            data[i] = i;
         }
-        num_alive = size;
     }
 
     int find(int x) {
@@ -66,50 +63,28 @@ public:
         if (rootX != rootY) {
             if (rank[rootX] < rank[rootY]) {
                 parent.set(rootX, rootY);
+                chkmax(data[rootY], data[rootX]);
             } else if (rank[rootX] > rank[rootY]) {
                 parent.set(rootY, rootX);
+                chkmax(data[rootX], data[rootY]);
             } else {
                 parent.set(rootY, rootX);
                 rank.set(rootX, rank[rootX] + 1);
-            }
-
-            // Are we killing any components? Death is
-            // infectious
-            bool new_is_alive = is_alive[rootX] && is_alive[rootY];
-
-            num_alive = num_alive - is_alive[rootX] - is_alive[rootY] + new_is_alive;
-
-            is_alive.set(rootX, new_is_alive);
-            is_alive.set(rootY, new_is_alive);
-        }
-
-        else {
-            // Same connected component, if it was alive,
-            // it is now dead
-            if (is_alive[rootX]) {
-                num_alive--;
-                is_alive.set(rootX, false);
+                chkmax(data[rootX], data[rootY]);
             }
         }
-
     }
 
     void commit() {
         parent.commit();
         rank.commit();
-        is_alive.commit();
-        num_alive_snaps.push(num_alive);
     }
 
     void revert() {
         parent.revert();
         rank.revert();
-        is_alive.revert();
-        num_alive = num_alive_snaps.top();
-        num_alive_snaps.pop();
     }
 };
-
 
 
 

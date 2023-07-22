@@ -149,6 +149,16 @@ public:
         }
         return tot;
     }
+
+    ndarray<T> operator-(const ndarray<T> other) {
+        ndarray<T> output(n_rows, n_cols);
+        rep(i, 0, n_rows - 1) {
+            rep(j, 0, n_cols - 1) {
+                output(i, j) = (*this)(i, j) - other(i, j);
+            }
+        }
+        return output;
+    }
 };
 
 typedef ndarray<ll> llarray;
@@ -166,4 +176,14 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr) {
         }
     }
     return os;
+}
+
+template<typename T>
+istream& operator>>(istream& input, ndarray<T>& arr) {
+    for (int i = 0; i < arr.get_n_rows(); i++) {
+        for (int j = 0; j < arr.get_n_cols(); j++) {
+            input >> arr(i, j);
+        }
+    }
+    return input;
 }
