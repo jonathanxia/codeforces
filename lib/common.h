@@ -128,12 +128,12 @@ inline vector<T> arange(T start, T end, T step)
 template <typename T>
 inline vector<T> arange(T start, T end)
 {
-    return arange(start, end, 1);
+    return arange(start, end, static_cast<T>(1));
 }
 template <typename T>
 inline vector<T> arange(T end)
 {
-    return arange(0, end, 1);
+    return arange(static_cast<T>(0), end, static_cast<T>(1));
 }
 
 // returns a hashmap of <value, frequency> pairs
@@ -535,27 +535,27 @@ void initmap(umap<K, V>& counts)
 typedef priority_queue<ll, vl, greater<ll>> minheap;
 typedef priority_queue<ll, vl, less<ll>> maxheap;
 
-#define RC(expr, x, lo, hi) ({   \
-    ll x;                        \
-    using RC_t = decltype(expr); \
-    vector<RC_t> lcret;          \
-    irep(x, lo, hi)              \
-    {                            \
-        lcret.push_back(expr);   \
-    }                            \
-    lcret;                       \
+#define RC(expr, x, lo, hi) ({                                \
+    ll x;                                                     \
+    using RC_t = std::remove_reference<decltype(expr)>::type; \
+    vector<RC_t> lcret;                                       \
+    irep(x, lo, hi)                                           \
+    {                                                         \
+        lcret.push_back(expr);                                \
+    }                                                         \
+    lcret;                                                    \
 })
 
-#define LC(expr, x, arr) ({                                 \
-    using LCx_t = decltype(arr)::value_type;                \
-    LCx_t x;                                                \
-    using LCexpr_t = decltype(expr);                        \
-    vector<LCexpr_t> lcret;                                 \
-    foreach (i, arr) {                                      \
-        x = i; /*Using i and then x = i pacifies -Wshadow*/ \
-        lcret.push_back(expr);                              \
-    }                                                       \
-    lcret;                                                  \
+#define LC(expr, x, arr) ({                                       \
+    using LCx_t = decltype(arr)::value_type;                      \
+    LCx_t x;                                                      \
+    using LCexpr_t = std::remove_reference<decltype(expr)>::type; \
+    vector<LCexpr_t> lcret;                                       \
+    foreach (i, arr) {                                            \
+        x = i; /*Using i and then x = i pacifies -Wshadow*/       \
+        lcret.push_back(expr);                                    \
+    }                                                             \
+    lcret;                                                        \
 })
 
 int dx[4] = { 1, 0, -1, 0 };
