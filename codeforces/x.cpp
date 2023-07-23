@@ -66,6 +66,14 @@ struct custom_hash {
     size_t operator()(const std::pair<T1, T2>& key) const {
         return (*this)(((*this)(key.first) * 37) ^ (*this)(key.second));
     }
+
+    size_t operator()(string s) const {
+        uint64_t out = 0;
+        for (int i = 0; i < (int) (s.size()); i++) {
+            out = out * 37 + s[i];
+        }
+        return do_hash(out);
+    }
 };
 
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
@@ -117,62 +125,71 @@ void initmap(umap<K, V>& counts) {
     counts.max_load_factor(0.25);
 }
 
-#define RC(typ, expr, x, lo, hi) ({ \
-    typ lcret; \
-    rep(x, lo, hi) {\
-        lcret.push_back(expr); \
-    } \
-    lcret; \
+#define RC(expr, x, lo, hi) ({                                \
+    ll x;                                                     \
+    using RC_t = std::remove_reference<decltype(expr)>::type; \
+    vector<RC_t> lcret;                                       \
+    irep(x, lo, hi)                                           \
+    {                                                         \
+        lcret.push_back(expr);                                \
+    }                                                         \
+    lcret;                                                    \
 })
 
-#define LC(typ, expr, x, arr) ({ \
-    typ lcret; \
-    foreach(x, arr) {\
-        lcret.push_back(expr); \
-    } \
-    lcret; \
+#define LC(expr, x, arr) ({                                          \
+    using LCx_t = decltype(arr)::value_type;                         \
+    LCx_t x;                                                         \
+    using LCexpr_t = std::remove_reference<decltype(expr)>::type;    \
+    vector<LCexpr_t> lcret;                                          \
+    foreach (LC_i, arr) {                                            \
+        x = LC_i; /*Using LC_i and then x = LC_i pacifies -Wshadow*/ \
+        lcret.push_back(expr);                                       \
+    }                                                                \
+    lcret;                                                           \
 })
 
-int dx[4] = {1, 0, -1, 0};
-int dy[4] = {0, 1, 0, -1};
+int dx[4] = { 1, 0, -1, 0 };
+int dy[4] = { 0, 1, 0, -1 };
 
 // Binary Search
-#define largest_st(bbbmid, cond, lo, hi) ({ \
-    ll bbbl = (lo), bbbr = (hi), bbbans = (hi); \
-    ll bbbmid; \
-    while (bbbl <= bbbr) { \
-        bbbmid = (bbbl + bbbr) / 2; \
-        if ((cond)) { \
-            bbbans = bbbmid; \
-            bbbl = bbbmid + 1; \
-        } else { \
-            bbbr = bbbmid - 1; \
-        } \
-    } \
-    bbbmid = bbbans; \
-    if (!((cond))) { \
-        bbbans = (lo)-1; \
-    } \
-    bbbans; \
+// NOTE: lo and hi are inclusive;
+// Eg. largest_st(x, a[x] < 5, 0, 10) will search for x between [0, 10]
+#define largest_st(mid, cond, lo, hi) ({                          \
+    ll BISEARCH_l = (lo), BISEARCH_r = (hi), BISEARCH_ans = (hi); \
+    ll mid;                                                       \
+    while (BISEARCH_l <= BISEARCH_r) {                            \
+        mid = (BISEARCH_l + BISEARCH_r) / 2;                      \
+        if ((cond)) {                                             \
+            BISEARCH_ans = (mid);                                 \
+            BISEARCH_l = (mid) + 1;                               \
+        } else {                                                  \
+            BISEARCH_r = (mid)-1;                                 \
+        }                                                         \
+    }                                                             \
+    mid = BISEARCH_ans;                                           \
+    if (!((cond))) {                                              \
+        BISEARCH_ans = (lo)-1;                                    \
+    }                                                             \
+    BISEARCH_ans;                                                 \
 })
 
-#define smallest_st(mid, cond, lo, hi) ({ \
-    ll bbbl = (lo), bbbr = (hi), bbbans = (hi); \
-    ll mid; \
-    while (bbbl <= bbbr) { \
-        mid = (bbbl + bbbr) / 2; \
-        if ((cond)) { \
-            bbbans = mid; \
-            bbbr = mid - 1; \
-        } else { \
-            bbbl = mid + 1; \
-        } \
-    } \
-    mid = bbbans; \
-    if (!((cond))) { \
-        bbbans = (hi) + 1; \
-    } \
-    bbbans; \
+#define smallest_st(mid, cond, lo, hi) ({                         \
+    ll BISEARCH_l = (lo), BISEARCH_r = (hi), BISEARCH_ans = (hi); \
+    ll mid;                                                       \
+    while (BISEARCH_l <= BISEARCH_r) {                            \
+        mid = (BISEARCH_l + BISEARCH_r) / 2;                      \
+        if ((cond)) {                                             \
+            BISEARCH_ans = (mid);                                 \
+            BISEARCH_r = (mid)-1;                                 \
+        } else {                                                  \
+            BISEARCH_l = (mid) + 1;                               \
+        }                                                         \
+    }                                                             \
+    mid = BISEARCH_ans;                                           \
+    if (!((cond))) {                                              \
+        BISEARCH_ans = (hi) + 1;                                  \
+    }                                                             \
+    BISEARCH_ans;                                                 \
 })
 
 // Strings
@@ -489,7 +506,7 @@ namespace vv {
     }
 
     template <typename T>
-    static vector<T> arange(T start, T end, T step = 1) {
+    inline vector<T> arange(T start, T end, T step = 1) {
         vector<T> result;
         for (T value = start; value <= end; value += step) {
             result.pb(value);
@@ -754,6 +771,10 @@ void solve() {
         }
     }
     print("YES");
+
+    print(position);
+    print(LC(2 * x + 1, x, position));
+    print(LC(mp(2 * x + 1, x), x, position));
 }
 
 int main() {
