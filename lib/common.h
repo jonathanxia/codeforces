@@ -363,25 +363,31 @@ void print(const T& t, const Args&... args) {
 template<typename T>
 void dprint(const T& t) {
     #ifndef ONLINE_JUDGE
+    #ifdef DEBUG
     std::cout << t << std::endl;
+    #endif
     #endif
 }
 
 template<typename T, typename... Args>
 void dprint(const T& t, const Args&... args) {
     #ifndef ONLINE_JUDGE
+    #ifdef DEBUG
     std::cout << t << " ";
     print(args...);
+    #endif
     #endif
 }
 
 // Fancy variable debugging, stolen from:
 // https://codeforces.com/blog/entry/79024
 #ifndef ONLINE_JUDGE
+#ifdef DEBUG
 int recur_depth = 0;
 #define dbg(x) {++recur_depth; auto x_=x; --recur_depth; cout<<string(recur_depth, '\t')<<__func__<<":"<<__LINE__<<"\t"<<#x<<" = "<<x_<<endl;}
 #else
 #define dbg(x)
+#endif
 #endif
 
 template<typename K, typename V>

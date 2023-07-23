@@ -1,5 +1,5 @@
-// #include<lib/common.h>
 // #include<lib/vv.h>
+// #include<lib/common.h>
 #include <bits/stdc++.h>
 #include <sstream>
 #include <functional>
@@ -365,25 +365,31 @@ void print(const T& t, const Args&... args) {
 template<typename T>
 void dprint(const T& t) {
     #ifndef ONLINE_JUDGE
+    #ifdef DEBUG
     std::cout << t << std::endl;
+    #endif
     #endif
 }
 
 template<typename T, typename... Args>
 void dprint(const T& t, const Args&... args) {
     #ifndef ONLINE_JUDGE
+    #ifdef DEBUG
     std::cout << t << " ";
     print(args...);
+    #endif
     #endif
 }
 
 // Fancy variable debugging, stolen from:
 // https://codeforces.com/blog/entry/79024
 #ifndef ONLINE_JUDGE
+#ifdef DEBUG
 int recur_depth = 0;
 #define dbg(x) {++recur_depth; auto x_=x; --recur_depth; cout<<string(recur_depth, '\t')<<__func__<<":"<<__LINE__<<"\t"<<#x<<" = "<<x_<<endl;}
 #else
 #define dbg(x)
+#endif
 #endif
 
 template<typename K, typename V>
@@ -731,50 +737,25 @@ namespace vv {
     }
 };
 
+bool all_gone(ll x, ll n, ll k, const vl& a) {
+    while (k > 0) {
+        ll i0 = largest_st(y, a[y] <= x, 0, n - 1);
+        x -= i0 + 1;
+        if (x == 0) {
+            return true;
+        }
+        k--;
+    }
+    return x == 0;
+}
+
 void solve() {
-    ll n, m; cin >> n >> m;
+    ll n; cin >> n;
+    ll k; cin >> k;
+    vl a(n); cin >> a;
 
-    vvpl graph(n);
-    rep(i, 0, m - 1) {
-        ll a, b, d; cin >> a >> b >> d;
-        a--; b--;
-        graph[a].pb({b, d});
-        graph[b].pb({a, -d});
-    }
-
-    vb visited(n);
-    vl position(n);
-
-    function<void(ll)> dfs = [&](ll node) -> void {
-        visited[node] = true;
-        foreachp(child, dist, graph[node])
-        {
-            if (visited[child])
-                continue;
-
-            position[child] = position[node] + dist;
-            dfs(child);
-        }
-    };
-
-    rep(i, 0, n - 1) {
-        if (!visited[i]) dfs(i);
-    }
-
-    // Check all edges are consistent
-    rep(a, 0, n - 1) {
-        foreachp(b, d, graph[a]) {
-            if (position[a] + d != position[b]) {
-                print("NO");
-                return;
-            }
-        }
-    }
-    print("YES");
-
-    print(position);
-    print(LC(2 * x + 1, x, position));
-    print(LC(mp(2 * x + 1, x), x, position));
+    ll ans = smallest_st(x, !all_gone(x, n, k, a), 1LL, 1LL << 50);
+    print(ans);
 }
 
 int main() {
