@@ -2,7 +2,6 @@
 
 from typing import List
 
-
 class Solution:
     def maximumJumps(self, nums: List[int], target: int) -> int:
         ans = [0] * len(nums)
