@@ -43,7 +43,13 @@ typedef long long ll;
 #define idep(i, u, d) for (i = (u); i >= (d); --i)
 #define srep(i, d, u, s) for (ll i = (d); i < (u); i += s)
 #define cep(t) while (t--)
-#define cepsolve(t) cep(t) solve();
+#define cepsolve        \
+    int main()          \
+    {                   \
+        ll t;           \
+        cin >> t;       \
+        cep(t) solve(); \
+    }
 #define cepeat(t)         \
     ll CEPEAT_COPY = (t); \
     cep(CEPEAT_COPY)
