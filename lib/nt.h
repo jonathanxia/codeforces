@@ -79,9 +79,8 @@ namespace nt {
         return a;
     }
 
-    // ll M = std::pow(10, 9) + 7;
-    // ll MOD = 998244353LL;
-    ll MOD = ll(pow(10, 9)) + 7;
+    ll MOD = 998244353LL;
+    // ll MOD = 1000000007;
     ll mod(ll a) {
         return mod(a, MOD);
     }
@@ -318,6 +317,15 @@ namespace combo {
             result[i] = nt::mod(result[i] * (2 * i - 1), m);
             result[i] = nt::mdiv(result[i], i + 1, m);
             result[i] = nt::mdiv(result[i], i, m);
+        }
+        return result;
+    }
+
+    vl precompute_fac(ll n, ll m = MOD) {
+        vl result(n + 1);
+        result[0] = 1;
+        rep(i, 1, n) {
+            result[i] = mod(result[i - 1] * i, m);
         }
         return result;
     }
