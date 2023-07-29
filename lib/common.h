@@ -75,6 +75,15 @@ struct custom_hash {
     {
         return (*this)(((*this)(key.first) * 37) ^ (*this)(key.second));
     }
+
+    size_t operator()(string s) const
+    {
+        uint64_t out = 0;
+        for (int i = 0; i < s.size(); i++) {
+            out = out * 37 + s[i];
+        }
+        return do_hash(out);
+    }
 };
 
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
