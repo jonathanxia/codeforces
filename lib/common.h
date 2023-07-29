@@ -37,11 +37,16 @@ typedef long long ll;
 
 // Looping
 #define rep(i, d, u) for (ll i = (d); i < (u); ++i)
+#define repi(i, d, u) for (ll i = (d); i <= (u); ++i)
 #define dep(i, u, d) for (ll i = (u); i >= (d); --i)
 #define irep(i, d, u) for (i = (d); i < (u); ++i)
 #define idep(i, u, d) for (i = (u); i >= (d); --i)
 #define srep(i, d, u, s) for (ll i = (d); i < (u); i += s)
 #define cep(t) while (t--)
+#define cepsolve(t) cep(t) solve();
+#define cepeat(t)         \
+    ll CEPEAT_COPY = (t); \
+    cep(CEPEAT_COPY)
 #define foreach(i, c) for (auto& i : c)
 #define foreachp(k, v, c) for (auto& [k, v] : c)
 // Looping through a container
@@ -79,7 +84,7 @@ struct custom_hash {
     size_t operator()(string s) const
     {
         uint64_t out = 0;
-        for (int i = 0; i < s.size(); i++) {
+        for (int i = 0; i < len(s); i++) {
             out = out * 37 + s[i];
         }
         return do_hash(out);
