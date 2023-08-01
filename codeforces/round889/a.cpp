@@ -1,13 +1,9 @@
-// Enables various options not allowed in O2, it can be slower in rare cases.
-// https://gcc.gnu.org/onlinedocs/gcc-7.3.0/gcc/Optimize-Options.html
-#ifndef DEBUG // Don't optimize locally
-#pragma GCC optimize("O3")
-#endif
-
+// #include<lib/common.h>
 #include <bits/stdc++.h>
 
 using namespace std;
 
+//  Definition of the macro.
 #define ass(a, b, x, y) (tie(a, b) = make_tuple(x, y));
 #define ordered(x, y, z) ((x) <= (y) && (y) <= (z))
 
@@ -29,10 +25,8 @@ inline int len(const T& v) {
 
 #define to_str to_string
 #define pb push_back
-#define eb emplace_back
 #define mp make_pair
 #define ALL(x) (x).begin(), (x).end()
-#define SLC(x, i1, i2) (x).begin() + i1, (x).begin() + i2
 
 typedef long long ll;
 
@@ -45,21 +39,6 @@ typedef long long ll;
 #define cep(t) while(t--)
 #define foreach(i, c) for(auto& i : c)
 #define foreachp(k, v, c) for (auto& [k, v] : c)
-
-#define cepsolve (int main() { \
-    init();                    \
-    int t; cin >> t;           \
-    cep(t) solve();            \
-    return 0;                  \
-})
-
-#define cepsolve1 int main() { \
-    init();                    \
-    int t = 1;                 \
-    cep(t) solve();            \
-    return 0;                  \
-}
-
 
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
@@ -496,4 +475,30 @@ template<typename S, typename T>
 istream& operator>>(istream& input, pair<S, T>& p) {
     input >> p.first >> p.second;
     return input;
+}
+
+void solve() {
+    ll n; cin >> n;
+    vl p(n); cin >> p;
+    p = LC(vl, x - 1, x, p);
+
+    ll num_fixed = 0;
+    rep(i, 0, n - 1) {
+        if (p[i] == i) {
+            num_fixed++;
+        }
+    }
+
+    if (num_fixed == 0) {
+        print(0);
+    } else {
+        print((num_fixed - 1) / 2 + 1);
+    }
+}
+
+int main() {
+    init();
+    int t; cin >> t;
+    cep(t) solve();
+    return 0;
 }
