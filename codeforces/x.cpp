@@ -29,7 +29,8 @@ inline int len(const T& v) {
 #define mp make_pair
 #define ALL(x) (x).begin(), (x).end()
 
-typedef long long ll;
+// typedef long long ll;
+typedef __int128_t ll;
 
 // Looping
 #define rep(i, d, u) for(ll i = (d); i <= (u); ++i)
@@ -323,12 +324,6 @@ namespace inp {
         }
         return res;
     }
-
-    void array1(vl& arr, int n) {
-        rep(i, 1, n) {
-            cin >> arr[i];
-        }
-    }
 }
 
 // Printing
@@ -463,6 +458,8 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
     os << "}";
     return os;
 }
+
+
 
 template<typename T>
 istream& operator>>(istream& input, vector<T>& vec) {
@@ -752,7 +749,7 @@ namespace combo {
 
     vl precompute_choose(ll n1, ll n2, ll k, ll m=-1) {
         vl result(n2 - n1 + 1);
-        ll idx = max(k - n1, 0LL);
+        ll idx = max(k - n1, ll(0));
         if (idx > n2 - n1) {
             return result;
         }
@@ -809,13 +806,10 @@ namespace combo {
     }
 }
 
-typedef __int128_t lll;
 
-__int128_t func(ll k, ll d) {
+ll func(ll k, ll d) {
     using namespace nt;
-    dbg(k);
-    dbg(d);
-    lll v = (pow(k, d - 1, -1) - 1) / (k - 1);
+    ll v = (pow(k, d - 1, -1) - 1) / (k - 1);
     return v + pow(k, d - 1, -1);
 }
 
@@ -825,7 +819,7 @@ void solve() {
     using namespace nt;
 
     rep(d, 3, 60) {
-        ll BOUND = 1LL << (63 / (d - 1));
+        ll BOUND = ll(1) << (63 / (d - 1) + 1);
         ll k0 = smallest_st(k, func(k, d) >= n, 2, BOUND);
         if (k0 > BOUND) continue;
         if (func(k0, d) == n) {

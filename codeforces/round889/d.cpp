@@ -757,6 +757,8 @@ using namespace vv;
 void solve() {
     ll n; cin >> n;
     vl a(n); cin >> a;
+    // What if you did a stupid dp instead
+    vl dp(n);
 
     bs achieve;
     achieve[0] = true;
