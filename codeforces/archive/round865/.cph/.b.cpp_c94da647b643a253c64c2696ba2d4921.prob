@@ -1,1 +1,0 @@
-{"name":"Local: b","url":"/home/jonathan/Desktop/code/codeforces/round865/b.cpp","tests":[{"id":1685162255927,"input":"3\n2\n4\n6","output":"3 2\n1 4\n8 2 6 4\n1 5 3 7\n11 5 9 1 7 3\n6 10 2 8 4 12"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/jonathan/Desktop/code/codeforces/round865/b.cpp","group":"local","local":true}

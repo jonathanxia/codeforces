@@ -1,1 +1,0 @@
-{"name":"Local: b","url":"/home/jonathanxia/Desktop/code/codeforces/round855/b.cpp","tests":[{"id":1684376842472,"input":"5\n11 2\naAaaBACacbE\n2 2\nab\n4 1\naaBB\n6 0\nabBAcC\n5 3\ncbccb","output":"5\n0\n1\n3\n2"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/jonathanxia/Desktop/code/codeforces/round855/b.cpp","group":"local","local":true}

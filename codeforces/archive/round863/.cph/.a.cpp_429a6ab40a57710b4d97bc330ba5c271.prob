@@ -1,1 +1,0 @@
-{"name":"Local: a","url":"/home/jonathanxia/Desktop/code/codeforces/round863/a.cpp","tests":[{"id":1684642075950,"input":"5\nabacaba\ncodeforces\noooooooo\nabcdef\nmewheniseearulhiiarul","output":"1\n3\n0\n2\n4"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/jonathanxia/Desktop/code/codeforces/round863/a.cpp","group":"local","local":true}
