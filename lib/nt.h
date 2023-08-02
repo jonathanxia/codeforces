@@ -281,3 +281,6 @@ namespace combo {
         return mdiv(ans, factorial[n - k], m);
     }
 }
+
+using namespace nt;
+using namespace combo;

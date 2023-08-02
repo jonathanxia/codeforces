@@ -250,3 +250,5 @@ namespace vv {
         return std::lexicographical_compare(a.begin(), a.end(), perm.begin(), perm.end());
     }
 };
+
+using namespace vv;
