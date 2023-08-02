@@ -1,3 +1,7 @@
 *.out
 callgrind.*
 **/.cph/**
+codeforces
+leetcode
+atcoder
+usaco
