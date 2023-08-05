@@ -348,6 +348,7 @@ namespace inp {
 
 void init() {
     ios_base::sync_with_stdio(false), cin.tie(nullptr);
+    cout << setprecision(9);
 }
 
 template<typename T>
