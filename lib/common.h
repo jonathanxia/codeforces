@@ -46,6 +46,7 @@ typedef long long ll;
 #define cepsolve        \
     int main()          \
     {                   \
+        init();         \
         ll t;           \
         cin >> t;       \
         cep(t) solve(); \
@@ -385,5 +386,12 @@ istream& operator>>(istream& input, vector<T>& vec)
     for (auto& element : vec) {
         input >> element;
     }
+    return input;
+}
+
+template <typename S, typename T>
+istream& operator>>(istream& input, pair<S, T>& p)
+{
+    input >> p.first >> p.second;
     return input;
 }
