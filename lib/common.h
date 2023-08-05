@@ -50,9 +50,9 @@ typedef long long ll;
         cin >> t;       \
         cep(t) solve(); \
     }
-#define cepeat(t)         \
-    ll CEPEAT_COPY = (t); \
-    cep(CEPEAT_COPY)
+#define CEPEAT_CAT_(a, b) a##b
+#define CEPEAT_CAT(a, b) CEPEAT_CAT_(a, b)
+#define cepeat(t) rep(CEPEAT_CAT(CEPEAT_COPY, __COUNTER__), 0, t)
 #define foreach(i, c) for (auto& i : c)
 #define foreachp(k, v, c) for (auto& [k, v] : c)
 // Looping through a container
