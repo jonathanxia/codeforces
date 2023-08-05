@@ -1,5 +1,3 @@
-// Enables various options not allowed in O2, it can be slower in rare cases.
-// https://gcc.gnu.org/onlinedocs/gcc-7.3.0/gcc/Optimize-Options.html
 #ifndef DEBUG // Don't optimize locally
 #pragma GCC optimize("O3")
 #endif
@@ -47,12 +45,12 @@ typedef long long ll;
 #define foreach(i, c) for(auto& i : c)
 #define foreachp(k, v, c) for (auto& [k, v] : c)
 
-#define cepsolve (int main() { \
+#define cepsolve int main() { \
     init();                    \
     int t; cin >> t;           \
     cep(t) solve();            \
     return 0;                  \
-})
+}
 
 #define cepsolve1 int main() { \
     init();                    \
