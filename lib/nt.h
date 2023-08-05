@@ -296,80 +296,30 @@ umapll prime_factorization(ll n)
 }
 
 namespace combo {
-ll choose(ll n, ll k, ll m = -1)
-{
-    ll p = 1;
-    rep(i, 1, k)
-    {
-        p = p * (n - k + i) / i;
-        if (m > 0) {
-            p = nt::mod(p, m);
-        }
-    }
-    return p;
-}
-
-vl precompute_choose(ll n1, ll n2, ll k, ll m = -1)
-{
-    vl result(n2 - n1 + 1);
-    ll idx = max(k - n1, 0LL);
-    if (idx > n2 - n1) {
-        return result;
-    }
-    if (n1 + idx == k) {
-        result[idx] = 1;
-    } else {
-        result[idx] = choose(n1 + idx, k, m);
-    }
-    rep(i, idx + 1, n2 - n1)
-    {
-        result[i] = result[i - 1] * (n1 + i) / (n1 + i - k);
-        if (m > 0) {
-            result[i] %= m;
-        }
-    }
-    return result;
-}
-
-vl precompute_choose2(ll n, ll k1, ll k2, ll m = -1)
-{
-    vl result(k2 - k1 + 1);
-    result[0] = choose(n, k1, m = m);
-    rep(i, k1 + 1, k2)
-    {
-        if (m > 0) {
-            result[i] = nt::mdiv(
-                result[i - 1] * (n - i + 1), i, m);
-        } else {
-            result[i] = result[i - 1] * (n - i + 1) / i;
-        }
-    }
-    return result;
-}
-
 using namespace nt;
-vl precompute_catalan(ll n, ll m = MOD)
+vl factorial;
+bool factorial_computed = false;
+void precompute_fac(ll n, ll m = MOD)
 {
-    vl result(n + 1);
-    result[0] = 1;
+    factorial.resize(n + 1);
+    factorial[0] = 1;
     rep(i, 1, n)
     {
-        result[i] = nt::mod(result[i - 1] * 2 * i, m);
-        result[i] = nt::mod(result[i] * (2 * i - 1), m);
-        result[i] = nt::mdiv(result[i], i + 1, m);
-        result[i] = nt::mdiv(result[i], i, m);
+        factorial[i] = mod(factorial[i - 1] * i, m);
     }
-    return result;
+    factorial_computed = true;
 }
 
-vl precompute_fac(ll n, ll m = MOD)
+ll choose(ll n, ll k, ll m = MOD)
 {
-    vl result(n + 1);
-    result[0] = 1;
-    rep(i, 1, n)
-    {
-        result[i] = mod(result[i - 1] * i, m);
+    if (!factorial_computed) {
+        throw out_of_range("Please run precompute_fac()");
     }
-    return result;
+    if (k > n)
+        return 0;
+
+    ll ans = mdiv(factorial[n], factorial[k], m);
+    return mdiv(ans, factorial[n - k], m);
 }
+
 }
