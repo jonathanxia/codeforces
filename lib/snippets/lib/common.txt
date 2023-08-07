@@ -96,6 +96,16 @@
 "        }",
 "        return do_hash(out);",
 "    }",
+
+"    template <typename T>",
+"    size_t operator()(const vector<T>& vec) const",
+"    {",
+"        size_t seed = len(vec);",
+"        for (auto& i : vec) {",
+"            seed ^= (*this)(i) + 0x9e3779b9 + (seed << 6) + (seed >> 2);",
+"        }",
+"        return seed;",
+"    }",
 "};",
 
 "mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());",
