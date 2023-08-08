@@ -43,7 +43,7 @@ struct DSU {
     {
         return m_size[find(x)];
     }
-    bool m_smart;
     vl m_link;
     vl m_size;
+    bool m_smart;
 };
