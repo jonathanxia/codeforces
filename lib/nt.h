@@ -108,6 +108,7 @@ ll mod(ll a)
 // Function to calculate (base^exponent) % modulus using repeated squaring
 ll pow(ll base, ll exponent, ll modulus = MOD)
 {
+    base = mod(base, modulus);
     ll result = 1;
 
     while (exponent > 0) {
