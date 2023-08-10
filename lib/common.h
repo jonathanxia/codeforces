@@ -43,6 +43,7 @@ inline ll len(const T& v) {
 #define irep(i, d, u) for(i = (d); i <= (u); ++i)
 #define idep(i, u, d) for(i = (u); i >= (d); --i)
 #define srep(i, d, u, s) for(ll i = (d); i <= (u); i += s)
+#define dsrep(i, d, u, s) for(ll i = (d); i >= (u); i -= s)
 #define cep(t) while(t--)
 #define foreach(i, c) for(auto& i : c)
 #define foreachp(k, v, c) for (auto& [k, v] : c)
@@ -227,6 +228,16 @@ namespace str {
             oss << elements[i];
         }
         return oss.str();
+    }
+
+    ll indexof(string s, string s2) {
+        auto idx = s.find(s2);
+        if (idx == std::string::npos) return -1;
+        return ll(idx);
+    }
+
+    ll contains(string s, string s2) {
+        return indexof(s, s2) != -1;
     }
 
     int stoi(char ch) {

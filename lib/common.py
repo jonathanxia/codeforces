@@ -1,5 +1,5 @@
 from math import gcd
-from collections import deque, defaultdict
+from collections import Counter, deque, defaultdict
 from typing import List, Dict
 
 def largest_st(func, lo, hi):
