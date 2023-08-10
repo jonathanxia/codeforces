@@ -48,20 +48,6 @@ inline ll len(const T& v) {
 #define foreach(i, c) for(auto& i : c)
 #define foreachp(k, v, c) for (auto& [k, v] : c)
 
-#define cepsolve int main() { \
-    init();                    \
-    int t; cin >> t;           \
-    cep(t) solve();            \
-    return 0;                  \
-}
-
-#define cepsolve1 int main() { \
-    init();                    \
-    int t = 1;                 \
-    cep(t) solve();            \
-    return 0;                  \
-}
-
 
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
