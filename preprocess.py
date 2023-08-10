@@ -10,7 +10,7 @@ def open_filename(fname):
     with open(fname, "r") as f:
         for line in f.readlines():
             line = line.rstrip()
-            mm = re.match(r"#include\s*<(lib/.*\.h)", line)
+            mm = re.match(r"#include\s*<(lib/.*\.(h|py))", line)
             if not mm:
                 output.append(line)
                 continue
@@ -27,9 +27,13 @@ def open_filename(fname):
 
 if __name__ == "__main__":
     fname = sys.argv[1]
+    if fname.endswith(".py"):
+        comment = "#"
+    else:
+        comment = "//"
     out = "\n".join(open_filename(fname))
     preamble = "\n".join(
-        [f"// #include<{fname}>" for fname in included_fnames]
+        [f"{comment} #include<{fname}>" for fname in included_fnames]
     )
 
     with open(fname, "w") as f:

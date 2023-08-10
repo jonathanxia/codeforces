@@ -72,19 +72,6 @@ namespace nt {
         return s;
     }
 
-    ll mod(ll a, ll p) {
-        if (p > 0) {
-            return (a % p + p) % p;
-        }
-        return a;
-    }
-
-    ll MOD = 998244353LL;
-    // ll MOD = 1000000007;
-    ll mod(ll a) {
-        return mod(a, MOD);
-    }
-
     // Function to calculate (base^exponent) % modulus using repeated squaring
     ll pow(ll base, ll exponent, ll modulus=MOD) {
         ll result = 1;
@@ -274,7 +261,6 @@ namespace combo {
     }
 
     ll choose(ll n, ll k, ll m=MOD) {
-        assert factorial_computed
         if (k > n) return 0;
 
         ll ans = mdiv(factorial[n], factorial[k], m);

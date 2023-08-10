@@ -249,6 +249,16 @@ namespace vv {
         // Compare the permutations lexicographically
         return std::lexicographical_compare(a.begin(), a.end(), perm.begin(), perm.end());
     }
+
+    template <typename T>
+    vector<pair<T, ll>> with_idx(const vector<T>& a) {
+        vector<pair<T, ll>> out;
+        ll n = len(a);
+        rep(i, 0, n - 1) {
+            out.pb(mp(a[i], i));
+        }
+        return out;
+    }
 };
 
 using namespace vv;

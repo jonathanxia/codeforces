@@ -18,11 +18,15 @@ void chkmax(T& lhs, S rhs) {
 	lhs = max(lhs, T(rhs));
 }
 
+
+typedef long long ll;
+// typedef __int128_t ll;
+
 // Because unsigned sizes are absolutely stupid
 // Got burned on 1841C
 template <typename T>
-inline int len(const T& v) {
-    return int(v.size());
+inline ll len(const T& v) {
+    return ll(v.size());
 }
 
 #define to_str to_string
@@ -32,8 +36,6 @@ inline int len(const T& v) {
 #define ALL(x) (x).begin(), (x).end()
 #define SLC(x, i1, i2) (x).begin() + i1, (x).begin() + i2
 
-typedef long long ll;
-// typedef __int128_t ll;
 
 // Looping
 #define rep(i, d, u) for(ll i = (d); i <= (u); ++i)
@@ -493,6 +495,8 @@ istream& operator>>(istream& input, pair<S, T>& p) {
 }
 
 // Overloading the << operator for __int128_t
+// For some reason, the leetcode compilers do not have this
+#ifndef LEETCODE
 std::ostream& operator<<(std::ostream& os, const __int128_t& value) {
     // Convert __int128_t to a string representation and output it
     std::string output;
@@ -526,4 +530,19 @@ std::istream& operator>>(std::istream& is, __int128_t& value) {
     }
 
     return is;
+}
+#endif
+
+ll MOD = 998244353LL;
+// ll MOD = 1000000007;
+
+ll mod(ll a, ll p) {
+    if (p > 0) {
+        return (a % p + p) % p;
+    }
+    return a;
+}
+
+ll mod(ll a) {
+    return mod(a, MOD);
 }
