@@ -43,7 +43,7 @@ inline ll len(const T& v) {
 #define irep(i, d, u) for(i = (d); i <= (u); ++i)
 #define idep(i, u, d) for(i = (u); i >= (d); --i)
 #define srep(i, d, u, s) for(ll i = (d); i <= (u); i += s)
-#define dsrep(i, d, u, s) for(ll i = (d); i >= (u); i -= s)
+#define sdep(i, d, u, s) for(ll i = (d); i >= (u); i -= s)
 #define cep(t) while(t--)
 #define foreach(i, c) for(auto& i : c)
 #define foreachp(k, v, c) for (auto& [k, v] : c)
@@ -87,6 +87,9 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 typedef vector<vector<int>> vvi;
 typedef vector<int> vi;
 typedef vector<string> vs;
+typedef array<ll, 2> array2;
+typedef array<ll, 3> array3;
+typedef array<ll, 4> array4;
 
 typedef vector<vector<ll>> vvl;
 typedef vector<vector<string>> vvs;

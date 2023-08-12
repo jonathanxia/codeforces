@@ -40,13 +40,15 @@ class DSU {
 public:
     PersistantVector parent;
     PersistantVector rank;
-    vl data;
+    vl largest;
+    vl smallest;
 
-    DSU(int size) : parent(size), rank(size), data(size) {
+    DSU(int size) : parent(size), rank(size), largest(size), smallest(size) {
         for (int i = 0; i < size; ++i) {
             parent.set(i, i);
             rank.set(i, 0);
-            data[i] = i;
+            largest[i] = i;
+            smallest[i] = i;
         }
     }
 
@@ -63,14 +65,17 @@ public:
         if (rootX != rootY) {
             if (rank[rootX] < rank[rootY]) {
                 parent.set(rootX, rootY);
-                chkmax(data[rootY], data[rootX]);
+                chkmax(largest[rootY], largest[rootX]);
+                chkmin(smallest[rootY], smallest[rootX]);
             } else if (rank[rootX] > rank[rootY]) {
                 parent.set(rootY, rootX);
-                chkmax(data[rootX], data[rootY]);
+                chkmax(largest[rootX], largest[rootY]);
+                chkmin(smallest[rootX], smallest[rootY]);
             } else {
                 parent.set(rootY, rootX);
                 rank.set(rootX, rank[rootX] + 1);
-                chkmax(data[rootX], data[rootY]);
+                chkmax(largest[rootX], largest[rootY]);
+                chkmin(smallest[rootX], smallest[rootY]);
             }
         }
     }

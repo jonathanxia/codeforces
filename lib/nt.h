@@ -2,18 +2,18 @@
 
 namespace nt {
     vl primes;
-    vl isnotprime;
+    vl is_composite;
     bool sieve_done = false;
 
     void do_sieve(ll max_prime) {
-        isnotprime.resize(max_prime + 1);
+        is_composite.resize(max_prime + 1);
         rep(d, 2, max_prime) {
-            if (!isnotprime[d]) {
+            if (!is_composite[d]) {
                 primes.push_back(d);
 
                 int x = 2 * d;
                 while (x <= max_prime) {
-                    isnotprime[x] = true;
+                    is_composite[x] = d;
                     x += d;
                 }
             }

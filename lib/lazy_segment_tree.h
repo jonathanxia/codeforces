@@ -41,7 +41,7 @@ std::ostream& operator<<(std::ostream& os, const lazynode& mp)
 }
 
 
-class LazySegmentTree {
+struct LazySegmentTree {
 public:
     ll n;
     vl a;
@@ -164,60 +164,73 @@ public:
     }
 };
 
-class MinSegmentTree : public LazySegmentTree {
-public:
+struct SegmentTree : LazySegmentTree {
     template <typename T>
-    MinSegmentTree(const vector<T>& v) : LazySegmentTree(
-        v,
-        [](node n1, node n2) {
-            return node(min(n1.data, n2.data));
-        },
-        [](node n1, int num, lazynode n2) {
-            // Assuming assignment updates
-            return node(n2.data);
+    SegmentTree(const vector<T>& v, function<node(node, node)> merge2) : LazySegmentTree(
+        v, merge2, [](node n1, int i, lazynode ln) {
+            assert (i == 1);
+            return node(ln.data);
         },
         [](lazynode n1, lazynode n2) {
-            return lazynode(n2.data);
+            return n2;
         }
-    )
-    {}
+    ) {}
 };
 
-class MaxSegmentTree : public LazySegmentTree {
-public:
-    template <typename T>
-    MaxSegmentTree(const vector<T>& v) : LazySegmentTree(
-        v,
-        [](node n1, node n2) {
-            return node(max(n1.data, n2.data));
-        },
-        [](node n1, int num, lazynode n2) {
-            // Assuming assignment updates
-            return node(n2.data);
-        },
-        [](lazynode n1, lazynode n2) {
-            return lazynode(n2.data);
-        }
-    )
-    {}
-};
+// struct MinSegmentTree : public LazySegmentTree {
+// public:
+//     template <typename T>
+//     MinSegmentTree(const vector<T>& v) : LazySegmentTree(
+//         v,
+//         [](node n1, node n2) {
+//             return node(min(n1.data, n2.data));
+//         },
+//         [](node n1, int num, lazynode n2) {
+//             // Assuming assignment updates
+//             return node(n2.data);
+//         },
+//         [](lazynode n1, lazynode n2) {
+//             return lazynode(n2.data);
+//         }
+//     )
+//     {}
+// };
 
-class SumSegmentTree : public LazySegmentTree {
-public:
-    template <typename T>
-    SumSegmentTree(const vector<T>& v) : LazySegmentTree(
-        v,
-        [](node n1, node n2) {
-            return node(n1.data + n2.data);
-        },
-        [](node n1, int num, lazynode n2) {
-            // Assuming assignment updates
-            return node(n2.data * num);
-        },
-        [](lazynode n1, lazynode n2) {
-            return lazynode(n2.data);
-        }
-    )
-    {}
-};
+// struct MaxSegmentTree : public LazySegmentTree {
+// public:
+//     template <typename T>
+//     MaxSegmentTree(const vector<T>& v) : LazySegmentTree(
+//         v,
+//         [](node n1, node n2) {
+//             return node(max(n1.data, n2.data));
+//         },
+//         [](node n1, int num, lazynode n2) {
+//             // Assuming assignment updates
+//             return node(n2.data);
+//         },
+//         [](lazynode n1, lazynode n2) {
+//             return lazynode(n2.data);
+//         }
+//     )
+//     {}
+// };
+
+// struct SumSegmentTree : public LazySegmentTree {
+// public:
+//     template <typename T>
+//     SumSegmentTree(const vector<T>& v) : LazySegmentTree(
+//         v,
+//         [](node n1, node n2) {
+//             return node(n1.data + n2.data);
+//         },
+//         [](node n1, int num, lazynode n2) {
+//             // Assuming assignment updates
+//             return node(n2.data * num);
+//         },
+//         [](lazynode n1, lazynode n2) {
+//             return lazynode(n2.data);
+//         }
+//     )
+//     {}
+// };
 
