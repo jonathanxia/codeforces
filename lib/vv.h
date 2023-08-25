@@ -86,7 +86,7 @@ namespace vv {
         if (end < 0) {
             end = len(a) + end;
         }
-        return std::accumulate(a.begin(), a.begin() + end + 1, T(0));
+        return std::accumulate(a.begin() + start, a.begin() + end + 1, T(0));
     }
 
     template <typename T>

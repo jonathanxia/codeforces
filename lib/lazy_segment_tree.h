@@ -164,18 +164,18 @@ public:
     }
 };
 
-struct SegmentTree : LazySegmentTree {
-    template <typename T>
-    SegmentTree(const vector<T>& v, function<node(node, node)> merge2) : LazySegmentTree(
-        v, merge2, [](node n1, int i, lazynode ln) {
-            assert (i == 1);
-            return node(ln.data);
-        },
-        [](lazynode n1, lazynode n2) {
-            return n2;
-        }
-    ) {}
-};
+// struct SegmentTree : LazySegmentTree {
+//     template <typename T>
+//     SegmentTree(const vector<T>& v, function<node(node, node)> merge2) : LazySegmentTree(
+//         v, merge2, [](node n1, int i, lazynode ln) {
+//             assert (i == 1);
+//             return node(ln.data);
+//         },
+//         [](lazynode n1, lazynode n2) {
+//             return n2;
+//         }
+//     ) {}
+// };
 
 // struct MinSegmentTree : public LazySegmentTree {
 // public:

@@ -84,7 +84,7 @@ namespace nt {
                     result = (result * base) % modulus;
                 }
                 else {
-                    result = result * base;
+                    result = cmul(result, base);
                 }
             }
             exponent >>= 1;
@@ -97,7 +97,7 @@ namespace nt {
                 base = (base * base) % modulus;
             }
             else {
-                base = base * base;
+                base = cmul(base, base);
             }
         }
 

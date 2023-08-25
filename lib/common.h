@@ -3,11 +3,14 @@
 #endif
 
 #include <bits/stdc++.h>
+#include <cassert>
+#include <cstdio>
 
 using namespace std;
 
 #define ass(a, b, x, y) (tie(a, b) = make_tuple(x, y));
 #define ordered(x, y, z) ((x) <= (y) && (y) <= (z))
+#define FNCT function
 
 template <typename T, typename S>
 void chkmin(T& lhs, S rhs) {
@@ -17,7 +20,6 @@ template <typename T, typename S>
 void chkmax(T& lhs, S rhs) {
 	lhs = max(lhs, T(rhs));
 }
-
 
 typedef long long ll;
 // typedef __int128_t ll;
@@ -39,7 +41,9 @@ inline ll len(const T& v) {
 
 // Looping
 #define rep(i, d, u) for(ll i = (d); i <= (u); ++i)
+#define rep0(i, u) for(ll i = 0; i <= (u); ++i)
 #define dep(i, u, d) for(ll i = (u); i >= (d); --i)
+#define dep0(i, u) for(ll i = (u); i >= 0; --i)
 #define irep(i, d, u) for(i = (d); i <= (u); ++i)
 #define idep(i, u, d) for(i = (u); i >= (d); --i)
 #define srep(i, d, u, s) for(ll i = (d); i <= (u); i += s)
@@ -96,6 +100,7 @@ typedef vector<vector<string>> vvs;
 typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef pair<ll, ll> pl;
+typedef pair<int, int> pi;
 typedef vector<vector<pl>> vvpl;
 typedef vector<pl> vpl;
 
@@ -193,6 +198,48 @@ int dy[4] = {0, 1, 0, -1};
     BISEARCH_ans;                                                 \
 })
 
+#define first_st(x, cond, lo, hi) ({ \
+    ll _INTERNAL_start = (lo);                \
+    ll _INTERNAL_end = (hi);                  \
+    ll x;                                               \
+    for (x = _INTERNAL_start; x <= _INTERNAL_end; x++) { \
+        if (cond) break;                                 \
+    }                                                    \
+    x;                                                   \
+})
+
+#define last_st(x, cond, lo, hi) ({  \
+    ll _INTERNAL_start = (lo);                \
+    ll _INTERNAL_end = (hi);                  \
+    ll x;                                               \
+    for (x = _INTERNAL_end; x >= _INTERNAL_start; x--) { \
+        if (cond) break;                                 \
+    }                                                    \
+    x;                                                   \
+})
+
+#define any_st(x, cond, lo, hi) ({   \
+    bool any_good = false;                            \
+    ll _INTERNAL_start = (lo);                \
+    ll _INTERNAL_end = (hi);                  \
+    ll x;                                               \
+    for (x = _INTERNAL_start; x <= _INTERNAL_end; x++) { \
+        exists_good |= (cond);                           \
+    }                                                    \
+    any_good;                                         \
+})
+
+#define all_st(x, cond, lo, hi) ({   \
+    bool all_good = true;                                \
+    ll _INTERNAL_start = (lo);                \
+    ll _INTERNAL_end = (hi);                  \
+    ll x;                                               \
+    for (x = _INTERNAL_start; x <= _INTERNAL_end; x++) { \
+        all_good &= (cond);                              \
+    }                                                    \
+    all_good;                                            \
+})
+
 // Strings
 namespace str {
     string lower(const string& s) {
@@ -263,7 +310,7 @@ namespace mset {
     void mset_del(S& ss, T x) {
         auto it = ss.find(x);
         if (it == ss.end()) {
-            throw std::out_of_range("element not found");
+            throw std::out_of_range("element not found " + to_str(x));
         }
         ss.erase(it);
     }
@@ -327,6 +374,20 @@ namespace mset {
         }
         return (ss.rbegin())->first;
     }
+
+    template <typename T>
+    T popmax(set<T>& ss) {
+        auto val = max(ss);
+        ss.erase(val);
+        return val;
+    }
+
+    template <typename T>
+    T popmin(set<T>& ss) {
+        auto val = min(ss);
+        ss.erase(val);
+        return val;
+    }
 }
 
 
@@ -352,6 +413,139 @@ void init() {
     ios_base::sync_with_stdio(false), cin.tie(nullptr);
     cout << setprecision(9);
 }
+
+template<typename T1, typename T2>
+std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p) {
+    os << "(" << p.first << ", " << p.second << ")";
+    return os;
+}
+
+template<typename K, typename V>
+std::ostream& operator<<(std::ostream& os, const unordered_map<K, V, custom_hash>& mp)
+{
+    os << "{ ";
+    for (const auto& p : mp) {
+        os << p.first << ": " << p.second << ", ";
+    }
+    os << "}";
+    return os;
+}
+
+template<typename K, typename V>
+std::ostream& operator<<(std::ostream& os, const map<K, V>& mp)
+{
+    os << "{ ";
+    for (const auto& p : mp) {
+        os << p.first << ": " << p.second << ", ";
+    }
+    os << "}";
+    return os;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& v) {
+    for (auto it = v.begin(); it != v.end(); ++it) {
+        os << *it;
+        if (it != v.end() - 1) {
+            os << " ";
+        }
+    }
+    return os;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const std::set<T>& s) {
+    os << "{ ";
+    for (const auto& item : s) {
+        os << item << " ";
+    }
+    os << "}";
+    return os;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const std::multiset<T>& s) {
+    os << "{ ";
+    for (const auto& item : s) {
+        os << item << " ";
+    }
+    os << "}";
+    return os;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const std::unordered_set<T, custom_hash>& s) {
+    os << "{ ";
+    for (const auto& item : s) {
+        os << item << " ";
+    }
+    os << "}";
+    return os;
+}
+
+template<typename K, typename V>
+std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
+{
+    os << "{ ";
+    for (const auto& p : mp) {
+        os << p.first << ": " << p.second << ", ";
+    }
+    os << "}";
+    return os;
+}
+
+template<typename S, typename T>
+istream& operator>>(istream& input, pair<S, T>& p) {
+    input >> p.first >> p.second;
+    return input;
+}
+
+template<typename T>
+istream& operator>>(istream& input, vector<T>& vec) {
+    for (auto& element : vec) {
+        input >> element;
+    }
+    return input;
+}
+
+// Overloading the << operator for __int128_t
+// For some reason, the leetcode compilers do not have this
+#ifndef LEETCODE
+std::ostream& operator<<(std::ostream& os, const __int128_t& value) {
+    // Convert __int128_t to a string representation and output it
+    std::string output;
+    __int128_t cvalue = value;
+    if (cvalue < 0) {
+        output.append("-");
+        cvalue = -cvalue;
+    }
+    vector<char> digits;
+    while (cvalue > 0) {
+        digits.pb(cvalue % 10 + '0');
+        cvalue /= 10;
+    }
+    dep(i, len(digits) - 1, 0) {
+        output += digits[i];
+    }
+
+    os << output;
+
+    return os;
+}
+
+// Overloading the >> operator for __int128_t
+std::istream& operator>>(std::istream& is, __int128_t& value) {
+    std::string input;
+    is >> input;
+
+    value = 0;
+    rep(i, 0, len(input) - 1) {
+        value = value * 10 + (input[i] - '0');
+    }
+
+    return is;
+}
+#endif
 
 template<typename T>
 void print(const T& t) {
@@ -400,138 +594,7 @@ void dprint(const T& t, const Args&... args) {
     #define dbg(x)
 #endif
 
-template<typename K, typename V>
-std::ostream& operator<<(std::ostream& os, const unordered_map<K, V, custom_hash>& mp)
-{
-    os << "{ ";
-    for (const auto& p : mp) {
-        os << p.first << ": " << p.second << ", ";
-    }
-    os << "}";
-    return os;
-}
 
-template<typename K, typename V>
-std::ostream& operator<<(std::ostream& os, const map<K, V>& mp)
-{
-    os << "{ ";
-    for (const auto& p : mp) {
-        os << p.first << ": " << p.second << ", ";
-    }
-    os << "}";
-    return os;
-}
-
-template<typename T>
-std::ostream& operator<<(std::ostream& os, const std::vector<T>& v) {
-    for (auto it = v.begin(); it != v.end(); ++it) {
-        os << *it;
-        if (it != v.end() - 1) {
-            os << " ";
-        }
-    }
-    return os;
-}
-
-template<typename T1, typename T2>
-std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p) {
-    os << "(" << p.first << ", " << p.second << ")";
-    return os;
-}
-
-template<typename T>
-std::ostream& operator<<(std::ostream& os, const std::set<T>& s) {
-    os << "{ ";
-    for (const auto& item : s) {
-        os << item << " ";
-    }
-    os << "}";
-    return os;
-}
-
-template<typename T>
-std::ostream& operator<<(std::ostream& os, const std::multiset<T>& s) {
-    os << "{ ";
-    for (const auto& item : s) {
-        os << item << " ";
-    }
-    os << "}";
-    return os;
-}
-
-template<typename T>
-std::ostream& operator<<(std::ostream& os, const std::unordered_set<T, custom_hash>& s) {
-    os << "{ ";
-    for (const auto& item : s) {
-        os << item << " ";
-    }
-    os << "}";
-    return os;
-}
-
-template<typename K, typename V>
-std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& mp)
-{
-    os << "{ ";
-    for (const auto& p : mp) {
-        os << p.first << ": " << p.second << ", ";
-    }
-    os << "}";
-    return os;
-}
-
-template<typename T>
-istream& operator>>(istream& input, vector<T>& vec) {
-    for (auto& element : vec) {
-        input >> element;
-    }
-    return input;
-}
-
-template<typename S, typename T>
-istream& operator>>(istream& input, pair<S, T>& p) {
-    input >> p.first >> p.second;
-    return input;
-}
-
-// Overloading the << operator for __int128_t
-// For some reason, the leetcode compilers do not have this
-#ifndef LEETCODE
-std::ostream& operator<<(std::ostream& os, const __int128_t& value) {
-    // Convert __int128_t to a string representation and output it
-    std::string output;
-    __int128_t cvalue = value;
-    if (cvalue < 0) {
-        output.append("-");
-        cvalue = -cvalue;
-    }
-    vector<char> digits;
-    while (cvalue > 0) {
-        digits.pb(cvalue % 10 + '0');
-        cvalue /= 10;
-    }
-    dep(i, len(digits) - 1, 0) {
-        output += digits[i];
-    }
-
-    os << output;
-
-    return os;
-}
-
-// Overloading the >> operator for __int128_t
-std::istream& operator>>(std::istream& is, __int128_t& value) {
-    std::string input;
-    is >> input;
-
-    value = 0;
-    rep(i, 0, len(input) - 1) {
-        value = value * 10 + (input[i] - '0');
-    }
-
-    return is;
-}
-#endif
 
 ll MOD = 998244353LL;
 // ll MOD = 1000000007;
@@ -545,4 +608,25 @@ ll mod(ll a, ll p) {
 
 ll mod(ll a) {
     return mod(a, MOD);
+}
+
+ll cmul(ll a, ll b) {
+    if (b == 0) return 0;
+    if (b > 0) {
+        if (a >= LONG_LONG_MAX / b) {
+            return LONG_LONG_MAX;
+        }
+        else if (a <= LONG_LONG_MIN / b) {
+            return LONG_LONG_MIN;
+        }
+        return a * b;
+    }
+    // b is negative
+    if (a <= LONG_LONG_MAX / b) {
+        return LONG_LONG_MAX;
+    }
+    else if (a >= LONG_LONG_MIN / b) {
+        return LONG_LONG_MIN;
+    }
+    return a * b;
 }
