@@ -307,7 +307,7 @@ namespace str {
 
 namespace mset {
     template <typename S, typename T>
-    void mset_del(S& ss, T x) {
+    void del(S& ss, T x) {
         auto it = ss.find(x);
         if (it == ss.end()) {
             throw std::out_of_range("element not found " + to_str(x));

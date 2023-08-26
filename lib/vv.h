@@ -200,10 +200,16 @@ namespace vv {
     }
 
     template <typename T>
-    vector<T> cumsum(const vector<T>& a) {
+    vector<T> cumsum(const vector<T>& a, bool reverse=false) {
         vector<T> ret(a);
-        rep(i, 1, len(a) - 1) {
-            ret[i] += ret[i - 1];
+        if (reverse) {
+            dep(i, len(a) - 2, 0) {
+                ret[i] += ret[i + 1];
+            }
+        } else {
+            rep(i, 1, len(a) - 1) {
+                ret[i] += ret[i - 1];
+            }
         }
         return ret;
     }
