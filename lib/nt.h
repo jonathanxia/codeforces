@@ -8,7 +8,7 @@ bool sieve_done = false;
 void do_sieve(ll max_prime)
 {
     isnotprime.resize(max_prime + 1);
-    rep(d, 2, max_prime)
+    repi(d, 2, max_prime)
     {
         if (!isnotprime[d]) {
             primes.push_back(d);
@@ -30,7 +30,9 @@ bool is_prime(ll n)
     if (n <= 1) {
         return false;
     }
-
+    if (n < len(isnotprime)) {
+        return !isnotprime[n];
+    }
     ll p = *prev(primes.end());
     if (p * p < n) {
         throw out_of_range("Generate more primes please");
