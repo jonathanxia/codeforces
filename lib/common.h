@@ -43,14 +43,11 @@ typedef long long ll;
 #define idep(i, u, d) for (i = (u); i >= (d); --i)
 #define srep(i, d, u, s) for (ll i = (d); i < (u); i += s)
 #define cep(t) while (t--)
-#define cepsolve        \
-    int main()          \
-    {                   \
-        init();         \
-        ll t;           \
-        cin >> t;       \
-        cep(t) solve(); \
-    }
+#define cepsolve \
+    init();      \
+    ll t;        \
+    cin >> t;    \
+    cep(t) solve();
 #define CEPEAT_CAT_(a, b) a##b
 #define CEPEAT_CAT(a, b) CEPEAT_CAT_(a, b)
 #define cepeat(t) rep(CEPEAT_CAT(CEPEAT_COPY, __COUNTER__), 0, t)
@@ -60,6 +57,7 @@ typedef long long ll;
 #define walk(i, container) for (ll i = 0; i < len(container); ++i)
 #define reverse_walk(i, container) for (ll i = len(container) - 1; i >= 0; --i)
 #define iter_walk(i, container) for (auto i = container.begin(); i != container.end(); i++)
+#define reverse_iter_walk(i, container) for (auto i = container.rbegin(); i != container.rend(); i++)
 
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x)
@@ -278,7 +276,23 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& v)
     }
     return os;
 }
-
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const std::vector<std::vector<T>>& vv)
+{
+    walk(i, vv)
+    {
+#ifndef ONLINE_JUDGE
+#ifdef DEBUG
+        os << i << ": ";
+#endif
+#endif
+        os << vv[i];
+        if (i != len(vv) - 1) {
+            os << '\n';
+        }
+    }
+    return os;
+}
 template <typename T1, typename T2>
 std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p)
 {
