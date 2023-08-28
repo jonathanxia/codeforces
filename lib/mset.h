@@ -12,6 +12,7 @@ void mset_del(S& ss, T x)
     ss.erase(it);
 }
 
+// Moves x from ss1 to ss2
 template <typename S, typename T>
 void mset_move(S& ss1, S& ss2, T x)
 {
@@ -76,5 +77,45 @@ T max(map<T, V>& ss)
         throw out_of_range("Empty set max");
     }
     return (ss.rbegin())->first;
+}
+
+template <typename T>
+T popmax(set<T>& ss)
+{
+    auto val = max(ss);
+    ss.erase(val);
+    return val;
+}
+
+template <typename T>
+T popmin(set<T>& ss)
+{
+    auto val = min(ss);
+    ss.erase(val);
+    return val;
+}
+
+template <typename T>
+T popmax(multiset<T>& ms)
+{
+    if (ms.empty()) {
+        throw out_of_range("Empty multiset max");
+    }
+    auto iter = prev(ms.end());
+    auto val = *iter;
+    ms.erase(iter);
+    return val;
+}
+
+template <typename T>
+T popmin(multiset<T>& ms)
+{
+    if (ms.empty()) {
+        throw out_of_range("Empty multiset min");
+    }
+    auto iter = ms.begin();
+    auto val = *iter;
+    ms.erase(iter);
+    return val;
 }
 }
