@@ -243,6 +243,53 @@ int dy[4] = { 0, 1, 0, -1 };
     BISEARCH_ans;                                                 \
 })
 
+// Linear search
+// Note that these are inclusive: [lo, hi]
+#define first_st(x, cond, lo, hi) ({                     \
+    ll _INTERNAL_start = (lo);                           \
+    ll _INTERNAL_end = (hi);                             \
+    ll x;                                                \
+    for (x = _INTERNAL_start; x <= _INTERNAL_end; x++) { \
+        if (cond)                                        \
+            break;                                       \
+    }                                                    \
+    x;                                                   \
+})
+
+#define last_st(x, cond, lo, hi) ({                      \
+    ll _INTERNAL_start = (lo);                           \
+    ll _INTERNAL_end = (hi);                             \
+    ll x;                                                \
+    for (x = _INTERNAL_end; x >= _INTERNAL_start; x--) { \
+        if (cond)                                        \
+            break;                                       \
+    }                                                    \
+    x;                                                   \
+})
+
+// Existential/Universal linear search
+#define exists_st(x, cond, lo, hi) ({                    \
+    bool _INTERNAL_any_good = false;                     \
+    ll _INTERNAL_start = (lo);                           \
+    ll _INTERNAL_end = (hi);                             \
+    ll x;                                                \
+    for (x = _INTERNAL_start; x <= _INTERNAL_end; x++) { \
+        _INTERNAL_any_good |= (cond);                    \
+    }                                                    \
+    _INTERNAL_any_good;                                  \
+})
+
+#define all_st(x, cond, lo, hi) ({                       \
+    bool _INTERNAL_all_good = true;                      \
+    ll _INTERNAL_start = (lo);                           \
+    ll _INTERNAL_end = (hi);                             \
+    ll x;                                                \
+    for (x = _INTERNAL_start; x <= _INTERNAL_end; x++) { \
+        _INTERNAL_all_good &= (cond);                    \
+    }                                                    \
+    _INTERNAL_all_good;                                  \
+})
+
 template <typename K, typename V>
 std::ostream& operator<<(std::ostream& os, const unordered_map<K, V, custom_hash>& mp)
 {
