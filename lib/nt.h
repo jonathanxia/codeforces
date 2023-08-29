@@ -2,20 +2,23 @@
 
 namespace nt {
 vl primes;
-vl isnotprime;
+
+// is_composite[i] is 0 if i is prime, otherwise it is
+// the largest prime that divides i
+vl is_composite;
 bool sieve_done = false;
 
 void do_sieve(ll max_prime)
 {
-    isnotprime.resize(max_prime + 1);
+    is_composite.resize(max_prime + 1);
     repi(d, 2, max_prime)
     {
-        if (!isnotprime[d]) {
+        if (!is_composite[d]) {
             primes.push_back(d);
 
             int x = 2 * d;
             while (x <= max_prime) {
-                isnotprime[x] = true;
+                is_composite[x] = d;
                 x += d;
             }
         }
@@ -30,8 +33,8 @@ bool is_prime(ll n)
     if (n <= 1) {
         return false;
     }
-    if (n < len(isnotprime)) {
-        return !isnotprime[n];
+    if (n < len(is_composite)) {
+        return !is_composite[n];
     }
     ll p = *prev(primes.end());
     if (p * p < n) {
