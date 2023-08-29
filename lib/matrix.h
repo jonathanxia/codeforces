@@ -95,8 +95,10 @@ public:
 
     void fill(const T& value, int istart, int iend, int jstart, int jend)
     {
-        for (int i = istart; i <= iend; i++) {
-            for (int j = jstart; j <= jend; j++) {
+        rep(i, istart, iend)
+        {
+            rep(j, jstart, jend)
+            {
                 (*this)(i, j) = value;
             }
         }
@@ -105,31 +107,53 @@ public:
     void set_row(int row, const vector<T>& ret, int cstart = 0, int cend = -1)
     {
         if (cend == -1) {
-            cend = n_cols;
+            cend = n_cols - REP_OFFSET;
         }
-        rep(i, cstart, cend - 1)
+        rep(i, cstart, cend)
         {
             (*this)(row, i) = ret[i - cstart];
         }
     }
 
-    void set_row(int row, const T& ret, int cstart = 0, int cend = -1)
+    void set_col(int col, const vector<T>& ret, int rstart = 0, int rend = -1)
+    {
+        if (rend == -1) {
+            rend = n_cols - REP_OFFSET;
+        }
+        rep(i, rstart, rend)
+        {
+            (*this)(i, col) = ret[i - rstart];
+        }
+    }
+
+    void fill_row(int row, const T& ret, int cstart = 0, int cend = -1)
     {
         if (cend == -1) {
-            cend = n_cols;
+            cend = n_cols - REP_OFFSET;
         }
-        rep(i, cstart, cend - 1)
+        rep(i, cstart, cend)
         {
             (*this)(row, i) = ret;
+        }
+    }
+
+    void fill_col(int col, const T& ret, int rstart = 0, int rend = -1)
+    {
+        if (rend == -1) {
+            rend = n_rows - REP_OFFSET;
+        }
+        rep(i, rstart, rend)
+        {
+            (*this)(i, col) = ret;
         }
     }
 
     vector<T> get_row(int row, int cstart = 0, int cend = -1)
     {
         if (cend == -1) {
-            cend = n_cols - 1;
+            cend = n_cols - REP_OFFSET;
         }
-        vector<T> ret(cend - cstart + 1);
+        vector<T> ret(cend - cstart + REP_OFFSET);
         rep(i, cstart, cend)
         {
             ret[i - cstart] = (*this)(row, i);
@@ -140,9 +164,9 @@ public:
     vector<T> get_col(int col, int rstart = 0, int rend = -1)
     {
         if (rend == -1) {
-            rend = n_rows - 1;
+            rend = n_rows - REP_OFFSET;
         }
-        vector<T> ret(rend - rstart + 1);
+        vector<T> ret(rend - rstart + REP_OFFSET);
         rep(i, rstart, rend)
         {
             ret[i - rstart] = (*this)(i, col);
@@ -150,22 +174,13 @@ public:
         return ret;
     }
 
-    void set_col(int col, const T& ret, int rstart = 0, int rend = -1)
-    {
-        if (rend == -1) {
-            rend = n_rows;
-        }
-        rep(i, rstart, rend - 1)
-        {
-            (*this)(i, col) = ret;
-        }
-    }
-
     ndarray<T> slice(int istart, int iend, int jstart, int jend)
     {
-        ndarray<T> subarray(iend - istart, jend - jstart);
-        for (int i = istart; i <= iend; i++) {
-            for (int j = jstart; j <= jend; j++) {
+        ndarray<T> subarray(iend - istart + REP_OFFSET, jend - jstart + REP_OFFSET);
+        rep(i, istart, iend)
+        {
+            rep(j, jstart, jend)
+            {
                 subarray(i - istart, j - jstart) = (*this)(i, j);
             }
         }
@@ -176,9 +191,9 @@ public:
     {
         ndarray<T> output(n_cols, n_rows);
 
-        rep(i, 0, n_rows - 1)
+        repe(i, 0, n_rows)
         {
-            rep(j, 0, n_cols - 1)
+            repe(j, 0, n_cols)
             {
                 output(j, i) = (*this)(i, j);
             }
@@ -193,9 +208,9 @@ T sum(const ndarray<T>& arr, ll mod = INT64_MAX)
     int n_rows = arr.get_n_rows();
     int n_cols = arr.get_n_cols();
     T tot(0);
-    rep(i, 0, n_rows - 1)
+    repe(i, 0, n_rows)
     {
-        rep(j, 0, n_cols - 1)
+        repe(j, 0, n_cols)
         {
             tot += arr(i, j);
             tot %= mod;
@@ -215,12 +230,12 @@ ndarray<T> mult(const ndarray<T>& left, const ndarray<T>& right, ll mod = INT64_
     int j_max = right.get_n_cols();
     int k_max = left.get_n_cols();
 
-    rep(k, 0, k_max)
+    repe(k, 0, k_max)
     {
-        rep(i, 0, i_max)
+        repe(i, 0, i_max)
         {
             T r = left(i, k);
-            rep(j, 0, j_max)
+            repe(j, 0, j_max)
             {
                 result(i, j) += r * right(k, j);
                 result(i, j) %= mod;
@@ -233,7 +248,7 @@ template <typename T>
 ndarray<T> identity(ll size)
 {
     ndarray<T> I(size, size, T(0));
-    rep(i, 0, size)
+    repe(i, 0, size)
     {
         I(i, i) = T(1);
     }
