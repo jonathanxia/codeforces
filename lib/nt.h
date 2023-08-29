@@ -89,24 +89,6 @@ ll digits_to_num(const vl& digs, ll base = 10)
     return s;
 }
 
-// does % but doesn't mess up negatives
-//  mod(4, 5) == mod(-1, 5) == mod(-6, 5)
-ll mod(ll a, ll p)
-{
-    if (p > 0) {
-        return (a % p + p) % p;
-    }
-    return a;
-}
-
-// important constant to set for some problems
-ll MOD = 998244353LL;
-// ll MOD = 1000000007;
-ll mod(ll a)
-{
-    return mod(a, MOD);
-}
-
 // Function to calculate (base^exponent) % modulus using repeated squaring
 ll pow(ll base, ll exponent, ll modulus = MOD)
 {

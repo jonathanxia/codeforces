@@ -308,6 +308,24 @@ int dy[4] = { 0, 1, 0, -1 };
     _INTERNAL_all_good;                                  \
 })
 
+// does % but doesn't mess up negatives
+//  mod(4, 5) == mod(-1, 5) == mod(-6, 5)
+ll mod(ll a, ll p)
+{
+    if (p > 0) {
+        return (a % p + p) % p;
+    }
+    return a;
+}
+
+// important constant to set for some problems
+ll MOD = 998244353LL;
+// ll MOD = 1000000007;
+ll mod(ll a)
+{
+    return mod(a, MOD);
+}
+
 template <typename K, typename V>
 std::ostream& operator<<(std::ostream& os, const unordered_map<K, V, custom_hash>& mp)
 {
