@@ -32,16 +32,23 @@ inline int len(const T& v)
 #define pb push_back
 #define mp make_pair
 #define ALL(x) (x).begin(), (x).end()
+#define ceildiv(x, y) ((x) / (y) + ((x) % (y) != 0))
 
 typedef long long ll;
 
+// Stylistic choice
+#define rep repe
+#define srep srepe
+#define irep irepe
 // Looping
-#define rep(i, d, u) for (ll i = (d); i < (u); ++i)
+#define repe(i, d, u) for (ll i = (d); i < (u); ++i)
 #define repi(i, d, u) for (ll i = (d); i <= (u); ++i)
 #define dep(i, u, d) for (ll i = (u); i >= (d); --i)
-#define irep(i, d, u) for (i = (d); i < (u); ++i)
+#define irepi(i, d, u) for (i = (d); i <= (u); ++i)
+#define irepe(i, d, u) for (i = (d); i < (u); ++i)
 #define idep(i, u, d) for (i = (u); i >= (d); --i)
-#define srep(i, d, u, s) for (ll i = (d); i < (u); i += s)
+#define srepi(i, d, u, s) for (ll i = (d); i <= (u); i += s)
+#define srepe(i, d, u, s) for (ll i = (d); i < (u); i += s)
 #define cep(t) while (t--)
 #define cepsolve \
     init();      \
@@ -50,7 +57,7 @@ typedef long long ll;
     cep(t) solve();
 #define CEPEAT_CAT_(a, b) a##b
 #define CEPEAT_CAT(a, b) CEPEAT_CAT_(a, b)
-#define cepeat(t) rep(CEPEAT_CAT(CEPEAT_COPY, __COUNTER__), 0, t)
+#define cepeat(t) repe(CEPEAT_CAT(CEPEAT_COPY, __COUNTER__), 0, t)
 #define foreach(i, c) for (auto& i : c)
 #define foreachp(k, v, c) for (auto& [k, v] : c)
 // Looping through a container

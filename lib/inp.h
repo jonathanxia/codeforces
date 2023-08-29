@@ -17,7 +17,7 @@ long long binary()
 
 void array(vl& arr, int n)
 {
-    rep(i, 0, n - 1)
+    repi(i, 0, n - 1)
     {
         cin >> arr[i];
     }
@@ -25,7 +25,7 @@ void array(vl& arr, int n)
 
 void array(vi& arr, int n)
 {
-    rep(i, 0, n - 1)
+    repi(i, 0, n - 1)
     {
         cin >> arr[i];
     }
@@ -33,7 +33,7 @@ void array(vi& arr, int n)
 
 void array1(vl& arr, int n)
 {
-    rep(i, 1, n)
+    repi(i, 1, n)
     {
         cin >> arr[i];
     }

@@ -5,7 +5,7 @@ namespace graph {
 // target's neighbors)
 void dijkstra(const vvpl& graph, vl& dist, ll start, ll target = -1LL)
 {
-    rep(i, 0, len(dist))
+    repe(i, 0, len(dist))
     {
         dist[i] = LONG_LONG_MAX;
     }
@@ -112,7 +112,7 @@ vl topo_sort(const vvl& dag)
         DFS_processing[node] = false;
         order.pb(node);
     };
-    rep(i, 0, n)
+    repe(i, 0, n)
     {
         DFS(i);
     }

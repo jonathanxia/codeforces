@@ -178,13 +178,13 @@ ll v_p(ll x, ll p)
 
 // calculates x!
 // for precomputing, use combo::precompute_fac(x)
-ll factorial(ll x)
+ll factorial(ll x, ll modulus = MOD)
 {
     ll p = 1;
-    rep(i, 1, x)
+    repi(i, 1, x)
     {
-        p *= i;
-        p = mod(p);
+        p *= mod(i, modulus);
+        p = mod(p, modulus);
     }
     return p;
 }
@@ -306,9 +306,9 @@ void precompute_fac(ll n, ll m = MOD)
 {
     factorial.resize(n + 1);
     factorial[0] = 1;
-    rep(i, 1, n)
+    repi(i, 1, n)
     {
-        factorial[i] = mod(factorial[i - 1] * i, m);
+        factorial[i] = mod(factorial[i - 1] * mod(i, m), m);
     }
     factorial_computed = true;
 }
