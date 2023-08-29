@@ -30,7 +30,8 @@ template <typename T>
 inline vector<T> arange(T start, T end, T step)
 {
     vector<T> result;
-    for (T value = start; value < end; value += step) {
+    srep(value, start, end, step)
+    {
         result.pb(value);
     }
     return result;
@@ -68,7 +69,7 @@ inline unordered_map<T, ll, custom_hash> counter(const vector<T>& a, ll start, l
 template <typename T>
 inline unordered_map<T, ll, custom_hash> counter(const vector<T>& a, ll start = 0)
 {
-    return counter(a, start, len(a));
+    return counter(a, start, len(a) - REP_OFFSET);
 }
 
 // returns a sliced vector, a[start:end]
@@ -87,16 +88,16 @@ vector<T> slc(const vector<T>& a, int start, int end)
 template <typename T>
 vector<T> slc(const vector<T>& a, int start = 0)
 {
-    return slc(a, start, len(a));
+    return slc(a, start, len(a) - REP_OFFSET);
 }
 
 // returns a subvector of a, defined by the indices in idx
 template <typename T, typename S>
 vector<T> slc(const vector<T>& a, const vector<S> idx)
 {
-    int ll = len(idx);
-    vector<T> result(ll);
-    for (int i = 0; i < ll; i++) {
+    ll length = len(idx);
+    vector<T> result(length);
+    for (int i = 0; i < length; i++) {
         result[i] = a[idx[i]];
     }
     return result;
@@ -129,7 +130,7 @@ T sum(const vector<T>& a, int start, int end)
 template <typename T>
 T sum(const vector<T>& a, int start = 0)
 {
-    return sum(a, start, len(a));
+    return sum(a, start, len(a) - REP_OFFSET);
 }
 
 // multiplies all the elements of a from [start, end)
@@ -155,7 +156,7 @@ T product(const vector<T>& a, int start, int end, ll mm)
 template <typename T>
 T product(const vector<T>& a, int start = 0, ll mm = -1)
 {
-    return product(a, start, len(a), mm);
+    return product(a, start, len(a) - REP_OFFSET, mm);
 }
 
 // returns min of a[start:end]
@@ -179,7 +180,7 @@ T min(const vector<T>& a, int start, int end)
 template <typename T>
 T min(const vector<T>& a, int start = 0)
 {
-    return min(a, start, len(a));
+    return min(a, start, len(a) - REP_OFFSET);
 }
 
 // returns max element of a[start:end]
@@ -203,7 +204,7 @@ T max(const vector<T>& a, int start, int end)
 template <typename T>
 T max(const vector<T>& a, int start = 0)
 {
-    return max(a, start, len(a));
+    return max(a, start, len(a) - REP_OFFSET);
 }
 
 // sorts a[start:end]
@@ -216,11 +217,11 @@ void sort(vector<T>& a, int start, int end, KeyFunc keyFunc = Identity<T> {})
     if (end < 0) {
         end += len(a);
     }
-    if (start >= end || end > len(a)) {
+    if (start >= end || end > len(a) - REP_OFFSET) {
         return; // Invalid indices or empty range
     }
 
-    std::stable_sort(a.begin() + start, a.begin() + end,
+    std::stable_sort(a.begin() + start, a.begin() + end + REP_OFFSET,
         [&keyFunc](const T& x, const T& y) {
             return keyFunc(x) < keyFunc(y);
         });
@@ -228,7 +229,7 @@ void sort(vector<T>& a, int start, int end, KeyFunc keyFunc = Identity<T> {})
 template <typename T, typename KeyFunc = Identity<T>>
 void sort(vector<T>& a, int start = 0, KeyFunc keyFunc = Identity<T> {})
 {
-    return sort(a, start, len(a), keyFunc);
+    return sort(a, start, len(a) - REP_OFFSET, keyFunc);
 }
 
 // returns an array of indices of the sorting of a
@@ -263,7 +264,7 @@ int argmax(const vector<T>& a, ll start, ll end, bool earliest = true)
     int best_idx = start;
     rep(i, start, end)
     {
-        if (earliest ? a[i] > best : a[i] >= best) {
+        if (earliest ? (a[i] > best) : (a[i] >= best)) {
             best_idx = i;
             best = a[i];
         }
@@ -273,12 +274,12 @@ int argmax(const vector<T>& a, ll start, ll end, bool earliest = true)
 template <typename T>
 int argmax(const vector<T>& a, ll start, bool earliest = true)
 {
-    return argmax(a, start, len(a), earliest);
+    return argmax(a, start, len(a) - REP_OFFSET, earliest);
 }
 template <typename T>
 int argmax(const vector<T>& a, bool earliest = true)
 {
-    return argmax(a, 0, len(a), earliest);
+    return argmax(a, 0, len(a) - REP_OFFSET, earliest);
 }
 
 // returns the index of the smallest element
@@ -296,7 +297,7 @@ int argmin(const vector<T>& a, ll start, ll end, bool earliest = true)
     int best_idx = start;
     rep(i, start, end)
     {
-        if (earliest ? a[i] < best : a[i] <= best) {
+        if (earliest ? (a[i] < best) : (a[i] <= best)) {
             best_idx = i;
             best = a[i];
         }
@@ -306,19 +307,19 @@ int argmin(const vector<T>& a, ll start, ll end, bool earliest = true)
 template <typename T>
 int argmin(const vector<T>& a, ll start, bool earliest = true)
 {
-    return argmin(a, start, len(a), earliest);
+    return argmin(a, start, len(a) - REP_OFFSET, earliest);
 }
 template <typename T>
 int argmin(const vector<T>& a, bool earliest = true)
 {
-    return argmin(a, 0, len(a), earliest);
+    return argmin(a, 0, len(a) - REP_OFFSET, earliest);
 }
 
 // fills vector a with value elem
 template <typename S, typename T>
 void fill(vector<T>& a, S elem)
 {
-    rep(i, 0, len(a))
+    repe(i, 0, len(a))
     {
         a[i] = elem;
     }
@@ -330,7 +331,7 @@ template <typename T>
 vector<T> cumsum(const vector<T>& a)
 {
     vector<T> ret(a);
-    rep(i, 1, len(a))
+    repe(i, 1, len(a))
     {
         ret[i] += ret[i - 1];
     }
@@ -351,7 +352,7 @@ vector<T> cummax(const vector<T>& a, bool reverse = false)
             ret[i] = std::max(ret[i + 1], ret[i]);
         }
     } else {
-        rep(i, 1, n)
+        repe(i, 1, n)
         {
             ret[i] = std::max(ret[i], ret[i - 1]);
         }
@@ -373,7 +374,7 @@ vector<T> cummin(const vector<T>& a, bool reverse = false)
             ret[i] = std::min(ret[i + 1], ret[i]);
         }
     } else {
-        rep(i, 1, n)
+        repe(i, 1, n)
         {
             ret[i] = std::min(ret[i], ret[i - 1]);
         }

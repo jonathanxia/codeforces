@@ -37,9 +37,20 @@ inline int len(const T& v)
 typedef long long ll;
 
 // Stylistic choice
+// Comment this line for inclusive convention
+#define HALF_EXCLUSIVE
+
+#ifdef HALF_EXCLUSIVE
 #define rep repe
 #define srep srepe
 #define irep irepe
+#define REP_OFFSET 0LL
+#else
+#define rep repi
+#define srep srepi
+#define irep irepi
+#define REP_OFFSET 1LL
+#endif
 // Looping
 #define repe(i, d, u) for (ll i = (d); i < (u); ++i)
 #define repi(i, d, u) for (ll i = (d); i <= (u); ++i)
