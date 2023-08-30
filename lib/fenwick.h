@@ -20,7 +20,7 @@ struct FenwickTree {
         T ret = 0;
         for (; r >= 0; r = (r & (r + 1)) - 1)
             ret += bit[r];
-        return ret % 2;
+        return ret;
     }
 
     T sum(int l, int r) {
@@ -30,7 +30,6 @@ struct FenwickTree {
     void add(int idx, T delta) {
         for (; idx < n; idx = idx | (idx + 1)) {
             bit[idx] += delta;
-            bit[idx] %= 2;
         }
     }
 };
