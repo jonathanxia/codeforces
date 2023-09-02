@@ -1,6 +1,8 @@
-// #include<lib/common.h>
+// #include<lib/persistent.h>
 // #include<lib/vv.h>
-// #include<lib/nt.h>
+// #include<lib/common.h>
+#define INTERACTIVE
+
 #ifndef DEBUG // Don't optimize locally
 #pragma GCC optimize("O3")
 #endif
@@ -920,354 +922,208 @@ namespace vv {
 
 using namespace vv;
 
-namespace nt {
-    vl primes;
-    vl is_composite;
-    bool sieve_done = false;
+struct PersistentVector {
+    vl data;
+    stack<umapll> snapshots;
 
-    void do_sieve(ll max_prime) {
-        is_composite.resize(max_prime + 1);
-        rep(d, 2, max_prime) {
-            if (!is_composite[d]) {
-                primes.push_back(d);
-
-                int x = 2 * d;
-                while (x <= max_prime) {
-                    is_composite[x] = d;
-                    x += d;
-                }
-            }
-        }
-        sieve_done = true;
+    PersistentVector(int size) : data(size, 0) {
+        snapshots.push(umapll());
     }
 
-    bool is_prime(ll n) {
-        // Checks if n is prime
-        if (n <= 1) {
-            return false;
-        }
-
-        ll p = *prev(primes.end());
-        if (p * p < n) {
-            throw out_of_range("Generate more primes please");
-        }
-
-        ll i = 0;
-        while (primes[i] * primes[i] <= n) {
-            if (n % primes[i] == 0) {
-                return false;
-            }
-            i++;
-        }
-        return true;
+    const ll operator[](int idx) const {
+        return data[idx];
     }
 
-    ll sum_digits(ll n, ll b) {
-        int sum = 0;
-        while (n > 0) {
-            sum += n % b;
-            n /= b;
+    void set(int idx, ll value) {
+        auto& ss = snapshots.top();
+        if (!ss.count(idx)) {
+            ss[idx] = data[idx];
         }
-        return sum;
+
+        data[idx] = value;
     }
 
-    vl get_digits(ll n, ll b, ll pad=-1) {
-        vl ans;
-        while (n > 0) {
-            ans.push_back(n % b);
-            n /= b;
-        }
-        while (len(ans) < pad) {
-            ans.pb(0);
-        }
-        return ans;
+    void commit() {
+        snapshots.push(umapll());
     }
 
-    ll digits_to_num(const vl& digs, ll b) {
-        ll s = 0;
-        dep(i, digs.size() - 1, 0) {
-            s *= b;
-            s += digs[i];
+    void revert() {
+        auto dd = snapshots.top();
+        snapshots.pop();
+
+        foreach(k, dd) {
+            data[k.first] = k.second;
         }
-        return s;
+    }
+};
+
+template<typename M, typename K, typename V>
+struct PersistentMap {
+    M data;
+    stack<umap<K, V>> snapshots;
+    stack<vector<K>> deletion_list;
+
+    PersistentMap() {
+        snapshots.push(umap<K, V>());
+        deletion_list.push(vector<K>());
     }
 
-    // Function to calculate (base^exponent) % modulus using repeated squaring
-    ll pow(ll base, ll exponent, ll modulus=MOD) {
-        base = mod(base, modulus);
-        ll result = 1;
+    const V operator[](K idx) const {
+        return data[idx];
+    }
 
-        while (exponent > 0) {
-            // If the exponent is odd, multiply the result by base
-            if (exponent & 1) {
-                if (modulus > 0) {
-                    result = (result * base) % modulus;
-                }
-                else {
-                    result = cmul(result, base);
-                }
-            }
-            exponent >>= 1;
-            if (exponent == 0) {
-                break;
-            }
+    void set(K idx, V value) {
+        auto& ss = snapshots.top();
+        auto& dl = deletion_list.top();
+        if (!ss.count(idx)) {
+            // This is the first time we are
+            // setting the index after a commit,
+            // so we make sure to save it
 
-            // Square the base and reduce the exponent by half
-            if (modulus > 0) {
-                base = (base * base) % modulus;
+            // If we did not have the value before,
+            // we make sure to remember that and put
+            // that in our deletion list
+            if (data.count(idx) == 0) {
+                dl.push_back(idx);
             }
+            // Otherwise, save the value
             else {
-                base = cmul(base, base);
+                ss[idx] = data[idx];
             }
         }
 
-        return result;
+        data[idx] = value;
     }
 
-    ll inv(ll x, ll y) {
-        ll p = y;
-
-        ll ax = 1;
-        ll ay = 0;
-        while (x > 0) {
-            ll q = y / x;
-            tie(ax, ay) = make_tuple(ay - q * ax, ax);
-            tie(x, y) = make_tuple(y % x, x);
+    void erase(K idx) {
+        auto& ss = snapshots.top();
+        if (!ss.count(idx) && data.count(idx) > 0) {
+            ss[idx] = data[idx];
         }
 
-        return mod(ay, p);
+        data.erase(idx);
     }
 
-    ll mdiv(ll x, ll y, ll m=MOD) {
-        if (m <= 0) {
-            return x / y;
-        }
-        x = mod(x, m);
-        y = mod(y, m);
-        return mod(x * inv(y, m), m);
+    void commit() {
+        snapshots.push(umap<K, V>());
+        deletion_list.push(vector<K>());
     }
 
-    ll v_p(ll x, ll p) {
-        ll res = 0;
-        while (x % p == 0) {
-            ++res;
-            x /= p;
+    void revert() {
+        auto dd = snapshots.top();
+        snapshots.pop();
+
+        auto dl = deletion_list.top();
+        deletion_list.pop();
+
+        foreach(k, dd) {
+            data[k.first] = k.second;
         }
-        return res;
+        foreach(k, dl) {
+            data.erase(k);
+        }
+    }
+};
+
+template<typename T>
+struct PersistentValue {
+    T data;
+    stack<umap<int, T>> snapshots;
+
+    PersistentValue() {
+        snapshots.push(umap<int, T>());
     }
 
-    ll factorial(ll x) {
-        ll p = 1;
-        rep(i, 1, x) {
-            p *= i;
-            p = mod(p);
+    void set(V value) {
+        auto& ss = snapshots.top();
+        if (!ss.count(0)) {
+            ss[0] = data;
         }
-        return p;
+
+        data = value;
     }
 
-    bool is_pow_of_2(ll n) {
-        return (n > 0) && ((n & (n - 1)) == 0);
+    void commit() {
+        snapshots.push(umap<int, T>());
     }
 
-    ll phi(ll n) {
-        ll result = n;
-        if (!sieve_done) {
-            throw out_of_range("Sieve not done, please run do_sieve");
-        }
+    void revert() {
+        auto dd = snapshots.top();
+        snapshots.pop();
 
-        for (ll prime : primes) {
-            if (prime * prime > n)
-                break;
-            if (n % prime == 0) {
-                while (n % prime == 0) {
-                    n /= prime;
-                }
-                result -= result / prime;
-            }
+        foreach(k, dd) {
+            data = k.second;
         }
-
-        if (n > 1) {
-            result -= result / n;
-        }
-
-        return result;
     }
 
-    ll num_divisors(ll n) {
-        ll divisors = 1;
-
-        for (ll prime : primes) {
-            if (prime * prime > n)
-                break;
-
-            ll count = 0;
-            while (n % prime == 0) {
-                n /= prime;
-                count++;
-            }
-
-            divisors *= (count + 1);
-        }
-
-        if (n > 1) {
-            divisors *= 2;
-        }
-
-        return divisors;
-    }
-
-    ll sum_divisors(ll n) {
-        ll sum = 1;
-
-        for (ll prime : primes) {
-            if (prime * prime > n)
-                break;
-
-            if (n % prime == 0) {
-                ll factorSum = 1;
-                ll power = 1;
-                while (n % prime == 0) {
-                    n /= prime;
-                    power *= prime;
-                    factorSum += power;
-                }
-                sum *= factorSum;
-            }
-        }
-
-        if (n > 1) {
-            sum *= (n + 1);
-        }
-
-        return sum;
-    }
-
-    umapll primeFactorization(ll n) {
-        umapll factors;
-
-        for (ll prime : primes) {
-            if (prime * prime > n)
-                break;
-
-            ll exponent = 0;
-            while (n % prime == 0) {
-                n /= prime;
-                exponent++;
-            }
-
-            if (exponent > 0) {
-                factors[prime] = exponent;
-            }
-        }
-
-        if (n > 1) {
-            factors[n] = 1;
-        }
-
-        return factors;
-    }
 }
 
-namespace combo {
-    using namespace nt;
-    vl factorial;
-    bool factorial_computed = false;
-    void precompute_fac(ll n, ll m = MOD) {
-        factorial.resize(n + 1);
-        factorial[0] = 1;
-        rep(i, 1, n) {
-            factorial[i] = mod(factorial[i - 1] * i, m);
-        }
-        factorial_computed = true;
+struct State {
+    PersistentVector num_unique(1000001);
+    PersistentValue<ll> cur_ptr;
+    PersistentMap<umapll, ll, ll> first_index;
+    PersistentVector arr(1000001);
+
+    void commit() {
+        num_unique.commit();
+        cur_ptr.commit();
+        first_index.commit();
+        arr.commit();
     }
 
-    ll choose(ll n, ll k, ll m=MOD) {
-        if (k > n) return 0;
-
-        ll ans = mdiv(factorial[n], factorial[k], m);
-        return mdiv(ans, factorial[n - k], m);
+    void revert() {
+        num_unique.revert();
+        cur_ptr.revert();
+        first_index.revert();
+        arr.revert();
     }
-}
-
-using namespace nt;
-using namespace combo;
+};
 
 void solve() {
-    ll n; cin >> n;
-    vl a(n); cin >> a;
+    State s;
+    s.arr.set(1000000, -1);
+    s.commit();
 
-    sort(a);
-    ll ans = 0;
+    ll q; cin >> q;
+    cep(q) {
+        string typ; cin >> typ;
+        if (typ == "+") {
+            ll x; cin >> x;
+            ll idx = s.cur_ptr.data;
 
-    function<void(ll, ll, ll)> func = [&](ll start, ll end, ll k) {
-        if (end < start) return;
-        if (k < 0) return;
+            s.arr.set(idx, x);
+            s.cur_ptr.set(idx + 1);
 
-        ll n_zeros = first_st(i, (a[i] & (1LL << k)) > 0, start, end) - start;
-        ll n_tot = end - start + 1;
-        ll n_ones = n_tot - n_zeros;
-
-        ll idx = start + n_zeros;
-        ll ssq = 0;
-        while (idx <= end) {
-            ll idx2 = first_st(ii, a[ii] != a[idx], idx, end);
-            ssq = mod(ssq + (idx2 - idx) * (idx2 - idx));
-            idx = idx2;
+            ll prev_first_index = 1000000;
+            if (s.first_index.data.count(x) != 0) {
+                prev_first_index = s.first_index[x];
+            }
+            if (s.arr[prev_first_index] != x) {
+                prev_first_index = 1000000; // Invalidate the pointer
+            }
+            s.first_index.set(x, min(prev_first_index, idx));
+            int is_unique = s.first_index[x] == idx;
+            s.num_unique.set(idx + 1, s.num_unique[idx] + is_unique);
         }
 
-        bool is_zero_prefix = (a[start] >> (k + 1)) == 0;
-
-        // Both people have 1s
-        ans = mod(ans + 2 * (n_ones * n_ones - ssq));
-        // Alice 1 Bob 0
-        ans = mod(ans + (2 + 2 * is_zero_prefix) * n_ones * n_zeros);
-        // Alice 0 Bob 1
-        ans = mod(ans + (1 + 2 * is_zero_prefix) * n_zeros * n_ones);
-        if (ans > 0) {
-            dprint("(k, start, end)", k, start, end, "ans=", ans);
+        else if (typ == "-") {
+            ll x; cin >> x;
+            s.cur_ptr.set(s.cur_ptr.data - x);
+            s.commit();
         }
 
-        // Recurse
-        func(start, start + n_zeros - 1, k - 1);
-        func(start + n_zeros, end, k - 1);
-    };
-
-    func(0, n - 1, 30);
-
-    // Get the same people on board
-    ll same_ans = 0;
-    auto counts = counter(a);
-    ll prob = 0;
-    foreachp(val, cnt, counts) {
-        ll num_moves = sum_digits(val, 2);
-        // 1->2
-        // 2->3
-        // 3->4
-        if (num_moves < 3) {
-            num_moves = num_moves + 1;
-        }
-        else {
-            num_moves = 2 * (num_moves - 1);
+        else if (typ == "!") {
+            s.revert();
         }
 
-        same_ans += mod(mod(num_moves * cnt) * cnt);
-        same_ans = mod(same_ans);
-        // dprint(val, cnt, same_ans);
-        prob = mod(prob + mod(cnt * cnt));
+        else if (typ == "?") {
+            print(s.num_unique[s.cur_ptr.data]);
+        }
     }
-
-    prob = mod(mod(n * n) - prob);
-    dprint("Prob=", prob);
-    ans = mod(ans - 2 * prob);
-    dbg(ans); dbg(same_ans);
-
-    ll final_ans = mdiv(ans + same_ans, n * n);
-    print(final_ans);
 }
 
 int main() {
     init();
-    int t; cin >> t;
-    cep(t) solve();
+    solve();
     return 0;
 }
