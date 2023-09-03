@@ -1,4 +1,4 @@
-#include "common.h"
+#include <lib/common.h>
 
 // Solves subset sum when the items are nonnegative.
 // Complexity: O(target * len(items))

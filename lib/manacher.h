@@ -1,4 +1,4 @@
-#include "common.h"
+#include <lib/common.h>
 
 array<vl, 2> manacher(const string& s)
 {
