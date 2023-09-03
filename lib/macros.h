@@ -278,7 +278,7 @@ int dy[4] = { 0, 1, 0, -1 };
     x;                                                   \
 })
 
-#define last_st(x, cond, lo, hi) ({                      \
+#define last_st(x, cond, hi, lo) ({                      \
     ll _INTERNAL_start = (lo);                           \
     ll _INTERNAL_end = (hi);                             \
     ll x;                                                \
