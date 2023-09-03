@@ -32,9 +32,6 @@ struct DfsForest {
         deepest_leaf.resize(n, 0);
         parent.resize(n, -1);
 
-        inv_dfs_order_left.resize(n, -1);
-        inv_dfs_order_right.resize(n, -1);
-        inv_subtree_order.resize(n, -1);
         counter_to_node.resize(n, -1);
         node_to_counter.resize(n, -1);
 
@@ -74,14 +71,13 @@ struct DfsForest {
 };
 
 struct LCATree {
-    DFSForest forest;
+    DfsForest forest;
     SparseTable st;
 
     vl node_to_pos_in_dfs_order;
-    LCATree(const DFSForest& f)
-        : forest(f)
+    LCATree(const DfsForest& f)
+        : forest(f), st(forest.dfs_order, [](ll x, ll y) { return min(x, y); })
     {
-        st = SparseTable(forest.dfs_order, [](ll x, ll y) { return min(x, y); });
         ll n = forest.graph.size();
         node_to_pos_in_dfs_order = vl(n);
         FOR(j, 0, len(forest.dfs_order) - 1)
@@ -92,10 +88,12 @@ struct LCATree {
 
     ll lca(ll a, ll b)
     {
+        a = forest.node_to_counter[a];
+        b = forest.node_to_counter[b];
         ll idxa = node_to_pos_in_dfs_order[a];
         ll idxb = node_to_pos_in_dfs_order[b];
 
-        ll mn = st.query(idxa, idxb);
+        ll mn = st.query(min(idxa, idxb), max(idxa, idxb));
         return forest.counter_to_node[mn];
     }
 };
