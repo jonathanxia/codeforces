@@ -52,7 +52,7 @@ namespace str
 
     string slc(const string &s, int start, int end)
     {
-        return s.substr(start, end - start);
+        return s.substr(start, end - start + 1);
     }
 
     vector<string> split(const string &s, char delimiter)
