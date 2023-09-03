@@ -3,19 +3,17 @@
 // Overloading the << operator for __int128_t
 // For some reason, the leetcode compilers do not have this
 #ifndef LEETCODE
-std::ostream &operator<<(std::ostream &os, const __int128_t &value)
+std::ostream& operator<<(std::ostream& os, const __int128_t& value)
 {
     // Convert __int128_t to a string representation and output it
     std::string output;
     __int128_t cvalue = value;
-    if (cvalue < 0)
-    {
+    if (cvalue < 0) {
         output.append("-");
         cvalue = -cvalue;
     }
     vector<char> digits;
-    while (cvalue > 0)
-    {
+    while (cvalue > 0) {
         digits.pb(cvalue % 10 + '0');
         cvalue /= 10;
     }
@@ -30,13 +28,13 @@ std::ostream &operator<<(std::ostream &os, const __int128_t &value)
 }
 
 // Overloading the >> operator for __int128_t
-std::istream &operator>>(std::istream &is, __int128_t &value)
+std::istream& operator>>(std::istream& is, __int128_t& value)
 {
     std::string input;
     is >> input;
 
     value = 0;
-    rep(i, 0, len(input) - 1)
+    FOR(i, 0, len(input) - 1)
     {
         value = value * 10 + (input[i] - '0');
     }

@@ -21,7 +21,9 @@ struct DfsForest {
 
     ll cnter = 0;
 
-    DfsForest(const vvpl& g, ll root) : graph(g) {
+    DfsForest(const vvpl& g, ll root)
+        : graph(g)
+    {
         n = len(graph);
 
         height.resize(n, 0);
@@ -41,7 +43,8 @@ struct DfsForest {
         dfs(root, -1);
     }
 
-    void dfs(ll node, ll par) {
+    void dfs(ll node, ll par)
+    {
         parent[node] = par;
         // Visiting a new node, get a counter
         ll my_counter = cnter++;
@@ -53,8 +56,10 @@ struct DfsForest {
 
         num_desc[node]++;
         deepest_leaf[node] = 0;
-        foreachp(child, w, graph[node]) {
-            if (child == par) continue;
+        foreachp(child, w, graph[node])
+        {
+            if (child == par)
+                continue;
 
             weighted_height[child] = weighted_height[node] + w;
             height[child] = height[node] + 1;
@@ -73,16 +78,20 @@ struct LCATree {
     SparseTable st;
 
     vl node_to_pos_in_dfs_order;
-    LCATree(const DFSForest& f) : forest(f) {
+    LCATree(const DFSForest& f)
+        : forest(f)
+    {
         st = SparseTable(forest.dfs_order, [](ll x, ll y) { return min(x, y); });
         ll n = forest.graph.size();
         node_to_pos_in_dfs_order = vl(n);
-        rep(j, 0, len(forest.dfs_order) - 1) {
+        FOR(j, 0, len(forest.dfs_order) - 1)
+        {
             node_to_pos_in_dfs_order[forest.dfs_order[j]] = j;
         }
     }
 
-    ll lca(ll a, ll b) {
+    ll lca(ll a, ll b)
+    {
         ll idxa = node_to_pos_in_dfs_order[a];
         ll idxb = node_to_pos_in_dfs_order[b];
 

@@ -8,7 +8,6 @@ struct Identity {
     }
 };
 
-
 // Personal vectors
 namespace vv {
 template <typename T>
@@ -50,7 +49,8 @@ unordered_map<T, ll, custom_hash> counter(const vector<T>& a, ll start = 0, ll e
     }
 
     unordered_map<T, ll, custom_hash> result;
-    rep(i, start, end) {
+    FOR(i, start, end)
+    {
         result[a[i]]++;
     }
 
@@ -60,7 +60,7 @@ unordered_map<T, ll, custom_hash> counter(const vector<T>& a, ll start = 0, ll e
 // returns a sliced vector, a[start:end]
 // behaves like python slicing (the slice is from [start, end))
 template <typename T>
-vector<T> slc(const vector<T>& a, int start=0, int end=-1)
+vector<T> slc(const vector<T>& a, int start = 0, int end = -1)
 {
     if (start < 0) {
         start += len(a);
@@ -70,7 +70,6 @@ vector<T> slc(const vector<T>& a, int start=0, int end=-1)
     }
     return vector<T>(a.begin() + start, a.begin() + end);
 }
-
 
 // returns a subvector of a, defined by the indices in idx
 template <typename T, typename S>
@@ -208,7 +207,7 @@ vector<int> argsort(const vector<T>& a)
 // returns the index of the maximum element
 // if earliest is true, then return the earliest maximum element when there is a tie.
 template <typename T>
-int argmax(const vector<T>& a, ll start=0, ll end=-1, bool earliest = true)
+int argmax(const vector<T>& a, ll start = 0, ll end = -1, bool earliest = true)
 {
     if (start < 0) {
         start += len(a);
@@ -231,7 +230,7 @@ int argmax(const vector<T>& a, ll start=0, ll end=-1, bool earliest = true)
 // returns the index of the smallest element
 // if earliest is true, then return the earliest smallest element when there is a tie.
 template <typename T>
-int argmin(const vector<T>& a, ll start=0, ll end=-1, bool earliest = true)
+int argmin(const vector<T>& a, ll start = 0, ll end = -1, bool earliest = true)
 {
     if (start < 0) {
         start += len(a);
