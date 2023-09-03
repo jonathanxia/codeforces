@@ -10,7 +10,7 @@ struct PersistentVector {
         snapshots.push(umapll());
     }
 
-    const ll operator[](int idx) const { return data[idx]; }
+    ll operator[](int idx) { return data[idx]; }
 
     void set(int idx, ll value)
     {
@@ -47,7 +47,7 @@ struct PersistentMap {
         deletion_list.push(vector<K>());
     }
 
-    const V operator[](K idx) const { return data[idx]; }
+    V operator[](K idx) { return data[idx]; }
 
     void set(K idx, V value)
     {
@@ -113,7 +113,7 @@ struct PersistentValue {
 
     PersistentValue() { snapshots.push(umap<int, T>()); }
 
-    void set(V value)
+    void set(T value)
     {
         auto& ss = snapshots.top();
         if (!ss.count(0)) {
@@ -134,4 +134,4 @@ struct PersistentValue {
             data = k.second;
         }
     }
-}
+};
