@@ -5,6 +5,7 @@
 struct DfsTree {
     vvpl graph;
     ll n;
+    ll root;
 
     vl height; // From the root
     vl weighted_height; // From the root
@@ -21,8 +22,8 @@ struct DfsTree {
 
     ll cnter = 0;
 
-    DfsTree(const vvpl& g, ll root)
-        : graph(g)
+    DfsTree(const vvpl& g, ll root_)
+        : graph(g), root(root_)
     {
         n = len(graph);
 
@@ -74,15 +75,15 @@ struct LCATree {
     DfsTree forest;
     SparseTable st;
 
-    vl node_to_pos_in_dfs_order;
+    vl counter_to_pos_in_dfs_order;
     LCATree(const DfsTree& f)
         : forest(f), st(forest.dfs_order, [](ll x, ll y) { return min(x, y); })
     {
         ll n = forest.graph.size();
-        node_to_pos_in_dfs_order = vl(n);
+        counter_to_pos_in_dfs_order = vl(n);
         FOR(j, 0, len(forest.dfs_order) - 1)
         {
-            node_to_pos_in_dfs_order[forest.dfs_order[j]] = j;
+            counter_to_pos_in_dfs_order[forest.dfs_order[j]] = j;
         }
     }
 
@@ -90,10 +91,42 @@ struct LCATree {
     {
         a = forest.node_to_counter[a];
         b = forest.node_to_counter[b];
-        ll idxa = node_to_pos_in_dfs_order[a];
-        ll idxb = node_to_pos_in_dfs_order[b];
+        ll idxa = counter_to_pos_in_dfs_order[a];
+        ll idxb = counter_to_pos_in_dfs_order[b];
 
         ll mn = st.query(min(idxa, idxb), max(idxa, idxb));
         return forest.counter_to_node[mn];
+    }
+};
+
+struct AncestorTree {
+    DfsTree tree;
+    vvl ancestors; // ancestors[i][v] gives the 2^i-th ancestor of v
+
+    AncestorTree(const DfsTree& f) : tree(f) {
+        ll n = tree.graph.size();
+        ancestors = vvl(30, vl(n));
+        FOR(i, 0, n - 1) {
+            // Induces a self-loop for the parent
+            ancestors[0][i] = (i == tree.root) ? i : tree.parent[i];
+        }
+
+        FOR(i, 1, 29) {
+            FOR(vert, 0, n - 1) {
+                ll kp = ancestors[i - 1][vert];
+                ancestors[i][vert] = ancestors[i - 1][kp];
+            }
+        }
+    }
+
+    // Get the k-th ancestor of vertex v
+    ll get_ancestor(ll k, ll v) {
+        ll ret = v;
+        FOR(i, 1, 29) {
+            if ((1LL << i) & k) {
+                ret = ancestors[i][ret];
+            }
+        }
+        return ret;
     }
 };
