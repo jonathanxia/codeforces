@@ -43,7 +43,3 @@ public:
     }
 };
 
-// int main() {
-//     SparseTable st({3, 5, 1, 4, 2}, [](ll a, ll b) {return min(a, b);});
-//     print(st.query(2, 4));
-// }
