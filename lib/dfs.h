@@ -2,7 +2,7 @@
 
 #include <lib/sparsetable.h>
 
-struct DfsForest {
+struct DfsTree {
     vvpl graph;
     ll n;
 
@@ -21,7 +21,7 @@ struct DfsForest {
 
     ll cnter = 0;
 
-    DfsForest(const vvpl& g, ll root)
+    DfsTree(const vvpl& g, ll root)
         : graph(g)
     {
         n = len(graph);
@@ -71,11 +71,11 @@ struct DfsForest {
 };
 
 struct LCATree {
-    DfsForest forest;
+    DfsTree forest;
     SparseTable st;
 
     vl node_to_pos_in_dfs_order;
-    LCATree(const DfsForest& f)
+    LCATree(const DfsTree& f)
         : forest(f), st(forest.dfs_order, [](ll x, ll y) { return min(x, y); })
     {
         ll n = forest.graph.size();
