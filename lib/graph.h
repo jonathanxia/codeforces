@@ -153,8 +153,8 @@ namespace graph
         dfs(0, -1);
         ll start = farthest.second;
         farthest = {0, 0};
-        fill(dist, 0);
-        fill(parents, 0);
+        vv::fill(dist, 0);
+        vv::fill(parents, 0);
 
         dfs(start, -1);
         parents[start] = -1;
