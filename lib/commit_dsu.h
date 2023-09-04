@@ -8,12 +8,12 @@ struct DSU {
     PersistentVector smallest;
     PersistentVector sz;
 
-    DSU(int size)
-        : parent(size)
-        , rank(size)
-        , largest(size)
-        , smallest(size)
-        , sz(size)
+    DSU(int size, bool persist=false)
+        : parent(size, persist)
+        , rank(size, persist)
+        , largest(size, persist)
+        , smallest(size, persist)
+        , sz(size, persist)
     {
         for (int i = 0; i < size; ++i) {
             parent.set(i, i);
@@ -64,11 +64,17 @@ struct DSU {
     {
         parent.commit();
         rank.commit();
+        largest.commit();
+        smallest.commit();
+        sz.commit();
     }
 
     void revert()
     {
         parent.revert();
         rank.revert();
+        largest.revert();
+        smallest.revert();
+        sz.revert();
     }
 };

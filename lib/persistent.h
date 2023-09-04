@@ -1,137 +1,110 @@
 #include <lib/common.h>
 
+template <typename T=ll>
 struct PersistentVector {
-    vl data;
-    stack<umapll> snapshots;
+    vector<T> data;
+    vector<pair<int, T>> snapshots;
+    vector<int> checkpoints;
 
-    PersistentVector(int size)
-        : data(size, 0)
+    bool persist;
+
+    PersistentVector(int size, bool persist_=true)
+        : data(size, 0), persist(persist_)
     {
-        snapshots.push(umapll());
     }
 
-    ll operator[](int idx) { return data[idx]; }
+    T operator[](int idx) { return data[idx]; }
 
-    void set(int idx, ll value)
+    void set(int idx, T value)
     {
-        auto& ss = snapshots.top();
-        if (!ss.count(idx)) {
-            ss[idx] = data[idx];
+        if (!persist) {
+            data[idx] = value; return;
         }
-
+        snapshots.push_back(mp(idx, data[idx]));
         data[idx] = value;
     }
 
-    void commit() { snapshots.push(umapll()); }
+    void commit() {
+        if (persist) {
+            checkpoints.pb(len(snapshots));
+        }
+    }
 
     void revert()
     {
-        auto dd = snapshots.top();
-        snapshots.pop();
-
-        foreach (k, dd) {
-            data[k.first] = k.second;
+        if (!persist) return;
+        ll snap_len = checkpoints.back();
+        while (len(snapshots) > snap_len) {
+            auto p = snapshots.back();
+            data[p.first] = p.second;
+            snapshots.pop_back();
         }
+        checkpoints.pop_back();
     }
 };
 
 template <typename M, typename K, typename V>
 struct PersistentMap {
     M data;
-    stack<umap<K, V>> snapshots;
-    stack<vector<K>> deletion_list;
+    V dflt_value;
 
-    PersistentMap()
+    vector<pair<K, V>> snapshots;
+    vector<int> checkpoints;
+
+    PersistentMap(V dflt_value_) : dflt_value(dflt_value_)
     {
-        snapshots.push(umap<K, V>());
-        deletion_list.push(vector<K>());
     }
 
     V operator[](K idx) { return data[idx]; }
 
     void set(K idx, V value)
     {
-        auto& ss = snapshots.top();
-        auto& dl = deletion_list.top();
-        if (!ss.count(idx)) {
-            // This is the first time we are
-            // setting the index after a commit,
-            // so we make sure to save it
-
-            // If we did not have the value before,
-            // we make sure to remember that and put
-            // that in our deletion list
-            if (data.count(idx) == 0) {
-                dl.push_back(idx);
-            }
-            // Otherwise, save the value
-            else {
-                ss[idx] = data[idx];
-            }
+        if (data.count(idx)) {
+            snapshots.push_back(mp(idx, data[idx]));
         }
-
+        else {
+            snapshots.push_back(mp(idx, dflt_value));
+        }
         data[idx] = value;
     }
 
-    void erase(K idx)
+   void commit()
     {
-        auto& ss = snapshots.top();
-        if (!ss.count(idx) && data.count(idx) > 0) {
-            ss[idx] = data[idx];
-        }
-
-        data.erase(idx);
-    }
-
-    void commit()
-    {
-        snapshots.push(umap<K, V>());
-        deletion_list.push(vector<K>());
+        checkpoints.pb(len(snapshots));
     }
 
     void revert()
     {
-        auto dd = snapshots.top();
-        snapshots.pop();
+        ll snap_len = checkpoints.back();
+        while (len(snapshots) > snap_len) {
+            pair<K, V> snap = snapshots.back();
+            snapshots.pop_back();
 
-        auto dl = deletion_list.top();
-        deletion_list.pop();
+            data[snap.first] = snap.second;
+        }
 
-        foreach (k, dd) {
-            data[k.first] = k.second;
-        }
-        foreach (k, dl) {
-            data.erase(k);
-        }
+        checkpoints.pop_back();
     }
 };
 
+// Trivially implement this as a 1-element array
 template <typename T>
-struct PersistentValue {
-    T data;
-    stack<umap<int, T>> snapshots;
+struct PersistentValue
+{
+    PersistentVector<T> v;
+    PersistentValue() : v(1) {
 
-    PersistentValue() { snapshots.push(umap<int, T>()); }
-
-    void set(T value)
-    {
-        auto& ss = snapshots.top();
-        if (!ss.count(0)) {
-            ss[0] = data;
-        }
-
-        data = value;
     }
 
-    void commit() { snapshots.push(umap<int, T>()); }
-
-    void revert()
-    {
-        auto dd = snapshots.top();
-        snapshots.pop();
-
-        foreach (k, dd) {
-            data = k.second;
-        }
+    T value() {
+        return v[0];
     }
+
+    void set(T val) {
+        v.set(0, val);
+    }
+
+    void commit() { v.commit(); }
+    void revert() { v.revert(); }
 };
+
