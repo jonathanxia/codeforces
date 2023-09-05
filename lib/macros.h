@@ -16,15 +16,25 @@ using namespace std;
 
 // updates lhs to be the minimum of lhs and rhs
 template <typename T, typename S>
-void chkmin(T& lhs, S rhs)
+bool chkmin(T& lhs, S rhs)
 {
-    lhs = min(lhs, T(rhs));
+    if (lhs > static_cast<T>(rhs)) {
+        lhs = static_cast<T>(rhs);
+        return true;
+    } else {
+        return false;
+    }
 }
 // updates lhs to be the maximum of lhs and rhs
 template <typename T, typename S>
-void chkmax(T& lhs, S rhs)
+bool chkmax(T& lhs, S rhs)
 {
-    lhs = max(lhs, T(rhs));
+     if (lhs < static_cast<T>(rhs)) {
+        lhs = static_cast<T>(rhs);
+        return true;
+    } else {
+        return false;
+    }   
 }
 
 typedef long long ll;
