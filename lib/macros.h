@@ -339,6 +339,10 @@ ll mod(ll a)
 {
     return mod(a, MOD);
 }
+void chkmod(ll& a, ll m = MOD)
+{
+    a = mod(a, m);
+}
 
 ll cmul(ll a, ll b)
 {
