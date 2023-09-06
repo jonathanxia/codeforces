@@ -164,6 +164,7 @@ void dprint(const T &t, const Args &...args)
 // Fancy variable debugging, stolen from:
 // https://codeforces.com/blog/entry/79024
 #ifndef ONLINE_JUDGE
+#ifdef DEBUG
 int recur_depth = 0;
 #define dbg(x)                                                                                                 \
     {                                                                                                          \
@@ -172,6 +173,9 @@ int recur_depth = 0;
         --recur_depth;                                                                                         \
         cout << string(recur_depth, '\t') << __func__ << ":" << __LINE__ << "\t" << #x << " = " << x_ << endl; \
     }
+#else
+#define dbg(x)
+#endif
 #else
 #define dbg(x)
 #endif
