@@ -9,6 +9,11 @@ struct ModInt {
         , m_mod { modulo }
     {
     }
+    // Update function to keep m_value between [0, modulo - 1]
+    void update()
+    {
+        m_value = mod(m_value, m_mod);
+    }
     ModInt inv() const
     {
         return { nt::inv(m_value, m_mod), m_mod };
@@ -28,7 +33,7 @@ struct ModInt {
     template <typename T>
     ModInt operator+(const T& rhs) const
     {
-        return { mod(m_value + rhs, m_mod), m_mod };
+        return { mod(m_value + mod(rhs, m_mod), m_mod), m_mod };
     }
     ModInt operator+(const ModInt& rhs) const
     {
@@ -48,7 +53,7 @@ struct ModInt {
     template <typename T>
     ModInt operator-(const T& rhs) const
     {
-        return { mod(m_value - rhs, m_mod), m_mod };
+        return { mod(m_value - mod(rhs, m_mod), m_mod), m_mod };
     }
     ModInt operator-(const ModInt& rhs) const
     {
@@ -73,7 +78,7 @@ struct ModInt {
     template <typename T>
     ModInt operator*(const T& rhs) const
     {
-        return { mod(m_value * rhs, m_mod), m_mod };
+        return { mod(m_value * mod(rhs, m_mod), m_mod), m_mod };
     }
     ModInt operator*(const ModInt& rhs) const
     {
@@ -114,22 +119,26 @@ struct ModInt {
     const ModInt& operator++()
     {
         *this += 1;
+        update();
         return *this;
     }
     const ModInt operator++(int)
     {
         *this += 1;
+        update();
         return *this - 1;
     }
     // Decrement
     const ModInt& operator--()
     {
         *this -= 1;
+        update();
         return *this;
     }
     const ModInt operator--(int)
     {
         *this -= 1;
+        update();
         return *this + 1;
     }
     // Casting
@@ -139,6 +148,13 @@ struct ModInt {
     friend std::ostream& operator<<(std::ostream& os, const ModInt& rhs)
     {
         return os << rhs.m_value;
+    }
+    // Input
+    friend std::istream& operator>>(std::istream& is, const ModInt& rhs)
+    {
+        is >> rhs.m_value;
+        rhs.update();
+        return is;
     }
 };
 
