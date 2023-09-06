@@ -150,7 +150,7 @@ struct ModInt {
         return os << rhs.m_value;
     }
     // Input
-    friend std::istream& operator>>(std::istream& is, const ModInt& rhs)
+    friend std::istream& operator>>(std::istream& is, ModInt& rhs)
     {
         is >> rhs.m_value;
         rhs.update();
