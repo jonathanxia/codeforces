@@ -142,9 +142,9 @@ struct ModInt {
     }
 };
 
-typedef ModInt mi;
-typedef vector<mi> vmi;
-typedef vector<vmi> vvmi;
-typedef pair<mi, mi> pmi;
-typedef vector<pmi> vpmi;
-typedef vector<vpmi> vvpmi;
+typedef ModInt MI;
+typedef vector<MI> vMI;
+typedef vector<vMI> vvMI;
+typedef pair<MI, MI> pMI;
+typedef vector<pMI> vpMI;
+typedef vector<vpMI> vvpMI;
