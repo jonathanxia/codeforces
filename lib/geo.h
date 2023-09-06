@@ -100,7 +100,7 @@ vector<Point<T>> convex_hull(vector<Point<T>> pts)
     return { h.begin(), h.begin() + t - (t == 2 && h[0] == h[1]) };
 }
 template <typename T>
-vector<Point<T>> polygon_perimeter(vector<Point<T>> pts)
+T polygon_perimeter(vector<Point<T>> pts)
 {
     ll n = len(pts);
     T perimeter = 0;
