@@ -4,9 +4,9 @@
 struct ModInt {
     ll m_value;
     ll m_mod;
-    ModInt(ll init_value = 0LL, ll mod = MOD)
-        : m_value { init_value }
-        , m_mod { mod }
+    ModInt(ll init_value = 0LL, ll modulo = MOD)
+        : m_value { mod(init_value, modulo) }
+        , m_mod { modulo }
     {
     }
     ModInt inv() const
