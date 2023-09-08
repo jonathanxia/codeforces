@@ -141,6 +141,12 @@ double seg_dist(Point<T>& s, Point<T>& e, Point<T>& p)
     auto d = (e - s).dist2(), t = min(d, max(.0, (p - s).dot(e - s)));
     return ((p - s) * d - (e - s) * t).dist() / d;
 }
+// Returns whether p is on the segment from s to e.
+template <typename T>
+bool on_segment(Point<T> s, Point<T> e, Point<T> p)
+{
+    return p.cross(s, e) == 0 && (s - p).dot(e - p) <= 0;
+}
 // Returns **twice** the signed area of polygon defined by v.
 // Must provide a vector with either cw or ccw enumeration.
 template <class T>
@@ -149,5 +155,21 @@ T polygon_area2(vector<Point<T>>& v)
     T a = v.back().cross(v[0]);
     repe(i, 0, len(v) - 1) a += v[i].cross(v[i + 1]);
     return a;
+}
+// Returns true if a lies within p. If strict is true, returns false for
+// boundary points.
+template <typename T>
+bool in_polygon(vector<Point<T>>& p, Point<T> a, bool strict = true)
+{
+    int cnt = 0, n = len(p);
+    repe(i, 0, n)
+    {
+        Point<T> q = p[(i + 1) % n];
+        if (on_segment(p[i], q, a))
+            return !strict;
+        // or: if (segDist(p[i], q, a) <= eps) return !strict;
+        cnt ^= ((a.y < p[i].y) - (a.y < q.y)) * a.cross(p[i], q) > 0;
+    }
+    return cnt;
 }
 }
