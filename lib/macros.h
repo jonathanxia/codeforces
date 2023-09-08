@@ -333,8 +333,8 @@ ll mod(ll a, ll p)
 }
 
 // important constant to set for some problems
-ll MOD = 998244353LL;
-// ll MOD = 1000000007;
+const ll MOD = 998244353LL;
+// const ll MOD = 1000000007;
 ll mod(ll a)
 {
     return mod(a, MOD);

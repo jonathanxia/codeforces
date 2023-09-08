@@ -1,12 +1,11 @@
 #include <lib/common.h>
 #include <lib/nt.h>
 
+template <ll m_mod=MOD>
 struct ModInt {
     ll m_value;
-    ll m_mod;
-    ModInt(ll init_value = 0LL, ll modulo = MOD)
-        : m_value { mod(init_value, modulo) }
-        , m_mod { modulo }
+    ModInt(ll init_value = 0LL)
+        : m_value { mod(init_value, m_mod) }
     {
     }
     // Update function to keep m_value between [0, modulo - 1]
@@ -16,7 +15,7 @@ struct ModInt {
     }
     ModInt inv() const
     {
-        return { nt::inv(m_value, m_mod), m_mod };
+        return { nt::inv(m_value, m_mod) };
     }
     friend ModInt inv(const ModInt& param)
     {
@@ -24,7 +23,7 @@ struct ModInt {
     }
     ModInt pow(ll exponent) const
     {
-        return {nt::pow(m_value, exponent, m_mod), m_mod};
+        return {nt::pow(m_value, exponent, m_mod) };
     }
     friend ModInt pow(const ModInt& base, ll exponent)
     {
@@ -33,7 +32,7 @@ struct ModInt {
     template <typename T>
     ModInt operator+(const T& rhs) const
     {
-        return { mod(m_value + mod(rhs, m_mod), m_mod), m_mod };
+        return { mod(m_value + mod(rhs, m_mod), m_mod) };
     }
     ModInt operator+(const ModInt& rhs) const
     {
@@ -53,7 +52,7 @@ struct ModInt {
     template <typename T>
     ModInt operator-(const T& rhs) const
     {
-        return { mod(m_value - mod(rhs, m_mod), m_mod), m_mod };
+        return { mod(m_value - mod(rhs, m_mod), m_mod) };
     }
     ModInt operator-(const ModInt& rhs) const
     {
@@ -62,7 +61,7 @@ struct ModInt {
     ModInt operator-() const
     {
         // Unary operator
-        return { -m_value, m_mod };
+        return { -m_value };
     }
     template <typename T>
     friend ModInt operator-(const T& lhs, const ModInt& rhs)
@@ -78,7 +77,7 @@ struct ModInt {
     template <typename T>
     ModInt operator*(const T& rhs) const
     {
-        return { mod(m_value * mod(rhs, m_mod), m_mod), m_mod };
+        return { mod(m_value * mod(rhs, m_mod), m_mod) };
     }
     ModInt operator*(const ModInt& rhs) const
     {
@@ -98,7 +97,7 @@ struct ModInt {
     template <typename T>
     ModInt operator/(const T& rhs) const
     {
-        return { nt::mdiv(m_value, rhs, m_mod), m_mod };
+        return { nt::mdiv(m_value, rhs, m_mod) };
     }
     ModInt operator/(const ModInt& rhs) const
     {
@@ -158,9 +157,10 @@ struct ModInt {
     }
 };
 
-typedef ModInt MI;
+typedef ModInt<MOD> MI;
 typedef vector<MI> vMI;
 typedef vector<vMI> vvMI;
 typedef pair<MI, MI> pMI;
 typedef vector<pMI> vpMI;
 typedef vector<vpMI> vvpMI;
+
