@@ -114,8 +114,8 @@ T polygon_perimeter(vector<Point<T>> pts)
 // Returns the signed distance between point p and the line containing points
 // a and b. Positive value on left side and negative on right as seen from
 // a towards b. a==b gives nan. P is supposed to be Point<T>.
-template <class P>
-double line_dist(const P& a, const P& b, const P& p)
+template <typename T>
+double line_dist(const Point<T>& a, const Point<T>& b, const Point<T>& p)
 {
     return (double)(b - a).cross(p - a) / (b - a).dist();
 }
@@ -123,22 +123,31 @@ double line_dist(const P& a, const P& b, const P& p)
 // a unique intersection, then returns {1, intersection}.
 // If no intersection, returns {0, (0, 0)}.
 // If infinitely many, returns {-1, (0, 0)}.
-template <class P>
-pair<int, P> line_intersect(P s1, P e1, P s2, P e2)
+template <typename T>
+pair<int, Point<T>> line_intersect(Point<T> s1, Point<T> e1, Point<T> s2, Point<T> e2)
 {
     auto d = (e1 - s1).cross(e2 - s2);
     if (d == 0) // if parallel
-        return { -(s1.cross(e1, s2) == 0), P(0, 0) };
+        return { -(s1.cross(e1, s2) == 0), Point<T>(0, 0) };
     auto p = s2.cross(e1, e2), q = s2.cross(e2, s1);
     return { 1, (s1 * p + e1 * q) / d };
 }
 // Returns the shortest distance between point p and the segment from s to e.
-template <class P>
-double seg_dist(P& s, P& e, P& p)
+template <typename T>
+double seg_dist(Point<T>& s, Point<T>& e, Point<T>& p)
 {
     if (s == e)
         return (p - s).dist();
     auto d = (e - s).dist2(), t = min(d, max(.0, (p - s).dot(e - s)));
     return ((p - s) * d - (e - s) * t).dist() / d;
+}
+// Returns **twice** the signed area of polygon defined by v.
+// Must provide a vector with either cw or ccw enumeration.
+template <class T>
+T polygon_area2(vector<Point<T>>& v)
+{
+    T a = v.back().cross(v[0]);
+    repe(i, 0, len(v) - 1) a += v[i].cross(v[i + 1]);
+    return a;
 }
 }
