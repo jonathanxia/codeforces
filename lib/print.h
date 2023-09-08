@@ -10,8 +10,12 @@ void init()
 template <typename T1, typename T2>
 std::ostream &operator<<(std::ostream &os, const std::pair<T1, T2> &p)
 {
+#ifndef ONLINE_JUDGE
+#ifdef DEBUG
     os << "(" << p.first << ", " << p.second << ")";
-    return os;
+#endif
+#endif
+    return os << p.first << " " << p.second;
 }
 
 template <typename K, typename V>
