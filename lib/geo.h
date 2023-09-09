@@ -73,9 +73,12 @@ struct Point {
 #ifndef ONLINE_JUDGE
 #ifdef DEBUG
         return os << "(" << p.x << ", " << p.y << ")";
-#endif
-#endif
+#else
         return os << p.x << " " << p.y;
+#endif
+#else
+        return os << p.x << " " << p.y;
+#endif
     }
     friend istream& operator>>(istream& is, P& p)
     {
