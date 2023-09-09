@@ -316,6 +316,42 @@ vector<T> cummin(const vector<T>& a, bool reverse = false)
 }
 
 template <typename T>
+vector<T> cumprod(const vector<T>& a, bool reverse = false)
+{
+    vector<T> ret(a);
+    ll n = len(a);
+    if (reverse) {
+        DOR(i, n - 2, 0)
+        {
+            ret[i] *= ret[i + 1];
+        }
+    } else {
+        FOR(i, 1, n - 1)
+        {
+            ret[i] *= ret[i - 1];
+        }
+    }
+    return ret;
+}
+
+vl cumcprod(const vl& a, bool reverse = false)
+{
+    vl ret(a);
+    ll n = len(a);
+    if (reverse) {
+        DOR(i, n - 2, 0)
+        {
+            ret[i] = cmul(ret[i + 1], ret[i]);
+        }
+    } else {
+        FOR(i, 1, n - 1)
+        {
+            ret[i] = cmul(ret[i - 1], ret[i]);
+        }
+    }
+    return ret;
+}
+template <typename T>
 bool is_lex_less(const vector<T>& a, const vector<T>& perm)
 {
     // Compare the permutations lexicographically
