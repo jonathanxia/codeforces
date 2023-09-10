@@ -44,6 +44,18 @@ public:
         data.resize(n_rows * n_cols);
     }
 
+    // Vector constructor with mod
+    ndarray(int n_rows_, int n_cols_, vector<T> values_, ll mod = MOD)
+        : n_rows(n_rows_)
+        , n_cols(n_cols_)
+        , data(values_)
+    {
+        foreach (num, data) {
+            num %= mod;
+        }
+        data.resize(n_rows * n_cols);
+    }
+
     // Accessor function to get the number of rows
     int get_n_rows() const
     {
@@ -203,7 +215,7 @@ public:
 };
 namespace linalg {
 template <typename T>
-T sum(const ndarray<T>& arr, ll mod = INT64_MAX)
+T sum(const ndarray<T>& arr, ll mod = MOD)
 {
     int n_rows = arr.get_n_rows();
     int n_cols = arr.get_n_cols();
@@ -219,7 +231,7 @@ T sum(const ndarray<T>& arr, ll mod = INT64_MAX)
     return tot;
 }
 template <typename T>
-ndarray<T> mult(const ndarray<T>& left, const ndarray<T>& right, ll mod = INT64_MAX)
+ndarray<T> mult(const ndarray<T>& left, const ndarray<T>& right, ll mod = MOD)
 {
     if (left.get_n_cols() != right.get_n_rows())
         throw std::out_of_range("mult: Matrices have mismatching dimensions");
