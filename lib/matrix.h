@@ -262,7 +262,7 @@ ndarray<T> rotation(T cos, T sin)
     return ndarray<T>(2, 2, { cos, -sin, sin, cos });
 }
 template <typename T>
-ndarray<T> pow(ndarray<T> base, ll exp, ll mod = INT64_MAX)
+ndarray<T> pow(ndarray<T> base, ll exp, ll mod = MOD)
 {
     if (base.get_n_cols() != base.get_n_rows())
         throw std::out_of_range("pow: Matrix is not square");
