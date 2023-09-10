@@ -32,27 +32,12 @@ public:
         data.resize(n_rows * n_cols);
     }
 
-    // Member list constructor with mod
-    ndarray(int n_rows_, int n_cols_, initializer_list<T> values_, ll mod)
+    // Vector constructor 
+    ndarray(int n_rows_, int n_cols_, vector<T> values_)
         : n_rows(n_rows_)
         , n_cols(n_cols_)
         , data(values_)
     {
-        foreach (num, data) {
-            num %= mod;
-        }
-        data.resize(n_rows * n_cols);
-    }
-
-    // Vector constructor with mod
-    ndarray(int n_rows_, int n_cols_, vector<T> values_, ll mod = MOD)
-        : n_rows(n_rows_)
-        , n_cols(n_cols_)
-        , data(values_)
-    {
-        foreach (num, data) {
-            num %= mod;
-        }
         data.resize(n_rows * n_cols);
     }
 
@@ -215,7 +200,7 @@ public:
 };
 namespace linalg {
 template <typename T>
-T sum(const ndarray<T>& arr, ll mod = MOD)
+T sum(const ndarray<T>& arr)
 {
     int n_rows = arr.get_n_rows();
     int n_cols = arr.get_n_cols();
@@ -225,13 +210,12 @@ T sum(const ndarray<T>& arr, ll mod = MOD)
         repe(j, 0, n_cols)
         {
             tot += arr(i, j);
-            tot %= mod;
         }
     }
     return tot;
 }
 template <typename T>
-ndarray<T> mult(const ndarray<T>& left, const ndarray<T>& right, ll mod = MOD)
+ndarray<T> mult(const ndarray<T>& left, const ndarray<T>& right)
 {
     if (left.get_n_cols() != right.get_n_rows())
         throw std::out_of_range("mult: Matrices have mismatching dimensions");
@@ -250,7 +234,6 @@ ndarray<T> mult(const ndarray<T>& left, const ndarray<T>& right, ll mod = MOD)
             repe(j, 0, j_max)
             {
                 result(i, j) += r * right(k, j);
-                result(i, j) %= mod;
             }
         }
     }
@@ -274,7 +257,7 @@ ndarray<T> rotation(T cos, T sin)
     return ndarray<T>(2, 2, { cos, -sin, sin, cos });
 }
 template <typename T>
-ndarray<T> pow(ndarray<T> base, ll exp, ll mod = MOD)
+ndarray<T> pow(ndarray<T> base, ll exp)
 {
     if (base.get_n_cols() != base.get_n_rows())
         throw std::out_of_range("pow: Matrix is not square");
@@ -282,10 +265,10 @@ ndarray<T> pow(ndarray<T> base, ll exp, ll mod = MOD)
         return identity<T>(base.get_n_rows());
     if (exp == 1)
         return base;
-    ndarray<T> result = pow(base, exp / 2, mod);
-    result = mult(result, result, mod);
+    ndarray<T> result = pow(base, exp / 2);
+    result = mult(result, result);
     if (exp % 2)
-        result = mult(result, base, mod);
+        result = mult(result, base);
     return result;
 }
 }
