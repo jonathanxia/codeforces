@@ -140,6 +140,35 @@ struct ModInt {
         update();
         return *this + 1;
     }
+    // Comparison operators
+    template <typename T>
+    bool operator==(const T& rhs) const
+    {
+        return m_value == rhs;
+    }
+    bool operator==(const ModInt& rhs) const
+    {
+        return m_value == rhs.m_value;
+    }
+    template <typename T>
+    friend bool operator==(const T& lhs, const ModInt& rhs)
+    {
+        return rhs == lhs;
+    }
+    template <typename T>
+    bool operator!=(const T& rhs) const
+    {
+        return m_value != rhs;
+    }
+    bool operator!=(const ModInt& rhs) const
+    {
+        return m_value != rhs.m_value;
+    }
+    template <typename T>
+    friend bool operator!=(const T& lhs, const ModInt& rhs)
+    {
+        return rhs != lhs;
+    }
     // Casting
     template <typename T>
     operator T() const { return static_cast<T>(m_value); };
