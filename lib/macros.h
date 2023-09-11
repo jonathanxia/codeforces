@@ -187,6 +187,9 @@ typedef vector<pl> vpl;
 
 // Maps
 typedef unordered_map<ll, ll, custom_hash> umapll;
+typedef unordered_map<ll, vl, custom_hash> umaplvl;
+typedef unordered_map<string, ll, custom_hash> umapstrl;
+typedef unordered_map<ll, string, custom_hash> umaplstr;
 template <typename K, typename V>
 using umap = unordered_map<K, V, custom_hash>;
 
