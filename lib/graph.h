@@ -147,6 +147,41 @@ namespace graph
         }
         rep(k, 0, n) if (m[k][k] < 0) rep(i, 0, n) rep(j, 0, n) if (m[i][k] != inf && m[k][j] != inf) m[i][j] = -inf;
     }
+    // Finds cycles for directed graphs where degree of every node is 1
+    // Returns a vvl: vector of the cycles in the graph
+    vvl cycles(const vl& adj, vb& in_cycle, vb& in_chain, bool is1idx = false)
+    {
+        vvl cycles_;
+        walk(i, adj)
+        {
+            if (is1idx && i == 0)
+                continue;
+            ll slow = i;
+            ll fast = i;
+            do {
+                if (in_chain[slow] || in_cycle[slow] || in_chain[fast] || in_cycle[fast])
+                    break;
+                slow = adj[slow];
+                fast = adj[adj[fast]];
+            } while (slow != fast);
+            if (slow == fast && !in_cycle[slow] && !in_chain[slow]) {
+                vl cycle;
+                // now slow and fast are equal, they must be in a cycle
+                while (!in_cycle[slow]) {
+                    in_cycle[slow] = true;
+                    cycle.pb(slow);
+                    slow = adj[slow];
+                }
+                cycles_.pb(cycle);
+            }
+            fast = i;
+            while (!in_cycle[fast] && !in_chain[fast]) {
+                in_chain[fast] = true;
+                fast = adj[fast];
+            }
+        }
+        return cycles_;
+    }
 
 ///   TREE  ALGORITHMS   ///
 /// Also check out dfs.h ///
