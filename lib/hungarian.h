@@ -15,7 +15,7 @@ pair<ll, vl> hungarian(const vvl& a)
         do { // dijkstra
             done[j0] = true;
             ll i0 = p[j0], j1, delta = INT64_MAX;
-            rep(j, 1, m) if (!done[j])
+            repe(j, 1, m) if (!done[j])
             {
                 auto cur = a[i0 - 1][j - 1] - u[i0] - v[j];
                 if (cur < dist[j])
