@@ -172,6 +172,7 @@ struct ModInt {
     // Casting
     template <typename T>
     operator T() const { return static_cast<T>(m_value); };
+
     // Printing
     friend std::ostream& operator<<(std::ostream& os, const ModInt& rhs)
     {
@@ -183,6 +184,22 @@ struct ModInt {
         is >> rhs.m_value;
         rhs.update();
         return is;
+    }
+
+    std::string as_frac() {
+        ll denom = 1;
+        while (denom * denom <= m_mod) {
+            ll numer = mod(denom * m_value, m_mod);
+            if (numer * numer <= m_mod) {
+                return to_str(numer) + "/" + to_str(denom);
+            }
+            if ((m_mod - numer) * (m_mod - numer) <= m_mod) {
+                return "-" + to_str(m_mod - numer) + "/" + to_str(denom);
+            }
+            denom++;
+        }
+        // Give up
+        return to_str(m_value) + "/1";
     }
 };
 
