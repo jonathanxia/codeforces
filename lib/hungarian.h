@@ -1,5 +1,13 @@
 #include <lib/common.h>
-
+/*
+ * Given a weighted bipartite graph, matches every node on
+ * the left with a node on the right such that no
+ * nodes are in two matchings and the sum of the edge weights is minimal. Takes
+ * cost[N][M], where cost[i][j] = cost for L[i] to be matched with R[j] and
+ * returns (min cost, match), where L[i] is matched with
+ * R[match[i]]. Negate costs for max cost. Requires $N \le M$.
+ * Time: O(N^2M)
+ */
 pair<ll, vl> hungarian(const vvl& a)
 {
     if (a.empty())
