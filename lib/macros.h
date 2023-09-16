@@ -218,6 +218,16 @@ Value mget(const std::unordered_map<Key, Value, custom_hash>& map, const Key& ke
     return Value {}; // Default-constructed value
 }
 
+template <typename Key, typename Value>
+Value mget(const std::map<Key, Value>& map, const Key& key)
+{
+    auto it = map.find(key);
+    if (it != map.end()) {
+        return it->second;
+    }
+    return Value {}; // Default-constructed value
+}
+
 template <typename K, typename V>
 void initmap(umap<K, V>& counts)
 {
