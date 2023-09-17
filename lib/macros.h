@@ -197,9 +197,10 @@ typedef unordered_set<ll, custom_hash> usetl;
 template <typename K>
 using uset = unordered_set<K, custom_hash>;
 
-umapll operator+(const umapll& lhs, const umapll& rhs)
+template <typename K, typename V>
+umap<K, V> operator+(const umap<K, V>& lhs, const umap<K, V>& rhs)
 {
-    umapll result = lhs;
+    umap<K, V> result = lhs;
 
     for (const auto& pair : rhs) {
         result[pair.first] += pair.second;
@@ -209,7 +210,7 @@ umapll operator+(const umapll& lhs, const umapll& rhs)
 }
 
 template <typename Key, typename Value>
-Value mget(const std::unordered_map<Key, Value, custom_hash>& map, const Key& key)
+Value operator<<(const umap<Key, Value>& map, const Key& key)
 {
     auto it = map.find(key);
     if (it != map.end()) {
@@ -219,7 +220,7 @@ Value mget(const std::unordered_map<Key, Value, custom_hash>& map, const Key& ke
 }
 
 template <typename Key, typename Value>
-Value mget(const std::map<Key, Value>& map, const Key& key)
+Value operator<<(const std::map<Key, Value>& map, const Key& key)
 {
     auto it = map.find(key);
     if (it != map.end()) {
