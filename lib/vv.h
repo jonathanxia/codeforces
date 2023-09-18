@@ -68,7 +68,7 @@ vector<T> slc(const vector<T>& a, int start = 0, int end = -1)
     if (end < 0) {
         end += len(a);
     }
-    return vector<T>(a.begin() + start, a.begin() + end - 1);
+    return vector<T>(a.begin() + start, a.begin() + (end + 1));
 }
 
 // returns a subvector of a, defined by the indices in idx
