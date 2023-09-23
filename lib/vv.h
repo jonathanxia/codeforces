@@ -369,4 +369,9 @@ vector<pair<T, ll>> with_idx(const vector<T>& a)
     }
     return out;
 }
+
+template <typename T, typename S>
+void push_front(vector<T>& a, S val) {
+    a.insert(a.begin(), T(val));
+}
 };

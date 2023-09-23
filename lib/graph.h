@@ -35,6 +35,34 @@ namespace graph
             }
         }
     }
+
+    // Runs bfs on a graph and stores the distances in dist
+    // Starts need to be passed in, can have multiple start points
+    void bfs(const vvl& graph, const vl& starts, vl& dist) {
+        ll n = len(graph);
+
+        FOR(i, 0, n - 1) dist[i] = -1;
+
+        deque<ll> pq;
+        foreach(s, starts) {
+            pq.push_back(s);
+            dist[s] = 0;
+        }
+
+        while(len(pq)) {
+            ll node = pq.front();
+            pq.pop_front();
+
+            // Process the node by adding its children
+            foreach(child, graph[node]) {
+                if (dist[child] >= 0) continue;
+
+                dist[child] = dist[node] + 1;
+                pq.push_back(child);
+            }
+        }
+    }
+
     // Returns weight of minimum/maximum spanning tree, and stores the tree in edges
     // Use seed to specify a starting point from which to run Prim's.
 
