@@ -356,6 +356,38 @@ int dy[4] = { 0, 1, 0, -1 };
     _INTERNAL_all_good;                                  \
 })
 
+// Fixed iteration continuous binary search (largest_st)
+#define largest_double_st(mid, cond, lo, hi, num_iterations) ({ \
+    double BISEARCH_LO = (lo);                                   \
+    double BISEARCH_HI = (hi);                                   \
+    double mid;                                                  \
+    cepeat((num_iterations))                                     \
+    {                                                            \
+        mid = (BISEARCH_LO + BISEARCH_HI) / 2.0;                 \
+        if ((cond)) {                                            \
+            BISEARCH_LO = mid;                                   \
+        } else {                                                 \
+            BISEARCH_HI = mid;                                   \
+        }                                                        \
+    }                                                            \
+    mid;                                                         \
+})
+// Fixed iteration continuous binary search (smallest_st)
+#define smallest_double_st(mid, cond, lo, hi, num_iterations) ({ \
+    double BISEARCH_LO = (lo);                                   \
+    double BISEARCH_HI = (hi);                                   \
+    double mid;                                                  \
+    cepeat((num_iterations))                                     \
+    {                                                            \
+        mid = (BISEARCH_LO + BISEARCH_HI) / 2.0;                 \
+        if ((cond)) {                                            \
+            BISEARCH_HI = mid;                                   \
+        } else {                                                 \
+            BISEARCH_LO = mid;                                   \
+        }                                                        \
+    }                                                            \
+    mid;                                                         \
+})
 // does % but doesn't mess up negatives
 //  mod(4, 5) == mod(-1, 5) == mod(-6, 5)
 ll mod(ll a, ll p)
