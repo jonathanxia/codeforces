@@ -374,4 +374,8 @@ template <typename T, typename S>
 void push_front(vector<T>& a, S val) {
     a.insert(a.begin(), T(val));
 }
+
+vector<ll> to_vl(const vector<int>& v) {
+    return LC((ll) x, x, v);
+}
 };
