@@ -197,6 +197,12 @@ typedef unordered_set<ll, custom_hash> usetl;
 template <typename K>
 using uset = unordered_set<K, custom_hash>;
 
+
+template <typename T>
+using maxheap = priority_queue<T, vector<T>, less<T>>;
+template <typename T>
+using minheap = priority_queue<T, vector<T>, greater<T>>;
+
 template <typename K, typename V>
 umap<K, V> operator+(const umap<K, V>& lhs, const umap<K, V>& rhs)
 {
