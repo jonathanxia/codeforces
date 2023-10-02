@@ -100,10 +100,9 @@ struct LCATree {
 };
 
 struct AncestorTree {
-    DfsTree tree;
     vvl ancestors; // ancestors[i][v] gives the 2^i-th ancestor of v
     ll log_depth = 30; // length of ancestors
-    AncestorTree(const DfsTree& f) : tree(f) {
+    AncestorTree(const DfsTree& tree) {
         ll n = tree.graph.size();
         ancestors = vvl(log_depth, vl(n));
         FOR(i, 0, n - 1) {
