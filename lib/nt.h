@@ -72,10 +72,19 @@ vl get_digits(ll n, ll b, ll pad = -1)
     return ans;
 }
 
+ll get_digit(ll n, ll b, ll i) {
+    if (b == 2) {
+        return ((1LL << i) & n) > 0;
+    }
+    else {
+        return (n / pow(b, i, -1)) % b;
+    }
+}
+
 ll digits_to_num(const vl& digs, ll b)
 {
     ll s = 0;
-    dep(i, digs.size() - 1, 0)
+    DOR(i, len(digs) - 1, 0)
     {
         s *= b;
         s += digs[i];
