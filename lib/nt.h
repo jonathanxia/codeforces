@@ -72,15 +72,6 @@ vl get_digits(ll n, ll b, ll pad = -1)
     return ans;
 }
 
-ll get_digit(ll n, ll b, ll i) {
-    if (b == 2) {
-        return ((1LL << i) & n) > 0;
-    }
-    else {
-        return (n / pow(b, i, -1)) % b;
-    }
-}
-
 ll digits_to_num(const vl& digs, ll b)
 {
     ll s = 0;
@@ -121,6 +112,15 @@ ll pow(ll base, ll exponent, ll modulus = MOD)
     }
 
     return result;
+}
+
+ll get_digit(ll n, ll b, ll i) {
+    if (b == 2) {
+        return ((1LL << i) & n) > 0;
+    }
+    else {
+        return (n / nt::pow(b, i, -1)) % b;
+    }
 }
 
 ll inv(ll x, ll y)
