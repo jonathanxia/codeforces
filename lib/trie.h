@@ -16,13 +16,20 @@ public:
         bool isEnd;
         // freq is how many times this prefix occurs
         int freq;
-
+        // length of the prefix at this node
+        int length;
         TrieNode()
         {
             for (int i = 0; i < N; i++)
                 next[i] = -1;
             isEnd = false;
             freq = 0;
+            length = 0;
+        }
+        TrieNode(int _length)
+            : TrieNode()
+        {
+            length = _length;
         }
     };
 
@@ -44,7 +51,7 @@ public:
         for (int i = 0; i < (ll)s.size(); i++) {
             // tree[]
             if (tree[p].next[s[i] - baseChar] == -1) {
-                tree.push_back(TrieNode());
+                tree.push_back(TrieNode(tree[p].length + 1));
                 tree[p].next[s[i] - baseChar] = tree.size() - 1;
             }
 
