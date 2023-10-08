@@ -79,6 +79,9 @@ public:
         if (node2.is_empty) {
             return node1;
         }
+        if (node1.is_empty) {
+            return node2;
+        }
         return lazymerge(node1, node2);
     }
 
