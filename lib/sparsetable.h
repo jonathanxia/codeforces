@@ -1,26 +1,24 @@
 #include <lib/common.h>
 
+template <typename T>
 class SparseTable {
 public:
-    vector<vector<ll>> table;
+    vector<vector<T>> table;
     vector<ll> logTable;
-    vector<ll> arrSize;
-    function<ll(ll, ll)> operation;
+    function<T(T, T)> operation;
 
-    SparseTable(const vector<ll>& arr, function<ll(ll, ll)> op)
+    SparseTable(const vector<T>& arr, function<T(T, T)> op)
     {
         ll n = arr.size();
         ll logn = log2(n) + 1;
 
         table.resize(n, vector<ll>(logn));
         logTable.resize(n + 1);
-        arrSize.resize(n + 1);
         operation = op;
 
         // Precompute logarithm values and array sizes
         for (int i = 2; i <= n; i++) {
             logTable[i] = logTable[i / 2] + 1;
-            arrSize[i] = arrSize[i / 2] + (i & 1);
         }
 
         // Initialize the first column of the table
