@@ -122,6 +122,20 @@ T prod(const vector<T>& a, int start = 0, int end = -1, ll mm = -1)
 }
 
 template <typename T>
+T xor(const vector<T>& a, int start = 0, int end = -1)
+{
+    if (end < 0) {
+        end = len(a) + end;
+    }
+    T p(0);
+    FOR(i, start, end)
+    {
+        p = p ^ a[i];
+    }
+    return p;
+}
+
+template <typename T>
 T min(const vector<T>& a, int start = 0, int end = -1)
 {
     if (start < 0) {
@@ -291,6 +305,24 @@ vector<T> cummax(const vector<T>& a, bool reverse = false)
         FOR(i, 1, n - 1)
         {
             ret[i] = std::max(ret[i], ret[i - 1]);
+        }
+    }
+    return ret;
+}
+
+template <typename T>
+vector<T> cumxor(const vector<T>& a, bool reverse = false)
+{
+    vector<T> ret(a);
+    if (reverse) {
+        DOR(i, len(a) - 2, 0)
+        {
+            ret[i] ^= ret[i + 1];
+        }
+    } else {
+        FOR(i, 1, len(a) - 1)
+        {
+            ret[i] ^= ret[i - 1];
         }
     }
     return ret;
