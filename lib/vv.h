@@ -122,7 +122,7 @@ T prod(const vector<T>& a, int start = 0, int end = -1, ll mm = -1)
 }
 
 template <typename T>
-T xor(const vector<T>& a, int start = 0, int end = -1)
+T XOR(const vector<T>& a, int start = 0, int end = -1)
 {
     if (end < 0) {
         end = len(a) + end;
