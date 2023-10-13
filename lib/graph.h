@@ -38,9 +38,9 @@ namespace graph
 
     // Runs bfs on a graph and stores the distances in dist
     // Starts need to be passed in, can have multiple start points
-    void bfs(const vvl& graph, const vl& starts, vl& dist) {
+    vl bfs(const vvl& graph, const vl& starts, ll default_dist = LONG_LONG_MAX) {
         ll n = len(graph);
-
+        vl dist(n);
         FOR(i, 0, n - 1) dist[i] = -1;
 
         deque<ll> pq;
@@ -61,6 +61,7 @@ namespace graph
                 pq.push_back(child);
             }
         }
+        return LC(x < 0 ? default_dist : x, x, dist);
     }
 
     // Returns weight of minimum/maximum spanning tree, and stores the tree in edges
