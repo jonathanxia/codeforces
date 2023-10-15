@@ -24,6 +24,7 @@ struct FenwickTree {
     }
 
     T sum(int l, int r) {
+        if (l > r) return T(0);
         return sum(r) - sum(l - 1);
     }
 
@@ -31,6 +32,11 @@ struct FenwickTree {
         for (; idx < n; idx = idx | (idx + 1)) {
             bit[idx] += delta;
         }
+    }
+
+    void assign(int idx, T new_val) {
+        T val = sum(idx, idx);
+        add(idx, new_val - val);
     }
 };
 
