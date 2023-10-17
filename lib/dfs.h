@@ -73,14 +73,14 @@ struct DfsTree {
 
 struct LCATree {
     DfsTree forest;
-    SparseTable st;
+    SparseTable<int> st;
 
-    vl counter_to_pos_in_dfs_order;
+    vi counter_to_pos_in_dfs_order;
     LCATree(const DfsTree& f)
-        : forest(f), st(forest.dfs_order, [](ll x, ll y) { return min(x, y); })
+        : forest(f), st(forest.dfs_order, [](int x, int y) { return min(x, y); })
     {
         ll n = forest.graph.size();
-        counter_to_pos_in_dfs_order = vl(n);
+        counter_to_pos_in_dfs_order = vi(n);
         FOR(j, 0, len(forest.dfs_order) - 1)
         {
             counter_to_pos_in_dfs_order[forest.dfs_order[j]] = j;
