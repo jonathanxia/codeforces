@@ -12,7 +12,7 @@ public:
         ll n = arr.size();
         ll logn = log2(n) + 1;
 
-        table.resize(n, vector<ll>(logn));
+        table.resize(n, vector<T>(logn));
         logTable.resize(n + 1);
         operation = op;
 

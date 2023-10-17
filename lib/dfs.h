@@ -16,7 +16,7 @@ struct DfsTree {
     vl node_to_counter;
 
     vl subtree_order; // With counters
-    vl dfs_order; // With counters
+    vi dfs_order; // With counters
 
     vl parent;
 
