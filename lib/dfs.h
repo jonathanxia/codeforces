@@ -3,27 +3,27 @@
 #include <lib/sparsetable.h>
 
 struct DfsTree {
-    ll n;
-    ll root;
+    int n;
+    int root;
 
-    vl height; // From the root
+    vi height; // From the root
     vl weighted_height; // From the root
-    vl num_desc; // Including myself
-    vl deepest_leaf; // Leaf is 0
+    vi num_desc; // Including myself
+    vi deepest_leaf; // Leaf is 0
 
-    vl counter_to_node;
-    vl node_to_counter;
+    vi counter_to_node;
+    vi node_to_counter;
 
-    vl subtree_order; // With counters
+    vi subtree_order; // With counters
     vi dfs_order; // With counters
 
-    vl parent;
+    vi parent;
 
-    ll cnter = 0;
+    int cnter = 0;
 
     DfsTree(const vvpl& g, ll root_) : root(root_)
     {
-        n = len(graph);
+        n = len(g);
 
         height.resize(n, 0);
         weighted_height.resize(n, 0);
@@ -52,7 +52,7 @@ struct DfsTree {
 
         num_desc[node]++;
         deepest_leaf[node] = 0;
-        foreachp(child, w, graph[node])
+        foreachp(child, w, g[node])
         {
             if (child == par)
                 continue;
@@ -70,14 +70,14 @@ struct DfsTree {
 };
 
 struct LCATree {
-    DfsTree forest;
+    const DfsTree& forest;
     SparseTable<int> st;
 
     vi counter_to_pos_in_dfs_order;
     LCATree(const DfsTree& f)
         : forest(f), st(forest.dfs_order, [](int x, int y) { return min(x, y); })
     {
-        ll n = forest.graph.size();
+        ll n = forest.n;
         counter_to_pos_in_dfs_order = vi(n);
         FOR(j, 0, len(forest.dfs_order) - 1)
         {
@@ -99,10 +99,10 @@ struct LCATree {
 
 struct AncestorTree {
     vvi ancestors; // ancestors[i][v] gives the 2^i-th ancestor of v
-    const ll log_depth = 30; // length of ancestors
+    const ll log_depth = 24; // length of ancestors
 
     AncestorTree(const DfsTree& tree) {
-        ll n = tree.graph.size();
+        ll n = tree.n;
         ancestors = vvi(log_depth, vi(n));
         FOR(i, 0, n - 1) {
             // Induces a self-loop for the parent
@@ -118,7 +118,7 @@ struct AncestorTree {
     }
 
     // Get the k-th ancestor of vertex v
-    ll get_ancestor(ll k, ll v) {
+    ll get_ancestor(ll k, ll v) const {
         ll ret = v;
         FOR(i, 0, log_depth - 1) {
             if ((1LL << i) > k) break;
@@ -139,10 +139,10 @@ struct BinaryLiftingTree {
     function<T(T, T)> merge_func;
 
     BinaryLiftingTree(const DfsTree& tree, const AncestorTree& ast_, const vector<T>& values, function<T(T, T)> merge_func_)
-        : merge_func(merge_func_), ast(ast_)
+        : ast(ast_), merge_func(merge_func_)
     {
         ll log_depth = ast.log_depth;
-        ll n = tree.graph.size();
+        ll n = tree.n;
 
         cumulative = vector<vector<T>>(log_depth, vector<T>(n));
 
@@ -158,7 +158,7 @@ struct BinaryLiftingTree {
         }
     }
 
-    BinaryLiftingTree(const DfsTree& tree, const vector<T>& values, function<T(T, T)> merge_func_) : 
+    BinaryLiftingTree(const DfsTree& tree, const vector<T>& values, function<T(T, T)> merge_func_) :
         BinaryLiftingTree(tree, AncestorTree(tree), values, merge_func_)
     {
 
@@ -170,7 +170,7 @@ struct BinaryLiftingTree {
 
     // This version takes log time because it doesn't assume
     // idempotency
-    T query(ll k, ll v) {
+    T query(ll k, ll v) const {
         T ans = cumulative[0][v];
         v = ast.ancestors[0][v];
 
@@ -186,7 +186,7 @@ struct BinaryLiftingTree {
     }
 
     // Performs o(1) time query by assuming idempotency
-    T query1(ll k, ll v) {
+    T query1(ll k, ll v) const {
         T ans = cumulative[0][v];
         v = ast.ancestors[0][v];
         if (k == 0) return ans;
@@ -209,3 +209,4 @@ struct BinaryLiftingTree {
         return merge_func(ans, merge_func(cumulative[j][v], cumulative[j][v1]));
     }
 };
+
