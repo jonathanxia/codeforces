@@ -4,7 +4,7 @@ namespace graph
 {
     // Specify target to stop Dijkstra once target is processed (does not process
     // target's neighbors)
-    void dijkstra(const vvpl &graph, vl &dist, ll start, ll target = -1LL)
+    void dijkstra(const vvpl &graph, vl &dist, const vl& starts, ll target = -1LL)
     {
         repe(i, 0, len(dist))
         {
@@ -12,8 +12,10 @@ namespace graph
         }
         set<pl> pq;
 
-        pq.insert({0, start});
-        dist[start] = 0;
+        foreach(start, starts) {
+            pq.insert({0, start});
+            dist[start] = 0;
+        }
         while (!pq.empty())
         {
             auto [distance, node] = *(pq.begin());
@@ -34,6 +36,10 @@ namespace graph
                 }
             }
         }
+    }
+
+    void dijkstra(const vvpl& graph, vl& dist, ll start, ll target=-1LL) {
+        dijkstra(graph, dist, vl({start}), target);
     }
 
     // Runs bfs on a graph and stores the distances in dist

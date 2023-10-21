@@ -3,7 +3,6 @@
 #include <lib/sparsetable.h>
 
 struct DfsTree {
-    vvpl graph;
     ll n;
     ll root;
 
@@ -22,8 +21,7 @@ struct DfsTree {
 
     ll cnter = 0;
 
-    DfsTree(const vvpl& g, ll root_)
-        : graph(g), root(root_)
+    DfsTree(const vvpl& g, ll root_) : root(root_)
     {
         n = len(graph);
 
@@ -38,10 +36,10 @@ struct DfsTree {
 
         cnter = 0;
 
-        dfs(root, -1);
+        dfs(root, -1, g);
     }
 
-    void dfs(ll node, ll par)
+    void dfs(ll node, ll par, const vvpl& g)
     {
         parent[node] = par;
         // Visiting a new node, get a counter
@@ -62,7 +60,7 @@ struct DfsTree {
             weighted_height[child] = weighted_height[node] + w;
             height[child] = height[node] + 1;
 
-            dfs(child, node);
+            dfs(child, node, g);
             num_desc[node] += num_desc[child];
             chkmax(deepest_leaf[node], 1 + deepest_leaf[child]);
 
@@ -135,14 +133,13 @@ struct AncestorTree {
 // Data structure for efficient range queries on the tree.
 template <typename T>
 struct BinaryLiftingTree {
-    AncestorTree ast;
+    const AncestorTree& ast;
     vector<vector<T>> cumulative;
 
     function<T(T, T)> merge_func;
 
-    BinaryLiftingTree(const DfsTree& tree, const vector<T>& values, function<T(T, T)> merge_func_)
-        : ast(tree)
-        , merge_func(merge_func_)
+    BinaryLiftingTree(const DfsTree& tree, const AncestorTree& ast_, const vector<T>& values, function<T(T, T)> merge_func_)
+        : merge_func(merge_func_), ast(ast_)
     {
         ll log_depth = ast.log_depth;
         ll n = tree.graph.size();
@@ -159,6 +156,12 @@ struct BinaryLiftingTree {
                 cumulative[i][vert] = merge_func(cumulative[i - 1][vert], cumulative[i - 1][kp]);
             }
         }
+    }
+
+    BinaryLiftingTree(const DfsTree& tree, const vector<T>& values, function<T(T, T)> merge_func_) : 
+        BinaryLiftingTree(tree, AncestorTree(tree), values, merge_func_)
+    {
+
     }
 
     // query(k, v) returns the merge func applied
