@@ -16,6 +16,13 @@ namespace inp
         }
         return res;
     }
+
+    template <typename T>
+    void read1(vector<T>& v) {
+        FOR(i, 1, len(v)) {
+            cin >> v[i];
+        }
+    }
 }
 
 template <typename S, typename T>
