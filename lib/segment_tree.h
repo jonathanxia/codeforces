@@ -1,7 +1,7 @@
 #include <lib/lazy_segment_tree.h>
 
-struct SegmentTree : LazySegmentTree {
-    template <typename T>
+template <typename T>
+struct SegmentTree : LazySegmentTree<T> {
     SegmentTree(const vector<T>& v, function<node(node, node)> merge2)
         : LazySegmentTree(
             v, merge2, [](node n1, int i, lazynode ln) {

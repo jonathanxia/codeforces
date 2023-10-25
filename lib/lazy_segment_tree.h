@@ -44,10 +44,11 @@ std::ostream& operator<<(std::ostream& os, const lazynode& mp)
     return os;
 }
 
+template <typename T>
 struct LazySegmentTree {
 public:
     ll n;
-    vl a;
+    vector<T> a;
     function<node(node, node)> merge;
     function<node(node, int, lazynode)> apply;
     function<lazynode(lazynode, lazynode)> lazymerge;
@@ -113,7 +114,6 @@ public:
         tr[idx] = truemerge(tr[2 * idx + 1], tr[2 * idx + 2]);
     }
 
-    template <typename T>
     LazySegmentTree(
         const vector<T>& arr,
         function<node(node, node)> op,
@@ -181,10 +181,10 @@ public:
     }
 };
 
-// struct MinSegmentTree : public LazySegmentTree {
+// template <typename T>
+// struct MinSegmentTree : public LazySegmentTree<T> {
 // public:
-//     template <typename T>
-//     MinSegmentTree(const vector<T>& v) : LazySegmentTree(
+//     MinSegmentTree(const vector<T>& v) : LazySegmentTree<T>(
 //         v,
 //         [](node n1, node n2) {
 //             return node(min(n1.data, n2.data));
@@ -200,10 +200,10 @@ public:
 //     {}
 // };
 
-// struct MaxSegmentTree : public LazySegmentTree {
+// template <typename T>
+// struct MaxSegmentTree : public LazySegmentTree<T> {
 // public:
-//     template <typename T>
-//     MaxSegmentTree(const vector<T>& v) : LazySegmentTree(
+//     MaxSegmentTree(const vector<T>& v) : LazySegmentTree<T>(
 //         v,
 //         [](node n1, node n2) {
 //             return node(max(n1.data, n2.data));
@@ -219,10 +219,10 @@ public:
 //     {}
 // };
 
-// struct SumSegmentTree : public LazySegmentTree {
+// template <typename T>
+// struct SumSegmentTree : public LazySegmentTree<T> {
 // public:
-//     template <typename T>
-//     SumSegmentTree(const vector<T>& v) : LazySegmentTree(
+//     SumSegmentTree(const vector<T>& v) : LazySegmentTree<T>(
 //         v,
 //         [](node n1, node n2) {
 //             return node(n1.data + n2.data);
