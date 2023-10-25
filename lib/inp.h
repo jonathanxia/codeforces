@@ -19,7 +19,7 @@ namespace inp
 
     template <typename T>
     void read1(vector<T>& v) {
-        FOR(i, 1, len(v)) {
+        FOR(i, 1, len(v) - 1) {
             cin >> v[i];
         }
     }
