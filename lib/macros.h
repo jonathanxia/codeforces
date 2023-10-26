@@ -185,6 +185,7 @@ typedef pair<int, int> pi;
 typedef vector<vector<pl>> vvpl;
 typedef vector<pl> vpl;
 typedef vector<double> vd;
+typedef vector<long double> vld;
 
 // Maps
 typedef unordered_map<ll, ll, custom_hash> umapll;

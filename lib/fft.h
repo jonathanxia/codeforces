@@ -3,7 +3,6 @@
 namespace fft {
 #define sz len
 typedef complex<double> C;
-typedef vector<long double> vd;
 void fft(vector<C>& a)
 {
     ll n = sz(a), L = 31 - __builtin_clz(n);
@@ -29,11 +28,11 @@ void fft(vector<C>& a)
                 a[i + j] += z;
             }
 }
-vd conv(const vd& a, const vd& b)
+vld conv(const vld& a, const vld& b)
 {
     if (a.empty() || b.empty())
         return {};
-    vd res(sz(a) + sz(b) - 1);
+    vld res(sz(a) + sz(b) - 1);
     ll L = 32 - __builtin_clz(sz(res)), n = 1 << L;
     vector<C> in(n), out(n);
     copy(ALL(a), in.begin());
