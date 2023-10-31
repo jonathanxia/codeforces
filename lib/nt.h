@@ -174,6 +174,19 @@ bool is_pow_of_2(ll n)
     return (n > 0) && ((n & (n - 1)) == 0);
 }
 
+// Computes the first 2^i st 2^i >= x / y,
+// x and y must be positive
+ll ratio_log2(ll x, ll y) {
+    // 2^(-j) >= x / y
+    // y >= 2^j * x
+    if (x > y) {
+        return first_st(i, cmul(1LL << i, y) >= x, 0, 31);
+    }
+    else {
+        return -last_st(j, cmul((1LL << j), x) <= y, 31, 0);
+    }
+};
+
 ll phi(ll n)
 {
     ll result = n;
