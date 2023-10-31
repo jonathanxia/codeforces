@@ -183,6 +183,7 @@ typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef pair<ll, ll> pl;
 typedef pair<int, int> pi;
+typedef pair<int, int> pii;
 typedef vector<vector<pl>> vvpl;
 typedef vector<pl> vpl;
 typedef vector<double> vd;
