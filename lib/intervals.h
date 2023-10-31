@@ -39,8 +39,8 @@ template <class T>
 vi min_cover(vector<pair<T, T>> I, pair<T, T> G)
 {
     vi S(sz(I)), R;
-    iota(all(S), 0);
-    sort(all(S), [&](int a, int b) { return I[a] < I[b]; });
+    iota(ALL(S), 0);
+    sort(ALL(S), [&](int a, int b) { return I[a] < I[b]; });
     T cur = G.first;
     int at = 0;
     while (cur < G.second) { // (A)
