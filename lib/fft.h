@@ -1,7 +1,6 @@
 #include <lib/common.h>
 
 namespace fft {
-#define sz len
 typedef complex<double> C;
 void fft(vector<C>& a)
 {
@@ -46,7 +45,6 @@ vld conv(const vld& a, const vld& b)
     return res;
 }
 
-typedef vector<ll> vl;
 template <ll M = MOD>
 vl conv_mod(const vl& a, const vl& b)
 {
