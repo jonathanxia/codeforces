@@ -32,4 +32,28 @@ ll max_coverage(const vpl& intervals) {
 
     return max(cumsum(cumulative));
 }
+// Minimum number of intervals in I needed to cover G. Returns a vector of
+// indices pointing to intervals in I in the minimal covering. Returns empty
+// vector if covering is not possible.
+template <class T>
+vi min_cover(vector<pair<T, T>> I, pair<T, T> G)
+{
+    vi S(sz(I)), R;
+    iota(all(S), 0);
+    sort(all(S), [&](int a, int b) { return I[a] < I[b]; });
+    T cur = G.first;
+    int at = 0;
+    while (cur < G.second) { // (A)
+        pair<T, int> mx = make_pair(cur, -1);
+        while (at < sz(I) && I[S[at]].first <= cur) {
+            mx = max(mx, make_pair(I[S[at]].second, S[at]));
+            at++;
+        }
+        if (mx.second == -1)
+            return {};
+        cur = mx.first;
+        R.push_back(mx.second);
+    }
+    return R;
+}
 }

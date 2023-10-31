@@ -61,12 +61,14 @@ inline ll len(const T& v)
 {
     return ll(v.size());
 }
+#define sz len
 
 #define to_str to_string
 #define pb push_back
 #define eb emplace_back
 #define mp make_pair
 #define ALL(x) (x).begin(), (x).end()
+#define all ALL
 #define SLC(x, i1, i2) (x).begin() + i1, (x).begin() + i2
 
 template <typename T, typename Y>
