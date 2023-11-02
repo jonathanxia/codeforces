@@ -410,4 +410,22 @@ void push_front(vector<T>& a, S val) {
 vector<ll> to_vl(const vector<int>& v) {
     return LC((ll) x, x, v);
 }
+
+template <typename T>
+vector<ll> coord_compress(const vector<T>& a) {
+    umap<T, ll> coord;
+    ll idx = 0;
+    foreach(x, a) {
+        if (coord.count(x) == 0) {
+            coord[x] = idx;
+            idx++;
+        }
+    }
+    vl result(len(a));
+    walk(i, a) {
+        result[i] = coord[a[i]];
+    }
+    return result;
+}
 };
+
