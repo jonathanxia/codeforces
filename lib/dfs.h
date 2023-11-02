@@ -14,7 +14,7 @@ struct DfsTree {
     vi counter_to_node;
     vi node_to_counter;
 
-    vi subtree_order; // With counters
+    vi subtree_order; // With node values
     vi dfs_order; // With counters
 
     vi parent;
@@ -48,7 +48,7 @@ struct DfsTree {
         node_to_counter[node] = my_counter;
 
         dfs_order.pb(my_counter);
-        subtree_order.pb(my_counter);
+        subtree_order.pb(node);
 
         num_desc[node]++;
         deepest_leaf[node] = 0;
@@ -68,6 +68,8 @@ struct DfsTree {
         }
     }
 };
+
+
 
 struct LCATree {
     const DfsTree& forest;
