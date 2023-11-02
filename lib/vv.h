@@ -412,20 +412,27 @@ vector<ll> to_vl(const vector<int>& v) {
 }
 
 template <typename T>
-vector<ll> coord_compress(const vector<T>& a) {
-    umap<T, ll> coord;
-    ll idx = 0;
-    foreach(x, a) {
-        if (coord.count(x) == 0) {
-            coord[x] = idx;
-            idx++;
+vector<ll> coord_compress(const vector<T>& a, bool dedupe = true) {
+    if(dedupe)
+    {
+        umap<T, ll> coord;
+        ll idx = 0;
+        foreach(x, a) {
+            if (coord.count(x) == 0) {
+                coord[x] = idx;
+                idx++;
+            }
         }
+        vl result(len(a));
+        walk(i, a) {
+            result[i] = coord[a[i]];
+        }
+        return result;
     }
-    vl result(len(a));
-    walk(i, a) {
-        result[i] = coord[a[i]];
+    else
+    {
+        return to_vl(argsort(argsort(a)));
     }
-    return result;
 }
 };
 
