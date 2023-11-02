@@ -92,7 +92,7 @@ template <typename T>
 struct PersistentValue
 {
     PersistentVector<T> v;
-    PersistentValue() : v(1) {
+    PersistentValue(bool persist=false) : v(1, false) {
 
     }
 
