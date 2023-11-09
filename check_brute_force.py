@@ -7,6 +7,14 @@ from subprocess import run, check_output, STDOUT
 COMPILE_CMD = "g++ -g -Wno-return-type -Wshadow -O0 -std=c++17 -D_GLIBCXX_DEBUG -fsanitize=undefined,address -ftrapv"
 TESTCASE_FILE = "brute_force.input"
 
+# To use this, create a separate checker called brute.cpp
+# If you want to just catch a runtime error, you can of course
+# just copy paste your solution into brute.cpp
+
+# Then, specify the functions create_test_case and generate_test_cases
+
+# Then, run check_brute_force.py <your src code>
+
 def list_to_str(arr):
     return " ".join([str(x) for x in arr])
 
