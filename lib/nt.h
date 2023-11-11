@@ -223,6 +223,44 @@ ll phi(ll n)
     return result;
 }
 
+// Returns all possible values of
+// floor(n / k) from k = 1 to n.
+// There are 2*sqrt(n) such values
+vl floor_fractions(ll n) {
+    vl ret;
+    for (ll k = 1; k * k <= n; k++) {
+        ret.pb(n / k);
+        if (k != n / k) ret.pb(k);
+    }
+    sort(ALL(ret));
+    return ret;
+}
+
+// Returns all possible values of
+// ceil(n / k) from k = 1 to n.
+// There are 2*sqrt(n) such values
+vl ceil_fractions(ll n) {
+    vl ret;
+    for (ll k = 1; k * k <= n; k++) {
+        ret.pb(ceildiv(n, k));
+        if (k != ceildiv(n, k)) ret.pb(k);
+    }
+    sort(ALL(ret));
+    return ret;
+}
+
+vl get_divisors(ll n) {
+    vl divisors;
+    for (ll d = 1; d * d <= n; d++) {
+        if (n % d == 0) {
+            divisors.pb(d);
+            if (d * d != n)
+                divisors.pb(n / d);
+        }
+    }
+    return divisors;
+}
+
 ll num_divisors(ll n)
 {
     ll divisors = 1;
