@@ -7,6 +7,8 @@ from subprocess import run, check_output, STDOUT
 COMPILE_CMD = "g++ -g -Wno-return-type -Wshadow -O0 -std=c++17 -D_GLIBCXX_DEBUG -fsanitize=undefined,address -ftrapv"
 TESTCASE_FILE = "brute_force.input"
 
+NUM_TRIALS = 1
+
 # To use this, create a separate checker called brute.cpp
 # If you want to just catch a runtime error, you can of course
 # just copy paste your solution into brute.cpp
@@ -22,18 +24,14 @@ def list_to_str(arr):
 # and then iterate over them in generate_test_cases
 
 # The prnt function is for convenience
-def create_test_case(N, M, K, prnt):
-    prnt(N, M, K)
+def create_test_case(N, K, prnt):
+    prnt(1)
+    prnt(N)
 
-    locs = set()
-    for i in range(K):
-        x, y = 1, 1
-        while (x, y) == (1, 1) or (x, y) in locs:
-            x = np.random.randint(1, N + 1)
-            y = np.random.randint(1, M + 1)
-
-        locs.add((x, y))
-        prnt(x, y)
+    vals = np.random.permutation(np.arange(1, K + 1))
+    vals = list(vals[:N - 1])
+    vals = vals + [8648640]
+    prnt(list_to_str(np.sort(vals)))
 
 def generate_test_cases():
     with open(TESTCASE_FILE, "w") as f:
@@ -42,14 +40,13 @@ def generate_test_cases():
             print(*args, **kwargs)
         
         counter = 0
-        for N in range(100, 101):
-            for M in range(100, 101):
-                K = min(N * M - 1, 20)
-                for trial in range(10):
+        for N in [10 ** 6]:
+            for K in [10 ** 7]:
+                for _ in range(NUM_TRIALS):
                     counter += 1
                     print("Checking test", counter)
 
-                    create_test_case(N, M, K, prnt)
+                    create_test_case(N, K, prnt)
                     f.flush()
                     validate_test()
                     print("OK")
