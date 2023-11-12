@@ -23,6 +23,27 @@ namespace inp
             cin >> v[i];
         }
     }
+
+    // forward means the input is parsed as
+    // b[0], b[1], ..., b[n - 1]
+    // backwards means the input is parsed as
+    // b[n - 1], b[n - 2], ..., b[0]
+    template <size_t N>
+    void read_bitset(bitset<N>& b, int n, bool reverse=false) {
+        char ch;
+        if (!reverse) {
+            FOR(i, 0, n - 1) {
+                cin >> ch;
+                b[i] = ch == '1';
+            }
+        }
+        else {
+            DOR(i, n - 1, 0) {
+                cin >> ch;
+                b[i] = ch == '1';
+            }
+        }
+    }
 }
 
 template <typename S, typename T>

@@ -78,6 +78,15 @@ std::ostream &operator<<(std::ostream &os, const std::vector<std::vector<T>> &vv
     return os;
 }
 
+template <typename T, size_t N>
+std::ostream &operator<<(std::ostream& os, const array<T, N>& a) {
+    FOR(i, 0, (int) N - 1) {
+        cout << a[i];
+        if (i < (int) N - 1) cout << " ";
+    }
+    return os;
+}
+
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const std::set<T> &s)
 {
@@ -186,3 +195,4 @@ int recur_depth = 0;
 #else
 #define dbg(x)
 #endif
+

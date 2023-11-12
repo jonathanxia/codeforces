@@ -48,7 +48,7 @@ bool chkmax(T& lhs, S rhs)
         return true;
     } else {
         return false;
-    }   
+    }
 }
 
 typedef long long ll;
@@ -150,7 +150,7 @@ struct custom_hash {
         return (*this)(((*this)(key.first) * 37) ^ (*this)(key.second));
     }
 
-    size_t operator()(string s) const
+    size_t operator()(const string& s) const
     {
         uint64_t out = 0;
         for (int i = 0; i < len(s); i++) {
@@ -164,6 +164,21 @@ struct custom_hash {
     {
         size_t seed = len(vec);
         for (auto& i : vec) {
+            seed ^= (*this)(i) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        }
+        return seed;
+    }
+
+    template <long unsigned int T>
+    size_t operator()(const bitset<T>& b) const
+    {
+        return do_hash(to_string(b));
+    }
+
+    template <typename T, size_t N>
+    size_t operator()(const array<T, N>& a) const {
+        size_t seed = len(a);
+        for (auto& i : a) {
             seed ^= (*this)(i) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
         }
         return seed;
@@ -243,6 +258,8 @@ Value operator<<(const std::map<Key, Value>& map, const Key& key)
     }
     return Value {}; // Default-constructed value
 }
+
+
 
 template <typename K, typename V>
 void initmap(umap<K, V>& counts)
@@ -439,3 +456,4 @@ ll cmul(ll a, ll b)
     }
     return a * b;
 }
+
