@@ -8,6 +8,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 struct UF {
 	vi e;
 	UF(int n) : e(n, -1) {}
@@ -22,3 +23,4 @@ struct UF {
 		return true;
 	}
 };
+}

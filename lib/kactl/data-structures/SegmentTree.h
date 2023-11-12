@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 struct Tree {
 	typedef int T;
 	static constexpr T unit = INT_MIN;
@@ -28,3 +29,4 @@ struct Tree {
 		return f(ra, rb);
 	}
 };
+}

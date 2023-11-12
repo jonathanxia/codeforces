@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 typedef uint64_t ull;
 static int C; // initialized below
 
@@ -61,4 +62,5 @@ int main() {
 	C = (int)tp.tv_usec; // (less than modulo)
 	assert((ull)(H(1)*2+1-3) == 0);
 	// ...
+}
 }

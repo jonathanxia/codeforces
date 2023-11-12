@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 char buf[450 << 20] alignas(16);
 size_t buf_ind = sizeof buf;
 
@@ -23,3 +24,4 @@ template<class T> struct small {
 	}
 	void deallocate(T*, size_t) {}
 };
+}

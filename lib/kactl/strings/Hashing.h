@@ -8,6 +8,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 // Arithmetic mod 2^64-1. 2x slower than mod 2^64 and more
 // code, but works on evil test data (e.g. Thue-Morse, where
 // ABBA... and BAAB... of length 2^10 hash the same mod 2^64).
@@ -52,3 +53,4 @@ vector<H> getHashes(string& str, int length) {
 }
 
 H hashString(string& s){H h{}; for(char c:s) h=h*C+c;return h;}
+}

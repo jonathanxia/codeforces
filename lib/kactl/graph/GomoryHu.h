@@ -18,6 +18,7 @@
 
 #include <lib/kactl/graph/PushRelabel.h>
 
+namespace kactl {
 typedef array<ll, 3> Edge;
 vector<Edge> gomoryHu(int N, vector<Edge> ed) {
 	vector<Edge> tree;
@@ -30,4 +31,5 @@ vector<Edge> gomoryHu(int N, vector<Edge> ed) {
 			if (par[j] == par[i] && D.leftOfMinCut(j)) par[j] = i;
 	}
 	return tree;
+}
 }

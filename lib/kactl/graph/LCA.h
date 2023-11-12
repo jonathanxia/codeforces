@@ -13,6 +13,7 @@
 
 #include <lib/kactl/graph/../data-structures/RMQ.h>
 
+namespace kactl {
 struct LCA {
 	int T = 0;
 	vi time, path, ret;
@@ -34,3 +35,4 @@ struct LCA {
 	}
 	//dist(a,b){return depth[a] + depth[b] - 2*depth[lca(a,b)];}
 };
+}

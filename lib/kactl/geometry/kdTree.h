@@ -9,6 +9,7 @@
 
 #include <lib/kactl/geometry/Point.h>
 
+namespace kactl {
 typedef long long T;
 typedef Point<T> P;
 const T INF = numeric_limits<T>::max();
@@ -72,3 +73,4 @@ struct KDTree {
 		return search(root, p);
 	}
 };
+}

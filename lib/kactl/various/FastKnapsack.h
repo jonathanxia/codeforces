@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 int knapsack(vi w, int t) {
 	int a = 0, b = 0, x;
 	while (b < len(w) && a + w[b] <= t) a += w[b++];
@@ -24,4 +25,5 @@ int knapsack(vi w, int t) {
 	}
 	for (a = t; v[a+m-t] < 0; a--) ;
 	return a;
+}
 }

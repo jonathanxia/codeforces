@@ -14,6 +14,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 struct Angle {
 	int x, y;
 	int t;
@@ -48,4 +49,5 @@ Angle operator+(Angle a, Angle b) { // point a + vector b
 Angle angleDiff(Angle a, Angle b) { // angle b - angle a
 	int tu = b.t - a.t; a.t = b.t;
 	return {a.x*b.x + a.y*b.y, a.x*b.y - a.y*b.x, tu - (b < a)};
+}
 }

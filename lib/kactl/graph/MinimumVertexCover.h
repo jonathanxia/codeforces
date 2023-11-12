@@ -11,6 +11,7 @@
 
 #include <lib/kactl/graph/DFSMatching.h>
 
+namespace kactl {
 vi cover(vector<vi>& g, int n, int m) {
 	vi match(m, -1);
 	int res = dfsMatching(g, match);
@@ -30,4 +31,5 @@ vi cover(vector<vi>& g, int n, int m) {
 	rep(i,0,m) if (seen[i]) cover.push_back(n+i);
 	assert(len(cover) == res);
 	return cover;
+}
 }

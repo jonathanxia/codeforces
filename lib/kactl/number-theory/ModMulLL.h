@@ -16,6 +16,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 typedef unsigned long long ull;
 ull modmul(ull a, ull b, ull M) {
 	ll ret = a * b - M * ull(1.L / M * a * b);
@@ -26,4 +27,5 @@ ull modpow(ull b, ull e, ull mod) {
 	for (; e; b = modmul(b, b, mod), e /= 2)
 		if (e & 1) ans = modmul(ans, b, mod);
 	return ans;
+}
 }

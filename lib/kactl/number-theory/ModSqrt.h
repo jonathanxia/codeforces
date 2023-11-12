@@ -11,6 +11,7 @@
 
 #include <lib/kactl/number-theory/ModPow.h>
 
+namespace kactl {
 ll sqrt(ll a, ll p) {
 	a %= p; if (a < 0) a += p;
 	if (a == 0) return 0;
@@ -35,4 +36,5 @@ ll sqrt(ll a, ll p) {
 		x = x * gs % p;
 		b = b * g % p;
 	}
+}
 }

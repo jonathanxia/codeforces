@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 // Either globally or in a single class:
 static char buf[450 << 20];
 void* operator new(size_t s) {
@@ -17,3 +18,4 @@ void* operator new(size_t s) {
 	return (void*)&buf[i -= s];
 }
 void operator delete(void*) {}
+}

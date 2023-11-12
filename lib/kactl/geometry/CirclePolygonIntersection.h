@@ -12,6 +12,7 @@
 
 #include <lib/kactl/geometry/Point.h>
 
+namespace kactl {
 typedef Point<double> P;
 #define arg(p, q) atan2(p.cross(q), p.dot(q))
 double circlePoly(P c, double r, vector<P> ps) {
@@ -30,4 +31,5 @@ double circlePoly(P c, double r, vector<P> ps) {
 	rep(i,0,len(ps))
 		sum += tri(ps[i] - c, ps[(i + 1) % len(ps)] - c);
 	return sum;
+}
 }

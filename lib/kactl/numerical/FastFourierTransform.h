@@ -19,6 +19,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 typedef complex<double> C;
 typedef vector<double> vd;
 void fft(vector<C>& a) {
@@ -55,4 +56,5 @@ vd conv(const vd& a, const vd& b) {
 	fft(out);
 	rep(i,0,len(res)) res[i] = imag(out[i]) / (4 * n);
 	return res;
+}
 }

@@ -10,6 +10,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 typedef vector<double> vd;
 vd interpolate(vd x, vd y, int n) {
 	vd res(n), temp(n);
@@ -22,4 +23,5 @@ vd interpolate(vd x, vd y, int n) {
 		temp[i] -= last * x[k];
 	}
 	return res;
+}
 }

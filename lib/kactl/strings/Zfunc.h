@@ -7,6 +7,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 vi Z(const string& S) {
 	vi z(len(S));
 	int l = -1, r = -1;
@@ -18,4 +19,5 @@ vi Z(const string& S) {
 			l = i, r = i + z[i];
 	}
 	return z;
+}
 }

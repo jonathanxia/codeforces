@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 template<class T>
 vi cover(pair<T, T> G, vector<pair<T, T>> I) {
 	vi S(len(I)), R;
@@ -27,4 +28,5 @@ vi cover(pair<T, T> G, vector<pair<T, T>> I) {
 		R.push_back(mx.second);
 	}
 	return R;
+}
 }

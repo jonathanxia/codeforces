@@ -7,6 +7,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 template<class I> vi lis(const vector<I>& S) {
 	if (S.empty()) return {};
 	vi prev(len(S));
@@ -23,4 +24,5 @@ template<class I> vi lis(const vector<I>& S) {
 	vi ans(L);
 	while (L--) ans[L] = cur, cur = prev[cur];
 	return ans;
+}
 }

@@ -11,6 +11,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 void add(int ind, int end) { ... } // add a[ind] (end = 0 or 1)
 void del(int ind, int end) { ... } // remove a[ind]
 int calc() { ... } // compute current answer
@@ -59,4 +60,5 @@ vi moTree(vector<array<int, 2>> Q, vector<vi>& ed, int root=0){
 		if (end) res[qi] = calc();
 	}
 	return res;
+}
 }

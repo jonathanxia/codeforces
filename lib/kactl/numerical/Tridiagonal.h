@@ -33,6 +33,7 @@ the algorithm is numerically stable and neither \texttt{tr} nor the check for \t
  */
 #include <lib/common.h>
 
+namespace kactl {
 typedef double T;
 vector<T> tridiagonal(vector<T> diag, const vector<T>& super,
 		const vector<T>& sub, vector<T> b) {
@@ -58,4 +59,5 @@ vector<T> tridiagonal(vector<T> diag, const vector<T>& super,
 		}
 	}
 	return b;
+}
 }

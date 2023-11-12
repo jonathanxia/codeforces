@@ -14,6 +14,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 template<class F>
 int ternSearch(int a, int b, F f) {
 	assert(a <= b);
@@ -24,4 +25,5 @@ int ternSearch(int a, int b, F f) {
 	}
 	rep(i,a+1,b+1) if (f(a) < f(i)) a = i; // (B)
 	return a;
+}
 }

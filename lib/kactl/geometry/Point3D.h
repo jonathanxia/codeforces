@@ -10,6 +10,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 template<class T> struct Point3D {
 	typedef Point3D P;
 	typedef const P& R;
@@ -42,3 +43,4 @@ template<class T> struct Point3D {
 		return u*dot(u)*(1-c) + (*this)*c - cross(u)*s;
 	}
 };
+}

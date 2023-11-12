@@ -10,6 +10,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 struct Line {
 	mutable ll k, m, p;
 	bool operator<(const Line& o) const { return k < o.k; }
@@ -40,3 +41,4 @@ struct LineContainer : multiset<Line, less<>> {
 		return l.k * x + l.m;
 	}
 };
+}

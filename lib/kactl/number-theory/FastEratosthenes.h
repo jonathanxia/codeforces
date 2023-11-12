@@ -17,6 +17,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 const int LIM = 1e6;
 bitset<LIM> isPrime;
 vi eratosthenes() {
@@ -36,4 +37,5 @@ vi eratosthenes() {
 	}
 	for (int i : pr) isPrime[i] = 1;
 	return pr;
+}
 }

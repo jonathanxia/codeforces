@@ -13,6 +13,7 @@
 
 #include <lib/kactl/numerical/../number-theory/ModPow.h>
 
+namespace kactl {
 int matInv(vector<vector<ll>>& A) {
 	int n = len(A); vi col(n);
 	vector<vector<ll>> tmp(n, vector<ll>(n));
@@ -48,4 +49,5 @@ found:
 	rep(i,0,n) rep(j,0,n)
 		A[col[i]][col[j]] = tmp[i][j] % mod + (tmp[i][j] < 0 ? mod : 0);
 	return n;
+}
 }

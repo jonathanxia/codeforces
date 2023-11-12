@@ -11,6 +11,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 void FST(vi& a, bool inv) {
 	for (int n = len(a), step = 1; step < n; step *= 2) {
 		for (int i = 0; i < n; i += 2 * step) rep(j,i,i+step) {
@@ -26,4 +27,5 @@ vi conv(vi a, vi b) {
 	FST(a, 0); FST(b, 0);
 	rep(i,0,len(a)) a[i] *= b[i];
 	FST(a, 1); return a;
+}
 }

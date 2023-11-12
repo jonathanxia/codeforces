@@ -10,6 +10,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 struct FT {
 	vector<ll> s;
 	FT(int n) : s(n) {}
@@ -32,3 +33,4 @@ struct FT {
 		return pos;
 	}
 };
+}

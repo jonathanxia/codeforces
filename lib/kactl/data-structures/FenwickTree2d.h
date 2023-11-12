@@ -12,6 +12,7 @@
 
 #include <lib/kactl/data-structures/FenwickTree.h>
 
+namespace kactl {
 struct FT2 {
 	vector<vi> ys; vector<FT> ft;
 	FT2(int limx) : ys(limx) {}
@@ -34,3 +35,4 @@ struct FT2 {
 		return sum;
 	}
 };
+}

@@ -10,6 +10,8 @@
 #include <lib/common.h>
 
 #include <bits/extc++.h> /** keep-include */
+
+namespace kactl {
 // To use most bits rather than just the lowest ones:
 struct chash { // large odd number for C
 	const uint64_t C = ll(4e18 * acos(0)) | 71;
@@ -26,3 +28,4 @@ struct chash { // To use most bits rather than just the lowest ones:
 };
 __gnu_pbds::gp_hash_table<ll, int, chash> h({},{},{},{}, {1 << 16});
 */
+}

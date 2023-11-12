@@ -23,6 +23,8 @@
 
 #define cmp(i,j) sgn(dir.perp().cross(poly[(i)%n]-poly[(j)%n]))
 #define extr(i) cmp(i + 1, i) >= 0 && cmp(i, i - 1 + n) < 0
+
+namespace kactl {
 template <class P> int extrVertex(vector<P>& poly, P dir) {
 	int n = len(poly), lo = 0, hi = n;
 	if (extr(0)) return 0;
@@ -59,4 +61,5 @@ array<int, 2> lineHull(P a, P b, vector<P>& poly) {
 			case 2: return {res[1], res[1]};
 		}
 	return res;
+}
 }

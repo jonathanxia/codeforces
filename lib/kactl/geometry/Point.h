@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 template <class T> int sgn(T x) { return (x > 0) - (x < 0); }
 template<class T>
 struct Point {
@@ -37,3 +38,4 @@ struct Point {
 	friend ostream& operator<<(ostream& os, P p) {
 		return os << "(" << p.x << "," << p.y << ")"; }
 };
+}

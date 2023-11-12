@@ -10,6 +10,7 @@
 
 #include <lib/kactl/number-theory/euclid.h>
 
+namespace kactl {
 const ll mod = 17; // change to something else
 struct Mod {
 	ll x;
@@ -28,3 +29,4 @@ struct Mod {
 		return e&1 ? *this * r : r;
 	}
 };
+}

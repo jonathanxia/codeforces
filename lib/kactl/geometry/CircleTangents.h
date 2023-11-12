@@ -14,6 +14,7 @@
 
 #include <lib/kactl/geometry/Point.h>
 
+namespace kactl {
 template<class P>
 vector<pair<P, P>> tangents(P c1, double r1, P c2, double r2) {
 	P d = c2 - c1;
@@ -26,4 +27,5 @@ vector<pair<P, P>> tangents(P c1, double r1, P c2, double r2) {
 	}
 	if (h2 == 0) out.pop_back();
 	return out;
+}
 }

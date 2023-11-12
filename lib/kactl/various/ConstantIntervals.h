@@ -11,6 +11,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 template<class F, class G, class T>
 void rec(int from, int to, F& f, G& g, int& i, T& p, T q) {
 	if (p == q) return;
@@ -29,4 +30,5 @@ void constantIntervals(int from, int to, F f, G g) {
 	int i = from; auto p = f(i), q = f(to-1);
 	rec(from, to-1, f, g, i, p, q);
 	g(i, to, q);
+}
 }

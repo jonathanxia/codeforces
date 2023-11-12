@@ -17,6 +17,7 @@ The circumcirle of a triangle is the circle intersecting all three vertices. ccR
 
 #include <lib/kactl/geometry/Point.h>
 
+namespace kactl {
 typedef Point<double> P;
 double ccRadius(const P& A, const P& B, const P& C) {
 	return (B-A).dist()*(C-B).dist()*(A-C).dist()/
@@ -25,4 +26,5 @@ double ccRadius(const P& A, const P& B, const P& C) {
 P ccCenter(const P& A, const P& B, const P& C) {
 	P b = C-A, c = B-A;
 	return A + (b*c.dist2()-c*b.dist2()).perp()/b.cross(c)/2;
+}
 }

@@ -14,6 +14,7 @@
 
 #include <lib/kactl/various/BumpAllocator.h>
 
+namespace kactl {
 const int inf = 1e9;
 struct Node {
 	Node *l = 0, *r = 0;
@@ -64,3 +65,4 @@ struct Node {
 			l->add(lo,hi,madd), r->add(lo,hi,madd), madd = 0;
 	}
 };
+}

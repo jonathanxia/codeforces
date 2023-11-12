@@ -15,6 +15,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 vi val, comp, z, cont;
 int Time, ncomps;
 template<class G, class F> int dfs(int j, G& g, F& f) {
@@ -38,4 +39,5 @@ template<class G, class F> void scc(G& g, F f) {
 	val.assign(n, 0); comp.assign(n, -1);
 	Time = ncomps = 0;
 	rep(i,0,n) if (comp[i] < 0) dfs(i, g, f);
+}
 }

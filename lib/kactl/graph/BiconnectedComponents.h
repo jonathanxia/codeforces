@@ -19,6 +19,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 vi num, st;
 vector<vector<pii>> ed;
 int Time;
@@ -51,4 +52,5 @@ template<class F>
 void bicomps(F f) {
 	num.assign(len(ed), 0);
 	rep(i,0,len(ed)) if (!num[i]) dfs(i, -1, f);
+}
 }

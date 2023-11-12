@@ -11,6 +11,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 const ll inf = LLONG_MAX;
 struct Ed { int a, b, w, s() { return a < b ? a : -a; }};
 struct Node { ll dist = inf; int prev = -1; };
@@ -33,4 +34,5 @@ void bellmanFord(vector<Node>& nodes, vector<Ed>& eds, int s) {
 		if (nodes[e.a].dist == -inf)
 			nodes[e.b].dist = -inf;
 	}
+}
 }

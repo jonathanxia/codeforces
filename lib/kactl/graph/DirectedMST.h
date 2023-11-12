@@ -13,6 +13,7 @@
 
 #include <lib/kactl/graph/../data-structures/UnionFindRollback.h>
 
+namespace kactl {
 struct Edge { int a, b; ll w; };
 struct Node { /// lazy skew heap node
 	Edge key;
@@ -72,4 +73,5 @@ pair<ll, vi> dmst(int n, int r, vector<Edge>& g) {
 	}
 	rep(i,0,n) par[i] = in[i].a;
 	return {res, par};
+}
 }

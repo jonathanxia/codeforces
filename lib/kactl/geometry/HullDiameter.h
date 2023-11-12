@@ -11,6 +11,7 @@
 #include <lib/common.h>
 #include <lib/kactl/geometry/Point.h>
 
+namespace kactl {
 typedef Point<ll> P;
 array<P, 2> hullDiameter(vector<P> S) {
 	int n = len(S), j = n < 2 ? 0 : 1;
@@ -22,4 +23,5 @@ array<P, 2> hullDiameter(vector<P> S) {
 				break;
 		}
 	return res.second;
+}
 }

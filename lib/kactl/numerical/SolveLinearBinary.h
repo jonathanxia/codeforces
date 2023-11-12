@@ -10,6 +10,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 typedef bitset<1000> bs;
 
 int solveLinear(vector<bs>& A, vi& b, bs& x, int m) {
@@ -43,4 +44,5 @@ int solveLinear(vector<bs>& A, vi& b, bs& x, int m) {
 		rep(j,0,i) b[j] ^= A[j][i];
 	}
 	return rank; // (multiple solutions if rank < m)
+}
 }

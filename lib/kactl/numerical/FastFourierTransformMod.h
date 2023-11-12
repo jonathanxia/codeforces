@@ -15,6 +15,7 @@
 
 #include <lib/kactl/numerical/FastFourierTransform.h>
 
+namespace kactl {
 typedef vector<ll> vl;
 template<int M> vl convMod(const vl &a, const vl &b) {
 	if (a.empty() || b.empty()) return {};
@@ -36,4 +37,5 @@ template<int M> vl convMod(const vl &a, const vl &b) {
 		res[i] = ((av % M * cut + bv) % M * cut + cv) % M;
 	}
 	return res;
+}
 }

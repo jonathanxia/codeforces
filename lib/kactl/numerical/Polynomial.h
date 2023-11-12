@@ -5,6 +5,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 struct Poly {
 	vector<double> a;
 	double operator()(double x) const {
@@ -22,3 +23,4 @@ struct Poly {
 		a.pop_back();
 	}
 };
+}

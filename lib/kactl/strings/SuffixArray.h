@@ -17,6 +17,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 struct SuffixArray {
 	vi sa, lcp;
 	SuffixArray(string& s, int lim=256) { // or basic_string<int>
@@ -40,3 +41,4 @@ struct SuffixArray {
 					s[i + k] == s[j + k]; k++);
 	}
 };
+}

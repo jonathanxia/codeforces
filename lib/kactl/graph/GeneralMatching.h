@@ -12,6 +12,7 @@
 
 #include <lib/kactl/graph/../numerical/MatrixInverse-mod.h>
 
+namespace kactl {
 vector<pii> generalMatching(int N, vector<pii>& ed) {
 	vector<vector<ll>> mat(N, vector<ll>(N)), A;
 	for (pii pa : ed) {
@@ -51,4 +52,5 @@ vector<pii> generalMatching(int N, vector<pii>& ed) {
 		}
 	}
 	return ret;
+}
 }

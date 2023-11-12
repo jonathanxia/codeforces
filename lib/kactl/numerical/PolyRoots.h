@@ -10,6 +10,7 @@
 
 #include <lib/kactl/numerical/Polynomial.h>
 
+namespace kactl {
 vector<double> polyRoots(Poly p, double xmin, double xmax) {
 	if (len(p.a) == 2) { return {-p.a[0]/p.a[1]}; }
 	vector<double> ret;
@@ -32,4 +33,5 @@ vector<double> polyRoots(Poly p, double xmin, double xmax) {
 		}
 	}
 	return ret;
+}
 }

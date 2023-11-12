@@ -10,9 +10,12 @@
  *  rmq.query(inclusive, exclusive);
  * Time: $O(|V| \log |V| + Q)$
  * Status: stress-tested
+ * 
+ * Um this is called a sparsetable
  */
 #include <lib/common.h>
 
+namespace kactl {
 template<class T>
 struct RMQ {
 	vector<vector<T>> jmp;
@@ -29,3 +32,4 @@ struct RMQ {
 		return min(jmp[dep][a], jmp[dep][b - (1 << dep)]);
 	}
 };
+}

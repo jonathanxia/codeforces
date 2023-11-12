@@ -11,6 +11,7 @@
 #include <lib/common.h>
 
 
+namespace kactl {
 struct PushRelabel {
 	struct Edge {
 		int dest, back;
@@ -59,3 +60,4 @@ struct PushRelabel {
 	}
 	bool leftOfMinCut(int a) { return H[a] >= len(g); }
 };
+}

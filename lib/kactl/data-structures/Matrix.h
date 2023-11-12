@@ -12,6 +12,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 template<class T, int N> struct Matrix {
 	typedef Matrix M;
 	array<array<T, N>, N> d{};
@@ -38,3 +39,4 @@ template<class T, int N> struct Matrix {
 		return a;
 	}
 };
+}

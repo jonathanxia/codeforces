@@ -18,6 +18,7 @@
 
 typedef Point<ll> P;
 
+namespace kactl {
 bool inHull(const vector<P>& l, P p, bool strict = true) {
 	int a = 1, b = len(l) - 1, r = !strict;
 	if (len(l) < 3) return r && onSegment(l[0], l.back(), p);
@@ -29,4 +30,5 @@ bool inHull(const vector<P>& l, P p, bool strict = true) {
 		(sideOf(l[0], l[c], p) > 0 ? b : a) = c;
 	}
 	return sgn(l[a].cross(l[b], p)) < r;
+}
 }

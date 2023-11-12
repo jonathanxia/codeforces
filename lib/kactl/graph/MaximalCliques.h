@@ -15,6 +15,7 @@
 /// degree, where degrees go down as nodes are removed.
 /// (mostly irrelevant given MaximumClique)
 
+namespace kactl {
 typedef bitset<128> B;
 template<class F>
 void cliques(vector<B>& eds, F f, B P = ~B(), B X={}, B R={}) {
@@ -26,4 +27,5 @@ void cliques(vector<B>& eds, F f, B P = ~B(), B X={}, B R={}) {
 		cliques(eds, f, P & eds[i], X & eds[i], R);
 		R[i] = P[i] = 0; X[i] = 1;
 	}
+}
 }

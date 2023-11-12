@@ -12,6 +12,7 @@
 
 #include <lib/kactl/geometry/Point3D.h>
 
+namespace kactl {
 typedef Point3D<double> P3;
 
 struct PR {
@@ -61,3 +62,4 @@ vector<F> hull3d(const vector<P3>& A) {
 		A[it.c] - A[it.a]).dot(it.q) <= 0) swap(it.c, it.b);
 	return FS;
 };
+}

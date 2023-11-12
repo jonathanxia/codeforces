@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 struct Dinic {
 	struct Edge {
 		int to, rev;
@@ -51,3 +52,4 @@ struct Dinic {
 	}
 	bool leftOfMinCut(int a) { return lvl[a] != 0; }
 };
+}

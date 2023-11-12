@@ -17,6 +17,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 struct TwoSat {
 	int N;
 	vector<vi> gr;
@@ -73,3 +74,4 @@ struct TwoSat {
 		return 1;
 	}
 };
+}

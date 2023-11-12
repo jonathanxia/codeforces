@@ -13,6 +13,7 @@
 #include <lib/kactl/geometry/Point.h>
 #include <lib/kactl/geometry/3dHull.h>
 
+namespace kactl {
 template<class P, class F>
 void delaunay(vector<P>& ps, F trifun) {
 	if (len(ps) == 3) { int d = (ps[0].cross(ps[1], ps[2]) < 0);
@@ -22,4 +23,5 @@ void delaunay(vector<P>& ps, F trifun) {
 	if (len(ps) > 3) for(auto t:hull3d(p3)) if ((p3[t.b]-p3[t.a]).
 			cross(p3[t.c]-p3[t.a]).dot(P3(0,0,1)) < 0)
 		trifun(t.a, t.c, t.b);
+}
 }

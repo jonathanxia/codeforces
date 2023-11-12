@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 pair<int, vi> globalMinCut(vector<vi> mat) {
 	pair<int, vi> best = {INT_MAX, {}};
 	int n = len(mat);
@@ -29,4 +30,5 @@ pair<int, vi> globalMinCut(vector<vi> mat) {
 		mat[0][t] = INT_MIN;
 	}
 	return best;
+}
 }

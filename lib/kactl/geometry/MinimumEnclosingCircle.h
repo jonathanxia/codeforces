@@ -11,6 +11,7 @@
 
 #include <lib/kactl/geometry/circumcircle.h>
 
+namespace kactl {
 pair<P, double> mec(vector<P> ps) {
 	shuffle(ALL(ps), mt19937(time(0)));
 	P o = ps[0];
@@ -27,4 +28,5 @@ pair<P, double> mec(vector<P> ps) {
 		}
 	}
 	return {o, r};
+}
 }

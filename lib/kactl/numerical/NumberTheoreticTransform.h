@@ -18,6 +18,7 @@
 
 #include <lib/kactl/numerical/../number-theory/ModPow.h>
 
+namespace kactl {
 const ll mod = (119 << 23) + 1, root = 62; // = 998244353
 // For p < 2^30 there is also e.g. 5 << 25, 7 << 26, 479 << 21
 // and 483 << 21 (same root). The last two are > 10^9.
@@ -50,4 +51,5 @@ vl conv(const vl &a, const vl &b) {
 	rep(i,0,n) out[-i & (n - 1)] = (ll)L[i] * R[i] % mod * inv % mod;
 	ntt(out);
 	return {out.begin(), out.begin() + s};
+}
 }

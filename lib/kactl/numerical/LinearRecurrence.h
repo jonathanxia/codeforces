@@ -14,6 +14,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 const ll mod = 5; /** exclude-line */
 
 typedef vector<ll> Poly;
@@ -41,4 +42,5 @@ ll linearRec(Poly S, Poly tr, ll k) {
 	ll res = 0;
 	rep(i,0,n) res = (res + pol[i + 1] * S[i]) % mod;
 	return res;
+}
 }

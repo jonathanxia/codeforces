@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 vi pi(const string& s) {
 	vi p(len(s));
 	rep(i,1,len(s)) {
@@ -24,4 +25,5 @@ vi match(const string& s, const string& pat) {
 	rep(i,len(p)-len(s),len(p))
 		if (p[i] == len(pat)) res.push_back(i - 2 * len(pat));
 	return res;
+}
 }

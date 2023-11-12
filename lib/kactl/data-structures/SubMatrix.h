@@ -12,6 +12,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 template<class T>
 struct SubMatrix {
 	vector<vector<T>> p;
@@ -25,3 +26,4 @@ struct SubMatrix {
 		return p[d][r] - p[d][l] - p[u][r] + p[u][l];
 	}
 };
+}

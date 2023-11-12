@@ -24,6 +24,7 @@ Products of three coordinates are used in intermediate steps so watch out for ov
 #include <lib/kactl/geometry/Point.h>
 #include <lib/kactl/OnSegment.h>
 
+namespace kactl {
 template<class P> vector<P> segInter(P a, P b, P c, P d) {
 	auto oa = c.cross(d, a), ob = c.cross(d, b),
 	     oc = a.cross(b, c), od = a.cross(b, d);
@@ -36,4 +37,5 @@ template<class P> vector<P> segInter(P a, P b, P c, P d) {
 	if (onSegment(a, b, c)) s.insert(c);
 	if (onSegment(a, b, d)) s.insert(d);
 	return {ALL(s)};
+}
 }

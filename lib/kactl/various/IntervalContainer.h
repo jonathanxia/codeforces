@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 set<pii>::iterator addInterval(set<pii>& is, int L, int R) {
 	if (L == R) return is.end();
 	auto it = is.lower_bound({L, R}), before = it;
@@ -31,4 +32,5 @@ void removeInterval(set<pii>& is, int L, int R) {
 	if (it->first == L) is.erase(it);
 	else (int&)it->second = L;
 	if (R != r2) is.emplace(R, r2);
+}
 }

@@ -14,6 +14,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 vi eulerWalk(vector<vector<pii>>& gr, int nedges, int src=0) {
 	int n = len(gr);
 	vi D(n), its(n), eu(nedges), ret, s = {src};
@@ -28,4 +29,5 @@ vi eulerWalk(vector<vector<pii>>& gr, int nedges, int src=0) {
 		}}
 	for (int x : D) if (x < 0 || len(ret) != nedges+1) return {};
 	return {ret.rbegin(), ret.rend()};
+}
 }

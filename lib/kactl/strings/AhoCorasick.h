@@ -17,6 +17,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 struct AhoCorasick {
 	enum {alpha = 26, first = 'A'}; // change this!
 	struct Node {
@@ -83,3 +84,4 @@ struct AhoCorasick {
 		return res;
 	}
 };
+}

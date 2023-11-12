@@ -13,6 +13,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 typedef unsigned long long ull;
 struct FastMod {
 	ull b, m;
@@ -21,3 +22,4 @@ struct FastMod {
 		return a - (ull)((__uint128_t(m) * a) >> 64) * b;
 	}
 };
+}

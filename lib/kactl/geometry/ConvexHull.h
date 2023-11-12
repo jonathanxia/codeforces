@@ -20,6 +20,7 @@ Points on the edge of the hull between two other points are not considered part 
 
 #include <lib/kactl/geometry/Point.h>
 
+namespace kactl {
 typedef Point<ll> P;
 vector<P> convexHull(vector<P> pts) {
 	if (len(pts) <= 1) return pts;
@@ -32,4 +33,5 @@ vector<P> convexHull(vector<P> pts) {
 			h[t++] = p;
 		}
 	return {h.begin(), h.begin() + t - (t == 2 && h[0] == h[1])};
+}
 }

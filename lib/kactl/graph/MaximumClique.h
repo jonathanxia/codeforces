@@ -10,6 +10,7 @@
  * faster for sparse graphs.
  * Status: stress-tested
  */
+namespace kactl {
 typedef vector<bitset<200>> vb;
 struct Maxclique {
 	double limit=0.025, pk=0;
@@ -59,3 +60,4 @@ struct Maxclique {
 		rep(i,0,len(e)) V.push_back({i});
 	}
 };
+}

@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 const int MAX_PR = 5'000'000;
 bitset<MAX_PR> isprime;
 vi eratosthenesSieve(int lim) {
@@ -19,4 +20,5 @@ vi eratosthenesSieve(int lim) {
 	vi pr;
 	rep(i,2,lim) if (isprime[i]) pr.push_back(i);
 	return pr;
+}
 }

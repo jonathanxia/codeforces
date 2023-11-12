@@ -11,6 +11,9 @@
  * Status: stress-tested for n <= 300
  */
 
+#include <lib/common.h>
+
+namespace kactl {
 struct Frac { ll p, q; };
 
 template<class F>
@@ -35,4 +38,5 @@ Frac fracBS(F f, ll N) {
 		A = B; B = !!adv;
 	}
 	return dir ? hi : lo;
+}
 }

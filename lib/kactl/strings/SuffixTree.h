@@ -13,6 +13,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 struct SuffixTree {
 	enum { N = 200010, ALPHA = 26 }; // N ~ 2*maxlen+10
 	int toi(char c) { return c - 'a'; }
@@ -63,3 +64,4 @@ struct SuffixTree {
 		return st.best;
 	}
 };
+}

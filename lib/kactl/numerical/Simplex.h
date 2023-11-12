@@ -15,6 +15,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 typedef double T; // long double, Rational, double + mod<P>...
 typedef vector<T> vd;
 typedef vector<vd> vvd;
@@ -83,3 +84,4 @@ struct LPSolver {
 		return ok ? D[m][n+1] : inf;
 	}
 };
+}

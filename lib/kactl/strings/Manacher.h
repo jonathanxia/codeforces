@@ -8,6 +8,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 array<vi, 2> manacher(const string& s) {
 	int n = len(s);
 	array<vi,2> p = {vi(n+1), vi(n)};
@@ -20,4 +21,5 @@ array<vi, 2> manacher(const string& s) {
 		if (R>r) l=L, r=R;
 	}
 	return p;
+}
 }

@@ -14,6 +14,7 @@
 
 #include <lib/kactl/graph/LCA.h>
 
+namespace kactl {
 typedef vector<pair<int, int>> vpi;
 vpi compressTree(LCA& lca, const vi& subset) {
 	static vi rev; rev.resize(len(lca.time));
@@ -34,4 +35,5 @@ vpi compressTree(LCA& lca, const vi& subset) {
 		ret.emplace_back(rev[lca.lca(a, b)], b);
 	}
 	return ret;
+}
 }

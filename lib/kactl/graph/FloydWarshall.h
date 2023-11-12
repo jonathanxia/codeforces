@@ -11,6 +11,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 const ll inf = 1LL << 62;
 void floydWarshALL(vector<vector<ll>>& m) {
 	int n = len(m);
@@ -22,4 +23,5 @@ void floydWarshALL(vector<vector<ll>>& m) {
 		}
 	rep(k,0,n) if (m[k][k] < 0) rep(i,0,n) rep(j,0,n)
 		if (m[i][k] != inf && m[k][j] != inf) m[i][j] = -inf;
+}
 }

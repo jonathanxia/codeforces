@@ -13,6 +13,7 @@
 
 #include <lib/kactl/geometry/Point.h>
 
+namespace kactl {
 template<class P>
 vector<P> circleLine(P c, double r, P a, P b) {
 	P ab = b - a, p = a + ab * (c-a).dot(ab) / ab.dist2();
@@ -21,4 +22,5 @@ vector<P> circleLine(P c, double r, P a, P b) {
 	if (h2 == 0) return {p};
 	P h = ab.unit() * sqrt(h2);
 	return {p - h, p + h};
+}
 }

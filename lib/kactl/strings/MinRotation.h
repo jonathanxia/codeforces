@@ -10,6 +10,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 int minRotation(string s) {
 	int a=0, N=len(s); s += s;
 	rep(b,0,N) rep(k,0,N) {
@@ -17,4 +18,5 @@ int minRotation(string s) {
 		if (s[a+k] > s[b+k]) { a = b; break; }
 	}
 	return a;
+}
 }

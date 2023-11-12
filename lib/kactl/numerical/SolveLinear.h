@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 typedef vector<double> vd;
 const double eps = 1e-12;
 
@@ -46,4 +47,5 @@ int solveLinear(vector<vd>& A, vd& b, vd& x) {
 		rep(j,0,i) b[j] -= A[j][i] * b[i];
 	}
 	return rank; // (multiple solutions if rank < m)
+}
 }

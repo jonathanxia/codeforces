@@ -14,6 +14,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 pair<int, vi> hungarian(const vector<vi> &a) {
 	if (a.empty()) return {0, {}};
 	int n = len(a) + 1, m = len(a[0]) + 1;
@@ -44,4 +45,5 @@ pair<int, vi> hungarian(const vector<vi> &a) {
 	}
 	rep(j,1,m) if (p[j]) ans[p[j] - 1] = j - 1;
 	return {-v[0], ans}; // min cost
+}
 }

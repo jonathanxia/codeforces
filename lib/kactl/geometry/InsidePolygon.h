@@ -18,6 +18,7 @@
 #include <lib/kactl/geometry/OnSegment.h>
 #include <lib/kactl/geometry/SegmentDistance.h>
 
+namespace kactl {
 template<class P>
 bool inPolygon(vector<P> &p, P a, bool strict = true) {
 	int cnt = 0, n = len(p);
@@ -28,4 +29,5 @@ bool inPolygon(vector<P> &p, P a, bool strict = true) {
 		cnt ^= ((a.y<p[i].y) - (a.y<q.y)) * a.cross(p[i], q) > 0;
 	}
 	return cnt;
+}
 }

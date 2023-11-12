@@ -17,6 +17,7 @@
 
 #include <lib/kactl/graph/../data-structures/LazySegmentTree.h>
 
+namespace kactl {
 template <bool VALS_EDGES> struct HLD {
 	int N, tim = 0;
 	vector<vi> adj;
@@ -63,3 +64,4 @@ template <bool VALS_EDGES> struct HLD {
 		return tree->query(pos[v] + VALS_EDGES, pos[v] + siz[v]);
 	}
 };
+}

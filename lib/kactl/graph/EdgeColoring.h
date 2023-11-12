@@ -13,6 +13,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 vi edgeColoring(int N, vector<pii> eds) {
 	vi cc(N + 1), ret(len(eds)), fan(N), free(N), loc;
 	for (pii e : eds) ++cc[e.first], ++cc[e.second];
@@ -43,4 +44,5 @@ vi edgeColoring(int N, vector<pii> eds) {
 	rep(i,0,len(eds))
 		for (tie(u, v) = eds[i]; adj[u][ret[i]] != v;) ++ret[i];
 	return ret;
+}
 }

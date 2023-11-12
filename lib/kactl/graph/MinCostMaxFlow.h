@@ -12,6 +12,7 @@
 
 // #include <bits/extc++.h> /// include-line, keep-include
 
+namespace kactl {
 const ll INF = numeric_limits<ll>::max() / 4;
 typedef vector<ll> VL;
 
@@ -91,3 +92,4 @@ struct MCMF {
 		assert(it >= 0); // negative cost cycle
 	}
 };
+}

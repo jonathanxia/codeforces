@@ -12,6 +12,7 @@
 
 #include <lib/kactl/number-theory/ModMulLL.h>
 
+namespace kactl {
 bool isPrime(ull n) {
 	if (n < 2 || n % 6 % 4 != 1) return (n | 1) == 3;
 	ull A[] = {2, 325, 9375, 28178, 450775, 9780504, 1795265022},
@@ -23,4 +24,5 @@ bool isPrime(ull n) {
 		if (p != n-1 && i != s) return 0;
 	}
 	return 1;
+}
 }

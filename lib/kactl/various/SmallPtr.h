@@ -10,6 +10,7 @@
 
 #include <lib/kactl/various/BumpAllocator.h>
 
+namespace kactl {
 template<class T> struct ptr {
 	unsigned ind;
 	ptr(T* p = 0) : ind(p ? unsigned((char*)p - buf) : 0) {
@@ -20,3 +21,4 @@ template<class T> struct ptr {
 	T& operator[](int a) const { return (&**this)[a]; }
 	explicit operator bool() const { return ind; }
 };
+}

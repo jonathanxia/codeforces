@@ -11,6 +11,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 struct RollbackUF {
 	vi e; vector<pii> st;
 	RollbackUF(int n) : e(n, -1) {}
@@ -32,3 +33,4 @@ struct RollbackUF {
 		return true;
 	}
 };
+}

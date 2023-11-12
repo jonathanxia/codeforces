@@ -22,6 +22,7 @@
 #include <lib/kactl/geometry/Point.h>
 #include <lib/kactl/lineIntersection.h>
 
+namespace kactl {
 typedef Point<double> P;
 vector<P> polygonCut(const vector<P>& poly, P s, P e) {
 	vector<P> res;
@@ -34,4 +35,5 @@ vector<P> polygonCut(const vector<P>& poly, P s, P e) {
 			res.push_back(cur);
 	}
 	return res;
+}
 }

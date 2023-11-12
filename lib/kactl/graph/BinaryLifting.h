@@ -11,6 +11,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 vector<vi> treeJump(vi& P){
 	int on = 1, d = 1;
 	while(on < len(P)) on *= 2, d++;
@@ -35,4 +36,5 @@ int lca(vector<vi>& tbl, vi& depth, int a, int b) {
 		if (c != d) a = c, b = d;
 	}
 	return tbl[0][a];
+}
 }

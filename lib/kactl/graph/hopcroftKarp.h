@@ -14,6 +14,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 bool dfs(int a, int L, vector<vi>& g, vi& btoa, vi& A, vi& B) {
 	if (A[a] != L) return 0;
 	A[a] = -1;
@@ -58,4 +59,5 @@ int hopcroftKarp(vector<vi>& g, vi& btoa) {
 		rep(a,0,len(g))
 			res += dfs(a, 0, g, btoa, A, B);
 	}
+}
 }

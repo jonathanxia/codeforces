@@ -11,6 +11,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 vi topoSort(const vector<vi>& gr) {
 	vi indeg(len(gr)), ret;
 	for (auto& li : gr) for (int x : li) indeg[x]++;
@@ -24,4 +25,5 @@ vi topoSort(const vector<vi>& gr) {
 			if (--indeg[x] == 0) q.push(x);
 	}
 	return ret;
+}
 }

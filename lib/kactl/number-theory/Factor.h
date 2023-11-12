@@ -42,6 +42,7 @@
 #include <lib/kactl/number-theory/ModMulLL.h>
 #include <lib/kactl/number-theory/MillerRabin.h>
 
+namespace kactl {
 ull pollard(ull n) {
 	auto f = [n](ull x) { return modmul(x, x, n) + 1; };
 	ull x = 0, y = 0, t = 30, prd = 2, i = 1, q;
@@ -59,4 +60,5 @@ vector<ull> factor(ull n) {
 	auto l = factor(x), r = factor(n / x);
 	l.insert(l.end(), ALL(r));
 	return l;
+}
 }

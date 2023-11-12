@@ -13,6 +13,7 @@
 #include <lib/common.h>
 #include <lib/kactl/geometry/Point.h>
 
+namespace kactl {
 typedef Point<int> P;
 vector<array<int, 3>> manhattanMST(vector<P> ps) {
 	vi id(len(ps));
@@ -35,4 +36,5 @@ vector<array<int, 3>> manhattanMST(vector<P> ps) {
 		for (P& p : ps) if (k & 1) p.x = -p.x; else swap(p.x, p.y);
 	}
 	return edges;
+}
 }

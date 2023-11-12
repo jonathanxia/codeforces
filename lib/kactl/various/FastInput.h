@@ -10,6 +10,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 inline char gc() { // like getchar()
 	static char buf[1 << 16];
 	static size_t bc, be;
@@ -26,4 +27,5 @@ int readInt() {
 	if (a == '-') return -readInt();
 	while ((c = gc()) >= 48) a = a * 10 + c - 480;
 	return a - 48;
+}
 }

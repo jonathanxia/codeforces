@@ -8,6 +8,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 struct DP { // Modify at will:
 	int lo(int ind) { return 0; }
 	int hi(int ind) { return ind; }
@@ -26,3 +27,4 @@ struct DP { // Modify at will:
 	}
 	void solve(int L, int R) { rec(L, R, INT_MIN, INT_MAX); }
 };
+}

@@ -11,6 +11,7 @@
 
 #include <lib/kactl/geometry/Point.h>
 
+namespace kactl {
 typedef Point<double> P;
 P polygonCenter(const vector<P>& v) {
 	P res(0, 0); double A = 0;
@@ -19,4 +20,5 @@ P polygonCenter(const vector<P>& v) {
 		A += v[j].cross(v[i]);
 	}
 	return res / A / 3;
+}
 }

@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 double det(vector<vector<double>>& a) {
 	int n = len(a); double res = 1;
 	rep(i,0,n) {
@@ -23,4 +24,5 @@ double det(vector<vector<double>>& a) {
 		}
 	}
 	return res;
+}
 }

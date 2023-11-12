@@ -8,6 +8,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 typedef array<double, 2> P;
 
 template<class F> pair<double, P> hillClimb(P start, F f) {
@@ -21,4 +22,5 @@ template<class F> pair<double, P> hillClimb(P start, F f) {
 		}
 	}
 	return cur;
+}
 }

@@ -10,6 +10,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 int matInv(vector<vector<double>>& A) {
 	int n = len(A); vi col(n);
 	vector<vector<double>> tmp(n, vector<double>(n));
@@ -45,4 +46,5 @@ int matInv(vector<vector<double>>& A) {
 
 	rep(i,0,n) rep(j,0,n) A[col[i]][col[j]] = tmp[i][j];
 	return n;
+}
 }

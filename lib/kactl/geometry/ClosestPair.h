@@ -11,6 +11,7 @@
 
 #include <lib/kactl/geometry/Point.h>
 
+namespace kactl {
 typedef Point<ll> P;
 pair<P, P> closest(vector<P> v) {
 	assert(len(v) > 1);
@@ -27,4 +28,5 @@ pair<P, P> closest(vector<P> v) {
 		S.insert(p);
 	}
 	return ret.second;
+}
 }

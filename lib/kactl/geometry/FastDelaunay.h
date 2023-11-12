@@ -16,6 +16,7 @@
 
 #include <lib/kactl/geometry/Point.h>
 
+namespace kactl {
 typedef Point<ll> P;
 typedef struct Quad* Q;
 typedef __int128_t lll; // (can be ll if coords are < 2e4)
@@ -103,4 +104,5 @@ vector<P> triangulate(vector<P> pts) {
 	ADD; pts.clear();
 	while (qi < len(q)) if (!(e = q[qi++])->mark) ADD;
 	return pts;
+}
 }

@@ -14,6 +14,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 bool find(int j, vector<vi>& g, vi& btoa, vi& vis) {
 	if (btoa[j] == -1) return 1;
 	vis[j] = 1; int di = btoa[j];
@@ -35,4 +36,5 @@ int dfsMatching(vector<vi>& g, vi& btoa) {
 			}
 	}
 	return len(btoa) - (int)count(ALL(btoa), -1);
+}
 }

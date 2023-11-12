@@ -10,6 +10,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 struct Node {
 	Node *l = 0, *r = 0;
 	int val, y, c = 1;
@@ -64,4 +65,5 @@ void move(Node*& t, int l, int r, int k) {
 	tie(a,b) = split(t, l); tie(b,c) = split(b, r - l);
 	if (k <= l) t = merge(ins(a, b, k), c);
 	else t = merge(a, ins(c, b, k - r));
+}
 }

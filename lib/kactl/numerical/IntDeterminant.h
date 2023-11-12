@@ -9,6 +9,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 const ll mod = 12345;
 ll det(vector<vector<ll>>& a) {
 	int n = len(a); ll ans = 1;
@@ -26,4 +27,5 @@ ll det(vector<vector<ll>>& a) {
 		if (!ans) return 0;
 	}
 	return (ans + mod) % mod;
+}
 }

@@ -16,6 +16,7 @@
 
 #include <lib/kactl/numerical/../number-theory/ModPow.h>
 
+namespace kactl {
 vector<ll> berlekampMassey(vector<ll> s) {
 	int n = len(s), L = 0, m = 0;
 	vector<ll> C(n), B(n), T;
@@ -35,4 +36,5 @@ vector<ll> berlekampMassey(vector<ll> s) {
 	C.resize(L + 1); C.erase(C.begin());
 	for (ll& x : C) x = (mod - x) % mod;
 	return C;
+}
 }

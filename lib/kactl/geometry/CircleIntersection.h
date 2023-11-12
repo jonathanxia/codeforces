@@ -9,6 +9,7 @@
 
 #include <lib/kactl/geometry/Point.h>
 
+namespace kactl {
 typedef Point<double> P;
 bool circleInter(P a,P b,double r1,double r2,pair<P, P>* out) {
 	if (a == b) { assert(r1 != r2); return false; }
@@ -19,4 +20,5 @@ bool circleInter(P a,P b,double r1,double r2,pair<P, P>* out) {
 	P mid = a + vec*p, per = vec.perp() * sqrt(fmax(0, h2) / d2);
 	*out = {mid + per, mid - per};
 	return true;
+}
 }

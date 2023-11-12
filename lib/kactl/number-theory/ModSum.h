@@ -12,6 +12,7 @@
  */
 #include <lib/common.h>
 
+namespace kactl {
 typedef unsigned long long ull;
 ull sumsq(ull to) { return to / 2 * ((to-1) | 1); }
 /// ^ written in a weird way to deal with overflows correctly
@@ -28,4 +29,5 @@ ll modsum(ull to, ll c, ll k, ll m) {
 	c = ((c % m) + m) % m;
 	k = ((k % m) + m) % m;
 	return to * c + k * sumsq(to) - m * divsum(to, c, k, m);
+}
 }

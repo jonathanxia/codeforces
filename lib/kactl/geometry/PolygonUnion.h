@@ -14,6 +14,7 @@
 #include <lib/kactl/geometry/Point.h>
 #include <lib/kactl/geometry/sideOf.h>
 
+namespace kactl {
 typedef Point<double> P;
 double rat(P a, P b) { return sgn(b.x) ? a.x/b.x : a.y/b.y; }
 double polyUnion(vector<vector<P>>& poly) {
@@ -46,4 +47,5 @@ double polyUnion(vector<vector<P>>& poly) {
 		ret += A.cross(B) * sum;
 	}
 	return ret / 2;
+}
 }
