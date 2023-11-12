@@ -62,12 +62,6 @@ inline ll len(const T& v)
     return ll(v.size());
 }
 
-template <typename T>
-inline ll sz(const T& v)
-{
-    return ll(v.size());
-}
-
 #define to_str to_string
 #define pb push_back
 #define eb emplace_back
