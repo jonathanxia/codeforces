@@ -9,7 +9,7 @@
  * Time: O(k\log\frac{n}{k})
  * Status: tested
  */
-#pragma once
+#include <lib/common.h>
 
 template<class F, class G, class T>
 void rec(int from, int to, F& f, G& g, int& i, T& p, T q) {

@@ -7,9 +7,9 @@
  *  the complement is a maximum independent set.
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "DFSMatching.h"
+#include <lib/kactl/graph/DFSMatching.h>
 
 vi cover(vector<vi>& g, int n, int m) {
 	vi match(m, -1);

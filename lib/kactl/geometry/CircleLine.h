@@ -9,9 +9,9 @@
  * Status: unit tested
  */
 
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 template<class P>
 vector<P> circleLine(P c, double r, P a, P b) {

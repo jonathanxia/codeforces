@@ -10,7 +10,7 @@
  *  vec = (A^N) * vec;
  * Status: tested
  */
-#pragma once
+#include <lib/common.h>
 
 template<class T, int N> struct Matrix {
 	typedef Matrix M;

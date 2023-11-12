@@ -3,7 +3,7 @@
  * Date: 2003-03-16
  * Description:
  */
-#pragma once
+#include <lib/common.h>
 
 struct Poly {
 	vector<double> a;

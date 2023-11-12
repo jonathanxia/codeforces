@@ -10,9 +10,9 @@
  * Usage: Node* tr = new Node(v, 0, len(v));
  * Status: stress-tested a bit
  */
-#pragma once
+#include <lib/common.h>
 
-#include "../various/BumpAllocator.h"
+#include <lib/kactl/various/BumpAllocator.h>
 
 const int inf = 1e9;
 struct Node {

@@ -11,7 +11,7 @@
  * Time: O(NM)
  * Status: stress-tested, tested on kattis:gamescheduling
  */
-#pragma once
+#include <lib/common.h>
 
 vi edgeColoring(int N, vector<pii> eds) {
 	vi cc(N + 1), ret(len(eds)), fan(N), free(N), loc;

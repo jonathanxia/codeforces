@@ -9,9 +9,9 @@
  * Time: O(n^3)
  * Status: Slightly tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "../number-theory/ModPow.h"
+#include <lib/kactl/numerical/../number-theory/ModPow.h>
 
 int matInv(vector<vector<ll>>& A) {
 	int n = len(A); vi col(n);

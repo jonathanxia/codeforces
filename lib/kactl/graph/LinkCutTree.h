@@ -8,7 +8,7 @@
  * Time: All operations take amortized O(\log N).
  * Status: Stress-tested a bit for N <= 20
  */
-#pragma once
+#include <lib/common.h>
 
 struct Node { // Splay tree. Root's pp contains tree's parent.
 	Node *p = 0, *pp = 0, *c[2];

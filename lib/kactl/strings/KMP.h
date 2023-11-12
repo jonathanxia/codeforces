@@ -7,7 +7,7 @@
  * Time: O(n)
  * Status: Tested on kattis:stringmatching
  */
-#pragma once
+#include <lib/common.h>
 
 vi pi(const string& s) {
 	vi p(len(s));

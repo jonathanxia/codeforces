@@ -13,7 +13,7 @@
  * Time: O(E + V)
  * Status: Bruteforce-tested for N <= 5
  */
-#pragma once
+#include <lib/common.h>
 
 vi val, comp, z, cont;
 int Time, ncomps;

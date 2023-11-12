@@ -10,9 +10,9 @@
  * for overflow.
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 template<class P>
 P lineProj(P a, P b, P p, bool refl=false) {

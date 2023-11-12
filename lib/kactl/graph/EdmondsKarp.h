@@ -7,7 +7,7 @@
  * capacities before and after, and take the positive values only.
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 template<class T> T edmondsKarp(vector<unordered_map<int, T>>& graph, int source, int sink) {
 	assert(source != sink);

@@ -37,10 +37,10 @@
  * - t starts off as 30 to make the first gcd check come earlier, as an
  *   optimization for small numbers.
  */
-#pragma once
+#include <lib/common.h>
 
-#include "ModMulLL.h"
-#include "MillerRabin.h"
+#include <lib/kactl/number-theory/ModMulLL.h>
+#include <lib/kactl/number-theory/MillerRabin.h>
 
 ull pollard(ull n) {
 	auto f = [n](ull x) { return modmul(x, x, n) + 1; };

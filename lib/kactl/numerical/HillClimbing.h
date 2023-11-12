@@ -6,7 +6,7 @@
  * Description: Poor man's optimization for unimodal functions.
  * Status: used with great success
  */
-#pragma once
+#include <lib/common.h>
 
 typedef array<double, 2> P;
 

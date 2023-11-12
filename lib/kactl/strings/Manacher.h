@@ -6,7 +6,7 @@
  * Time: O(N)
  * Status: Stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 array<vi, 2> manacher(const string& s) {
 	int n = len(s);

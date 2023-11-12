@@ -12,7 +12,7 @@
  * Time: O(\sqrt{V}E)
  * Status: stress-tested by MinimumVertexCover, and tested on oldkattis.adkbipmatch and SPOJ:MATCHING
  */
-#pragma once
+#include <lib/common.h>
 
 bool dfs(int a, int L, vector<vi>& g, vi& btoa, vi& A, vi& B) {
 	if (A[a] != L) return 0;

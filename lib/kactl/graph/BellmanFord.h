@@ -9,7 +9,7 @@
  * Time: O(VE)
  * Status: Tested on kattis:shortestpath3
  */
-#pragma once
+#include <lib/common.h>
 
 const ll inf = LLONG_MAX;
 struct Ed { int a, b, w, s() { return a < b ? a : -a; }};

@@ -16,9 +16,9 @@ Returns the shortest distance between point p and the line segment from point s 
  * 	bool onSegment = segDist(a,b,p) < 1e-10;
  * Status: tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 typedef Point<double> P;
 double segDist(P& s, P& e, P& p) {

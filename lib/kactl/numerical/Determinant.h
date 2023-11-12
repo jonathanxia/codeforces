@@ -7,7 +7,7 @@
  * Time: $O(N^3)$
  * Status: somewhat tested
  */
-#pragma once
+#include <lib/common.h>
 
 double det(vector<vector<double>>& a) {
 	int n = len(a); double res = 1;

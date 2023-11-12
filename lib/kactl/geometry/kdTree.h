@@ -5,9 +5,9 @@
  * Description: KD-tree (2d, can be extended to 3d)
  * Status: Tested on excellentengineers
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 typedef long long T;
 typedef Point<T> P;

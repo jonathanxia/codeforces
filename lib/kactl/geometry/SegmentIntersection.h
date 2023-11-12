@@ -19,10 +19,10 @@ Products of three coordinates are used in intermediate steps so watch out for ov
  *   cout << "segments intersect at " << inter[0] << endl;
  * Status: stress-tested, tested on kattis:intersection
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
-#include "OnSegment.h"
+#include <lib/kactl/geometry/Point.h>
+#include <lib/kactl/OnSegment.h>
 
 template<class P> vector<P> segInter(P a, P b, P c, P d) {
 	auto oa = c.cross(d, a), ob = c.cross(d, b),

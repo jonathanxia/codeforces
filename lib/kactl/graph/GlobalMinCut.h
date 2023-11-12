@@ -7,7 +7,7 @@
  * Time: O(V^3)
  * Status: Stress-tested together with GomoryHu
  */
-#pragma once
+#include <lib/common.h>
 
 pair<int, vi> globalMinCut(vector<vi> mat) {
 	pair<int, vi> best = {INT_MAX, {}};

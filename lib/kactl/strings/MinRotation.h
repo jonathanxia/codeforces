@@ -8,7 +8,7 @@
  *  rotate(v.begin(), v.begin()+minRotation(v), v.end());
  * Status: Stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 int minRotation(string s) {
 	int a=0, N=len(s); s += s;

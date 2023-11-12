@@ -11,9 +11,9 @@
  * Details: An in-depth examination of precision for both FFT and FFTMod can be found
  * here (https://github.com/simonlindholm/fft-precision/blob/master/fft-precision.md)
  */
-#pragma once
+#include <lib/common.h>
 
-#include "FastFourierTransform.h"
+#include <lib/kactl/numerical/FastFourierTransform.h>
 
 typedef vector<ll> vl;
 template<int M> vl convMod(const vl &a, const vl &b) {

@@ -8,7 +8,7 @@
  * To get a map, change \texttt{null\_type}.
  * Time: O(\log N)
  */
-#pragma once
+#include <lib/common.h>
 
 #include <bits/extc++.h> /** keep-include */
 using namespace __gnu_pbds;

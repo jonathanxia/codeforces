@@ -7,7 +7,7 @@
  * Time: O(N \log N)
  * Status: Tested on kattis:intervalcover
  */
-#pragma once
+#include <lib/common.h>
 
 template<class T>
 vi cover(pair<T, T> G, vector<pair<T, T>> I) {

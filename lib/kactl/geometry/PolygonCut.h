@@ -17,10 +17,10 @@
  * 	p = polygonCut(p, P(0,0), P(1,0));
  * Status: tested but not extensively
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
-#include "lineIntersection.h"
+#include <lib/kactl/geometry/Point.h>
+#include <lib/kactl/lineIntersection.h>
 
 typedef Point<double> P;
 vector<P> polygonCut(const vector<P>& poly, P s, P e) {

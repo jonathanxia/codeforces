@@ -9,7 +9,7 @@
  * Time: $O(|V|+|E|)$
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 vi topoSort(const vector<vi>& gr) {
 	vi indeg(len(gr)), ret;

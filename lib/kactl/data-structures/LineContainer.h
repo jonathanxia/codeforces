@@ -8,7 +8,7 @@
  * Time: O(\log N)
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 struct Line {
 	mutable ll k, m, p;

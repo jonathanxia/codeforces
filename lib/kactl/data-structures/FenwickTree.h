@@ -8,7 +8,7 @@
  * Time: Both operations are $O(\log N)$.
  * Status: Stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 struct FT {
 	vector<ll> s;

@@ -9,7 +9,7 @@
  * Time: O(N^3)
  * Status: slightly tested
  */
-#pragma once
+#include <lib/common.h>
 
 const ll inf = 1LL << 62;
 void floydWarshALL(vector<vector<ll>>& m) {

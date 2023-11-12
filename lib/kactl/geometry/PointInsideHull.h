@@ -10,11 +10,11 @@
  * Status: stress-tested
  * Time: O(\log N)
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
-#include "sideOf.h"
-#include "OnSegment.h"
+#include <lib/kactl/geometry/Point.h>
+#include <lib/kactl/geometry/sideOf.h>
+#include <lib/kactl/geometry/OnSegment.h>
 
 typedef Point<ll> P;
 

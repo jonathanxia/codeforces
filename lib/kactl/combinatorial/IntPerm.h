@@ -6,7 +6,7 @@
  * Integer -> permutation can use a lookup table.
  * Time: O(n)
  */
-#pragma once
+#include <lib/common.h>
 
 int permToInt(vi& v) {
 	int use = 0, i = 0, r = 0;

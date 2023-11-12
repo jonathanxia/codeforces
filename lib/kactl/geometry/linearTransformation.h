@@ -14,9 +14,9 @@
 \end{minipage}
  * Status: not tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 typedef Point<double> P;
 P linearTransformation(const P& p0, const P& p1,

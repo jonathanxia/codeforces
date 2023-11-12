@@ -9,9 +9,9 @@
  * Time: $O(N \log N + Q)$
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "../data-structures/RMQ.h"
+#include <lib/kactl/graph/../data-structures/RMQ.h>
 
 struct LCA {
 	int T = 0;

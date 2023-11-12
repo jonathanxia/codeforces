@@ -10,7 +10,7 @@
  * Time: O(N^2 + Q)
  * Status: Tested on Kattis
  */
-#pragma once
+#include <lib/common.h>
 
 template<class T>
 struct SubMatrix {

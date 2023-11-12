@@ -4,7 +4,7 @@
  * Description: Magic formula for the volume of a polyhedron. Faces should point outwards.
  * Status: tested
  */
-#pragma once
+#include <lib/common.h>
 
 template<class V, class L>
 double signedPolyVolume(const V& p, const L& trilist) {

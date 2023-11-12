@@ -5,9 +5,9 @@
  * Description: Computes the pair of points at which two circles intersect. Returns false in case of no intersection.
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 typedef Point<double> P;
 bool circleInter(P a,P b,double r1,double r2,pair<P, P>* out) {

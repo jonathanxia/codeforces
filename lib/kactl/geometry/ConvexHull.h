@@ -16,9 +16,9 @@ Points on the edge of the hull between two other points are not considered part 
  * Time: O(n \log n)
  * Status: stress-tested, tested with kattis:convexhull
 */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 typedef Point<ll> P;
 vector<P> convexHull(vector<P> pts) {

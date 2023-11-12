@@ -5,7 +5,7 @@
  * Time: O(n)
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 vi Z(const string& S) {
 	vi z(len(S));

@@ -10,9 +10,9 @@
  * Time: $\log(n)$
  * Status: Works
  */
-#pragma once
+#include <lib/common.h>
 
-#include "euclid.h"
+#include <lib/kactl/number-theory/euclid.h>
 
 ll crt(ll a, ll m, ll b, ll n) {
 	if (n > m) swap(a, b), swap(m, n);

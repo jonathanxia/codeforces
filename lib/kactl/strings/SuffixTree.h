@@ -11,7 +11,7 @@
  * Time: $O(26N)$
  * Status: stress-tested a bit
  */
-#pragma once
+#include <lib/common.h>
 
 struct SuffixTree {
 	enum { N = 200010, ALPHA = 26 }; // N ~ 2*maxlen+10

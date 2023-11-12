@@ -11,7 +11,7 @@
  * Time: $O(|V| \log |V| + Q)$
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 template<class T>
 struct RMQ {

@@ -19,9 +19,9 @@ Products of three coordinates are used in intermediate steps so watch out for ov
  * 		cout << "intersection point at " << res.second << endl;
  * Status: stress-tested, and tested through half-plane tests
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 template<class P>
 pair<int, P> lineInter(P s1, P e1, P s2, P e2) {

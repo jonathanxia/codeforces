@@ -6,9 +6,9 @@
  * Description: To get all uniquely determined values of $x$ back from SolveLinear, make the following changes:
  * Status: tested on kattis:equationsolverplus, stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "SolveLinear.h"
+#include <lib/kactl/numerical/SolveLinear.h>
 
 rep(j,0,n) if (j != i) // instead of rep(j,i+1,n)
 // ... then at the end:

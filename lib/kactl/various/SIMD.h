@@ -10,10 +10,10 @@
  * If AVX is unsupported, try 128-bit operations, "emmintrin.h" and \#define \texttt{\_\_SSE\_\_} and \texttt{\_\_MMX\_\_} before including it.
  * For aligned memory use \texttt{\_mm\_malloc(size, 32)} or \texttt{int buf[N] alignas(32)}, but prefer loadu/storeu.
  */
-#pragma once
+#include <lib/common.h>
 
 #pragma GCC target ("avx2") // or sse4.1
-#include "immintrin.h" /** keep-include */
+#include <lib/kactl/various/immintrin.h> /** keep-include */
 
 typedef __m256i mi;
 #define L(x) _mm256_loadu_si256((mi*)&(x))

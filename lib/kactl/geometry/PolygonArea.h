@@ -7,9 +7,9 @@
  *  Clockwise enumeration gives negative area. Watch out for overflow if using int as T!
  * Status: Stress-tested and tested on kattis:polygonarea
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 template<class T>
 T polygonArea2(vector<Point<T>>& v) {

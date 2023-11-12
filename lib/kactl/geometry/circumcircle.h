@@ -13,9 +13,9 @@ The circumcirle of a triangle is the circle intersecting all three vertices. ccR
 \end{minipage}
  * Status: tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 typedef Point<double> P;
 double ccRadius(const P& A, const P& B, const P& C) {

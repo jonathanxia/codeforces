@@ -8,7 +8,7 @@
  * Time: O(n^3)
  * Status: Slightly tested
  */
-#pragma once
+#include <lib/common.h>
 
 int matInv(vector<vector<double>>& A) {
 	int n = len(A); vi col(n);

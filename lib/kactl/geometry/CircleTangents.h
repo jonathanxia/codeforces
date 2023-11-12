@@ -10,9 +10,9 @@
  * To find the tangents of a circle with a point set r2 to 0.
  * Status: tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 template<class P>
 vector<pair<P, P>> tangents(P c1, double r1, P c2, double r2) {

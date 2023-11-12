@@ -13,9 +13,9 @@
  * Time: O((\log N)^2)
  * Status: stress-tested against old HLD
  */
-#pragma once
+#include <lib/common.h>
 
-#include "../data-structures/LazySegmentTree.h"
+#include <lib/kactl/graph/../data-structures/LazySegmentTree.h>
 
 template <bool VALS_EDGES> struct HLD {
 	int N, tim = 0;

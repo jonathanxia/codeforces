@@ -8,9 +8,9 @@
  * Time: O(n^2)
  * Status: tested on SPOJ CH3D
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point3D.h"
+#include <lib/kactl/geometry/Point3D.h>
 
 typedef Point3D<double> P3;
 

@@ -8,7 +8,7 @@
  * Time: About 5x as fast as cin/scanf.
  * Status: tested on SPOJ INTEST, unit tested
  */
-#pragma once
+#include <lib/common.h>
 
 inline char gc() { // like getchar()
 	static char buf[1 << 16];

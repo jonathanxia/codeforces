@@ -12,7 +12,7 @@
  * Time: O(V + E)
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 vi eulerWalk(vector<vector<pii>>& gr, int nedges, int src=0) {
 	int n = len(gr);

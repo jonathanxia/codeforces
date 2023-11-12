@@ -12,7 +12,7 @@
  * Time: O(N^2M)
  * Status: Tested on kattis:cordonbleu, stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 pair<int, vi> hungarian(const vector<vi> &a) {
 	if (a.empty()) return {0, {}};

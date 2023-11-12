@@ -10,9 +10,9 @@
  * Time: $O(|S| \log |S|)$
  * Status: Tested at CodeForces
  */
-#pragma once
+#include <lib/common.h>
 
-#include "LCA.h"
+#include <lib/kactl/graph/LCA.h>
 
 typedef vector<pair<int, int>> vpi;
 vpi compressTree(LCA& lca, const vi& subset) {

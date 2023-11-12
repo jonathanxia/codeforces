@@ -17,7 +17,7 @@
  * Details: An in-depth examination of precision for both FFT and FFTMod can be found
  * here (https://github.com/simonlindholm/fft-precision/blob/master/fft-precision.md)
  */
-#pragma once
+#include <lib/common.h>
 
 typedef complex<double> C;
 typedef vector<double> vd;

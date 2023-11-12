@@ -6,7 +6,7 @@
  * Description: Disjoint-set data structure.
  * Time: $O(\alpha(N))$
  */
-#pragma once
+#include <lib/common.h>
 
 struct UF {
 	vi e;

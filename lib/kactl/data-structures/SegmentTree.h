@@ -7,7 +7,7 @@
  * Time: O(\log N)
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 struct Tree {
 	typedef int T;

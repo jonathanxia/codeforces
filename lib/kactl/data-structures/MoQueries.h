@@ -9,7 +9,7 @@
  * Time: O(N \sqrt Q)
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 void add(int ind, int end) { ... } // add a[ind] (end = 0 or 1)
 void del(int ind, int end) { ... } // remove a[ind]

@@ -9,7 +9,7 @@
  * Time: construction $O(N \log N)$, queries $O(\log N)$
  * Status: Tested at Petrozavodsk, also stress-tested via LCA.cpp
  */
-#pragma once
+#include <lib/common.h>
 
 vector<vi> treeJump(vi& P){
 	int on = 1, d = 1;

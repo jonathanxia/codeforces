@@ -8,8 +8,8 @@
  * Status: stress-tested, tested on kattis:roberthood
  * Time: O(n)
  */
-#pragma once
-#include "Point.h"
+#include <lib/common.h>
+#include <lib/kactl/geometry/Point.h>
 
 typedef Point<ll> P;
 array<P, 2> hullDiameter(vector<P> S) {

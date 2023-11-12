@@ -5,7 +5,7 @@
  * Time: $O(N \log N)$
  * Status: Tested on kattis:longincsubseq, stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 template<class I> vi lis(const vector<I>& S) {
 	if (S.empty()) return {};

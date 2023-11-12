@@ -15,7 +15,7 @@
  * Time: O(n \log n)
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 struct SuffixArray {
 	vi sa, lcp;

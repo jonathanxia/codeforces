@@ -8,7 +8,7 @@
  * Status: Tested on kattis:mincostmaxflow, stress-tested against another implementation
  * Time: Approximately O(E^2)
  */
-#pragma once
+#include <lib/common.h>
 
 // #include <bits/extc++.h> /// include-line, keep-include
 

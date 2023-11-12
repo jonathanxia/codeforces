@@ -6,7 +6,7 @@
  * Description: Self-explanatory methods for string hashing.
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 // Arithmetic mod 2^64-1. 2x slower than mod 2^64 and more
 // code, but works on evil test data (e.g. Thue-Morse, where

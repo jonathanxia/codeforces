@@ -17,7 +17,7 @@
  * Time: O(E + V)
  * Status: tested during MIPT ICPC Workshop 2017
  */
-#pragma once
+#include <lib/common.h>
 
 vi num, st;
 vector<vector<pii>> ed;

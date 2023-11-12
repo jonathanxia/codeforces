@@ -9,10 +9,10 @@
  * Time: $O(N^2)$, where $N$ is the total number of points
  * Status: stress-tested, Submitted on ECNA 2017 Problem A
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
-#include "sideOf.h"
+#include <lib/kactl/geometry/Point.h>
+#include <lib/kactl/geometry/sideOf.h>
 
 typedef Point<double> P;
 double rat(P a, P b) { return sgn(b.x) ? a.x/b.x : a.y/b.y; }

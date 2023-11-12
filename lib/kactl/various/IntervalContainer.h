@@ -7,7 +7,7 @@
  * Time: O(\log N)
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 set<pii>::iterator addInterval(set<pii>& is, int L, int R) {
 	if (L == R) return is.end();

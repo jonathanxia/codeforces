@@ -7,9 +7,9 @@
  * Time: O(n)
  * Status: Tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 typedef Point<double> P;
 P polygonCenter(const vector<P>& v) {

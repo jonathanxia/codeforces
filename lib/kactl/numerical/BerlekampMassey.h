@@ -12,9 +12,9 @@
  * Time: O(N^2)
  * Status: bruteforce-tested mod 5 for n <= 5 and all s
  */
-#pragma once
+#include <lib/common.h>
 
-#include "../number-theory/ModPow.h"
+#include <lib/kactl/numerical/../number-theory/ModPow.h>
 
 vector<ll> berlekampMassey(vector<ll> s) {
 	int n = len(s), L = 0, m = 0;

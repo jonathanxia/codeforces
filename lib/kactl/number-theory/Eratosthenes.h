@@ -7,7 +7,7 @@
  * Time: lim=100'000'000 $\approx$ 0.8 s. Runs 30\% faster if only odd indices are stored.
  * Status: Tested
  */
-#pragma once
+#include <lib/common.h>
 
 const int MAX_PR = 5'000'000;
 bitset<MAX_PR> isprime;

@@ -9,7 +9,7 @@
  * Time: O(3^{n/3}), much faster for sparse graphs
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 /// Possible optimization: on the top-most
 /// recursion level, ignore 'cands', and go through nodes in order of increasing
 /// degree, where degrees go down as nodes are removed.

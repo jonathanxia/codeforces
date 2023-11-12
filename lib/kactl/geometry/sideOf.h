@@ -8,9 +8,9 @@
  * 	bool left = sideOf(p1,p2,q)==1;
  * Status: tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 template<class P>
 int sideOf(P s, P e, P p) { return sgn(s.cross(e, p)); }

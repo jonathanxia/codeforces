@@ -12,7 +12,7 @@
  *  // sweeps j such that (j-i) represents the number of positively oriented triangles with vertices at 0 and i
  * Status: Used, works well
  */
-#pragma once
+#include <lib/common.h>
 
 struct Angle {
 	int x, y;

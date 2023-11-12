@@ -12,9 +12,9 @@ Returns the signed distance between point p and the line containing points a and
 \end{minipage}
  * Status: tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 template<class P>
 double lineDist(const P& a, const P& b, const P& p) {

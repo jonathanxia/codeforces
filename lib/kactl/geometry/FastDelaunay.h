@@ -12,9 +12,9 @@
  * Time: O(n \log n)
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 typedef Point<ll> P;
 typedef struct Quad* Q;

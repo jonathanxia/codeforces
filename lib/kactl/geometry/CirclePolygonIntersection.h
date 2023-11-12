@@ -8,9 +8,9 @@
  * Time: O(n)
  * Status: Tested on GNYR 2019 Gerrymandering, stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "../../content/geometry/Point.h"
+#include <lib/kactl/geometry/Point.h>
 
 typedef Point<double> P;
 #define arg(p, q) atan2(p.cross(q), p.dot(q))

@@ -8,9 +8,9 @@
  * Time: 7 times the complexity of $a^b \mod c$.
  * Status: Stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "ModMulLL.h"
+#include <lib/kactl/number-theory/ModMulLL.h>
 
 bool isPrime(ull n) {
 	if (n < 2 || n % 6 % 4 != 1) return (n | 1) == 3;

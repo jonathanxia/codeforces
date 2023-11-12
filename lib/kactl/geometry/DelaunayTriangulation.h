@@ -8,10 +8,10 @@
  * Time: O(n^2)
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
-#include "3dHull.h"
+#include <lib/kactl/geometry/Point.h>
+#include <lib/kactl/geometry/3dHull.h>
 
 template<class P, class F>
 void delaunay(vector<P>& ps, F trifun) {

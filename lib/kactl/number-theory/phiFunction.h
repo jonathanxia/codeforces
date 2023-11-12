@@ -15,7 +15,7 @@
  * \textbf{Fermat's little thm}: $p$ prime $\Rightarrow a^{p-1} \equiv 1 \pmod{p}$ $\forall a$.
  * Status: Tested
  */
-#pragma once
+#include <lib/common.h>
 
 const int LIM = 5000000;
 int phi[LIM];

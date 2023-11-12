@@ -7,7 +7,7 @@
  * Time: O(N \max(w_i))
  * Status: Tested on kattis:eavesdropperevasion, stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 int knapsack(vi w, int t) {
 	int a = 0, b = 0, x;

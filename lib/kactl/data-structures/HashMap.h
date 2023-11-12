@@ -7,7 +7,7 @@
  * 3x faster. Uses 1.5x memory.
  * Initial capacity must be a power of 2 (if provided).
  */
-#pragma once
+#include <lib/common.h>
 
 #include <bits/extc++.h> /** keep-include */
 // To use most bits rather than just the lowest ones:

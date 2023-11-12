@@ -11,7 +11,7 @@
  * More precisely, it can be proven that the result equals 0 only if $a = 0$,
  * and otherwise lies in $[1, (1 + a/2^64) * b)$.
  */
-#pragma once
+#include <lib/common.h>
 
 typedef unsigned long long ull;
 struct FastMod {

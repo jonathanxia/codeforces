@@ -7,9 +7,9 @@
  * Time: O(\log^2 p) worst case, O(\log p) for most $p$
  * Status: Tested for all a,p <= 10000
  */
-#pragma once
+#include <lib/common.h>
 
-#include "ModPow.h"
+#include <lib/kactl/number-theory/ModPow.h>
 
 ll sqrt(ll a, ll p) {
 	a %= p; if (a < 0) a += p;

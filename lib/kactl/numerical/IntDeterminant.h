@@ -7,7 +7,7 @@
  * Time: $O(N^3)$
  * Status: bruteforce-tested for N <= 3, mod <= 7
  */
-#pragma once
+#include <lib/common.h>
 
 const ll mod = 12345;
 ll det(vector<vector<ll>>& a) {

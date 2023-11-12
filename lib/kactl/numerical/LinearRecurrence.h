@@ -12,7 +12,7 @@
  * Time: O(n^2 \log k)
  * Status: bruteforce-tested mod 5 for n <= 5
  */
-#pragma once
+#include <lib/common.h>
 
 const ll mod = 5; /** exclude-line */
 

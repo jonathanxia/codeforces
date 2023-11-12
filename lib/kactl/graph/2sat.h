@@ -15,7 +15,7 @@
  * Time: O(N+E), where N is the number of boolean variables, and E is the number of clauses.
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 struct TwoSat {
 	int N;

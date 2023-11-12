@@ -5,7 +5,7 @@
  * Source: me
  * Description:
  */
-#pragma once
+#include <lib/common.h>
 
 #define F {...; ++i;}
 int i = from;

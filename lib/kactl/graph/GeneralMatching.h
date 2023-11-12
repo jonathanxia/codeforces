@@ -8,9 +8,9 @@
  * Time: O(N^3)
  * Status: not very well tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "../numerical/MatrixInverse-mod.h"
+#include <lib/kactl/graph/../numerical/MatrixInverse-mod.h>
 
 vector<pii> generalMatching(int N, vector<pii>& ed) {
 	vector<vector<ll>> mat(N, vector<ll>(N)), A;

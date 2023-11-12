@@ -12,7 +12,7 @@
  * Usage: vi btoa(m, -1); dfsMatching(g, btoa);
  * Status: works
  */
-#pragma once
+#include <lib/common.h>
 
 bool find(int j, vector<vi>& g, vi& btoa, vi& vis) {
 	if (btoa[j] == -1) return 1;

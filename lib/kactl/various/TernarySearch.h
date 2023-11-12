@@ -12,7 +12,7 @@
  * Time: O(\log(b-a))
  * Status: tested
  */
-#pragma once
+#include <lib/common.h>
 
 template<class F>
 int ternSearch(int a, int b, F f) {

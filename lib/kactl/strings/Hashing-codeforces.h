@@ -7,7 +7,7 @@
  * Use on Codeforces, which lacks 64-bit support and where solutions can be hacked.
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 typedef uint64_t ull;
 static int C; // initialized below

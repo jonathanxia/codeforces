@@ -6,9 +6,9 @@
  * Description: A 32-bit pointer that points into BumpAllocator memory.
  * Status: tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "BumpAllocator.h"
+#include <lib/kactl/various/BumpAllocator.h>
 
 template<class T> struct ptr {
 	unsigned ind;

@@ -7,9 +7,9 @@
  * Time: expected O(n)
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "circumcircle.h"
+#include <lib/kactl/geometry/circumcircle.h>
 
 pair<P, double> mec(vector<P> ps) {
 	shuffle(ALL(ps), mt19937(time(0)));

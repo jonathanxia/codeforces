@@ -10,8 +10,8 @@
  * Time: O(N \log N)
  * Status: Stress-tested
  */
-#pragma once
-#include "Point.h"
+#include <lib/common.h>
+#include <lib/kactl/geometry/Point.h>
 
 typedef Point<int> P;
 vector<array<int, 3>> manhattanMST(vector<P> ps) {

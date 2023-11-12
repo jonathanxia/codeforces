@@ -9,7 +9,7 @@
  * Time: O(N \log N)
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 void FST(vi& a, bool inv) {
 	for (int n = len(a), step = 1; step < n; step *= 2) {

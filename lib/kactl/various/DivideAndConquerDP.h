@@ -6,7 +6,7 @@
  * Time: O((N + (hi-lo)) \log N)
  * Status: tested on http://codeforces.com/contest/321/problem/E
  */
-#pragma once
+#include <lib/common.h>
 
 struct DP { // Modify at will:
 	int lo(int ind) { return 0; }

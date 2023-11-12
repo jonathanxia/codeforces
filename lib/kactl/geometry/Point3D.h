@@ -8,7 +8,7 @@
  * Usage:
  * Status: tested, except for phi and theta
  */
-#pragma once
+#include <lib/common.h>
 
 template<class T> struct Point3D {
 	typedef Point3D P;

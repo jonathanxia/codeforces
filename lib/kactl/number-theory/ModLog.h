@@ -30,7 +30,7 @@
  * exponents of a that are <= n, and then handling the non-tricky cases by
  * a simple gcd(a^n,m) == gcd(b,m) check.
  */
-#pragma once
+#include <lib/common.h>
 
 ll modLog(ll a, ll b, ll m) {
 	ll n = (ll) sqrt(m) + 1, e = 1, f = 1, j = 1;

@@ -8,9 +8,9 @@
  * Time: $O(\log^2 N)$. (Use persistent segment trees for $O(\log N)$.)
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
-#include "FenwickTree.h"
+#include <lib/kactl/data-structures/FenwickTree.h>
 
 struct FT2 {
 	vector<vi> ys; vector<FT> ft;

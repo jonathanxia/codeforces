@@ -6,9 +6,9 @@
  * Description: Operators for modular arithmetic. You need to set {\tt mod} to
  * some number first and then you can use the structure.
  */
-#pragma once
+#include <lib/common.h>
 
-#include "euclid.h"
+#include <lib/kactl/number-theory/euclid.h>
 
 const ll mod = 17; // change to something else
 struct Mod {

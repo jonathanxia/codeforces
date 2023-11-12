@@ -7,7 +7,7 @@
  * $O(\min(E^{1/2}, V^{2/3})E)$ if $U = 1$; $O(\sqrt{V}E)$ for bipartite matching.
  * Status: Tested on SPOJ FASTFLOW and SPOJ MATCHING, stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 struct Dinic {
 	struct Edge {

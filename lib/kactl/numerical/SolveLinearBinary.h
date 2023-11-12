@@ -8,7 +8,7 @@
  * Time: O(n^2 m)
  * Status: bruteforce-tested for n, m <= 4
  */
-#pragma once
+#include <lib/common.h>
 
 typedef bitset<1000> bs;
 

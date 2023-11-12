@@ -8,7 +8,7 @@
  * Time: $O(V^2\sqrt E)$
  * Status: Tested on Kattis and SPOJ, and stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 
 struct PushRelabel {

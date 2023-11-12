@@ -12,11 +12,11 @@
  * bool in = inPolygon(v, P{3, 3}, false);
  * Status: stress-tested and tested on kattis:pointinpolygon
  */
-#pragma once
+#include <lib/common.h>
 
-#include "Point.h"
-#include "OnSegment.h"
-#include "SegmentDistance.h"
+#include <lib/kactl/geometry/Point.h>
+#include <lib/kactl/geometry/OnSegment.h>
+#include <lib/kactl/geometry/SegmentDistance.h>
 
 template<class P>
 bool inPolygon(vector<P> &p, P a, bool strict = true) {

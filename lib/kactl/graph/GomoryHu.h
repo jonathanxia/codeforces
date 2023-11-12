@@ -14,9 +14,9 @@
  * pairs network flow analysis". PushRelabel is used here, but any flow
  * implementation that supports `leftOfMinCut` also works.
  */
-#pragma once
+#include <lib/common.h>
 
-#include "PushRelabel.h"
+#include <lib/kactl/graph/PushRelabel.h>
 
 typedef array<ll, 3> Edge;
 vector<Edge> gomoryHu(int N, vector<Edge> ed) {

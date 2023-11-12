@@ -6,7 +6,7 @@
  * you just need gcd, use the built in \texttt{\_\_gcd} instead.
  * If $a$ and $b$ are coprime, then $x$ is the inverse of $a \pmod{b}$.
  */
-#pragma once
+#include <lib/common.h>
 
 ll euclid(ll a, ll b, ll &x, ll &y) {
 	if (!b) return x = 1, y = 0, a;

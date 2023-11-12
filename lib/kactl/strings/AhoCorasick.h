@@ -15,7 +15,7 @@
  * find(x) is $O(N)$, where N = length of x. findAll is $O(NM)$.
  * Status: stress-tested
  */
-#pragma once
+#include <lib/common.h>
 
 struct AhoCorasick {
 	enum {alpha = 26, first = 'A'}; // change this!

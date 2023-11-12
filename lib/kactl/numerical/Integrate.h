@@ -9,7 +9,7 @@
  *  precision when epsilon changes.
  * Status: mostly untested
  */
-#pragma once
+#include <lib/common.h>
 
 template<class F>
 double quad(double a, double b, F f, const int n = 1000) {
