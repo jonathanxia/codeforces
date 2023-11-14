@@ -218,11 +218,51 @@ namespace graph
         return cycles_;
     }
 
+    // Finds cycles for directed graphs where degree of every node is 1
+    struct FunctionalGraph {
+        vb in_cycle;
+        vb in_chain;
+        const vl& adj;
+        vvl cycs;
+
+        vl cycle_number;
+        vl dist_from_cycle;
+
+        FunctionalGraph(const vl& adj_, bool is1idx = false) :
+            in_cycle(len(adj_)),
+            in_chain(len(adj_)),
+            adj(adj_),
+            cycle_number(len(adj_), -1),
+            dist_from_cycle(len(adj_))
+        {
+            cycs = cycles(adj, in_cycle, in_chain, is1idx);
+
+            walk(i, cycs) {
+                foreach(v, cycs[i]) cycle_number[v] = i;
+            }
+
+            ll n = len(adj);
+            FOR(i, (int) is1idx, n - 1) {
+                dfs(i);
+            }
+        }
+
+        void dfs(ll node) {
+            ll child = adj[node];
+            if (cycle_number[node] != -1) {
+                return;
+            }
+            dfs(child);
+            cycle_number[node] = cycle_number[child];
+            dist_from_cycle[node] = 1 + dist_from_cycle[child];
+        }
+    };
+
 ///   TREE  ALGORITHMS   ///
 /// Also check out dfs.h ///
 
     // Only works for trees!
-    vl longest_path(vvl &graph, ll n)
+    pair<ll, vl> longest_path(vvpl &graph, ll n)
     {
         vl dist(n);
         vl parents(n);
@@ -230,11 +270,11 @@ namespace graph
         function<void(ll, ll)> dfs = [&](ll node, ll parent) -> void
         {
             chkmax(farthest, mp(dist[node], node));
-            foreach (child, graph[node])
+            foreachp (child, weight, graph[node])
             {
                 if (child == parent)
                     continue;
-                dist[child] = dist[node] + 1;
+                dist[child] = dist[node] + weight;
                 parents[child] = node;
                 dfs(child, node);
             }
@@ -255,7 +295,7 @@ namespace graph
             end = parents[end];
         }
 
-        return path;
+        return {dist[end], path};
     }
 
 ///   TREE  ALGORITHMS   ///
