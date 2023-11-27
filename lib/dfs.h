@@ -10,6 +10,7 @@ struct DfsTree {
     vl weighted_height; // From the root
     vi num_desc; // Including myself
     vi deepest_leaf; // Leaf is 0
+    vl deepest_weighted_leaf; // Leaf is 0
 
     vi counter_to_node;
     vi node_to_counter;
@@ -29,6 +30,7 @@ struct DfsTree {
         weighted_height.resize(n, 0);
         num_desc.resize(n, 0);
         deepest_leaf.resize(n, 0);
+        deepest_weighted_leaf.resize(n, 0);
         parent.resize(n, -1);
 
         counter_to_node.resize(n, -1);
@@ -52,6 +54,7 @@ struct DfsTree {
 
         num_desc[node]++;
         deepest_leaf[node] = 0;
+        deepest_weighted_leaf[node] = 0;
         foreachp(child, w, g[node])
         {
             if (child == par)
@@ -63,6 +66,7 @@ struct DfsTree {
             dfs(child, node, g);
             num_desc[node] += num_desc[child];
             chkmax(deepest_leaf[node], 1 + deepest_leaf[child]);
+            chkmax(deepest_weighted_leaf[node], w + deepest_weighted_leaf[child]);
 
             dfs_order.pb(my_counter);
         }
@@ -211,4 +215,3 @@ struct BinaryLiftingTree {
         return merge_func(ans, merge_func(cumulative[j][v], cumulative[j][v1]));
     }
 };
-
