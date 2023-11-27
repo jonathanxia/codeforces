@@ -105,12 +105,10 @@ inline ll ceildiv(T x, Y y)
 #define iter_walk(i, container) for (auto i = container.begin(); i != container.end(); i++)
 #define reverse_iter_walk(i, container) for (auto i = container.rbegin(); i != container.rend(); i++)
 
-// Kevin's stuff
 #define rep repe
 #define srep srepe
 #define irep irepe
 
-// Jonathan's stuff
 #define FOR repi
 #define DOR dep
 #define SFOR srepi
@@ -450,4 +448,3 @@ ll cmul(ll a, ll b)
     }
     return a * b;
 }
-
