@@ -295,7 +295,7 @@ namespace graph
             end = parents[end];
         }
 
-        return {dist[end], path};
+        return {dist[farthest.second], path};
     }
 
 ///   TREE  ALGORITHMS   ///
