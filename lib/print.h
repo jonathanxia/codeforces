@@ -187,7 +187,7 @@ int recur_depth = 0;
         ++recur_depth;                                                                                         \
         auto x_ = x;                                                                                           \
         --recur_depth;                                                                                         \
-        cout << string(recur_depth, '\t') << __func__ << ":" << __LINE__ << "\t" << #x << " = " << x_ << endl; \
+        cout << string(recur_depth, '\t') << #x << " = " << x_ << endl; \
     }
 #else
 #define dbg(x)
