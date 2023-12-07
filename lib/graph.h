@@ -174,7 +174,7 @@ namespace graph
     void floyd_warshall(vvl& m)
     {
         int n = len(m);
-        repe(i, 0, n) m[i][i] = min(m[i][i], 0LL);
+        repe(i, 0, n) m[i][i] = min(m[i][i], ll(0));
         repe(k, 0, n) repe(i, 0, n) repe(j, 0, n) if (m[i][k] != inf && m[k][j] != inf)
         {
             auto newDist = max(m[i][k] + m[k][j], -inf);

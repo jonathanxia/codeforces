@@ -10,7 +10,7 @@ public:
     SparseTable(const vector<T>& arr, function<T(T, T)> op)
     {
         ll n = arr.size();
-        ll logn = log2(n) + 1;
+        ll logn = log2(int(n)) + 1;
 
         table.resize(n, vector<T>(logn));
         logTable.resize(n + 1);
