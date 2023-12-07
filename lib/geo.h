@@ -86,7 +86,6 @@ struct ConvexHull {
             top_start_ = top_end_ = bot_start_ = bot_end_ = 0;
             return;
         }
-        // dprint("Constructing convex hull for", pts_);
 
         vector<pair<Point<T>, int>> pts;
         FOR(i, 0, n - 1) {
@@ -120,10 +119,9 @@ struct ConvexHull {
         FOR(i, 0, len(cvx_hull) - 1) index_to_loc[indices[i]] = i;
 
         bot_start_ = 0;
-        bot_end_ = first_st(i, is_top[i], 0, n - 1);
+        bot_end_ = first_st(i, !is_bottom[i], 0, n - 1) - 1;
         top_start_ = bot_end_;
-        top_end_ = n - 1;
-        // dprint(cvx_hull);
+        top_end_ = first_st(i, !is_top[i % n], top_start_, top_start_ + n - 1) - 1;
     }
 
     // Returns the index of the point with the highest value of
@@ -134,12 +132,16 @@ struct ConvexHull {
         ll n = len(points);
         if (n == 0) return -1;
         Point<T> p = {x, 1};
+        if (n == 1) return 0;
+        if (top_start_ == top_end_) {
+            return top_start_ % n;
+        }
 
         ll cvx_idx = smallest_st(
             i, p.dot(points[i % n]) > p.dot(points[(i + 1) % n]),
             top_start_, top_end_ - 1);
-
-        return indices[cvx_idx];
+        
+        return indices[cvx_idx % n];
     }
 
     // Returns the highest value of ax + b across all points (a, b)
@@ -158,7 +160,11 @@ struct ConvexHull {
         // x value
         ll n = len(points);
         if (n == 0) return -1;
+        if (n == 1) return 0;
         Point<T> p = {x, 1};
+        if (bot_start_ == bot_end_) {
+            return bot_start_ % n;
+        }
 
         // This means the dot product should go down then up
 
@@ -166,7 +172,7 @@ struct ConvexHull {
             i, p.dot(points[i % n]) < p.dot(points[(i + 1) % n]),
             bot_start_, bot_end_ - 1);
 
-        return indices[cvx_idx];
+        return indices[cvx_idx % n];
     }
 
     // Returns the smallest value of ax + b across all points (a, b)
@@ -176,6 +182,11 @@ struct ConvexHull {
         if (idx < 0) return std::numeric_limits<T>::max();
         Point<T> optimal = points[index_to_loc[idx]];
         return optimal.dot({x, 1});
+    }
+
+    friend ostream& operator<<(ostream& os, const ConvexHull& p)
+    {
+        return os << p.points;
     }
 };
 
@@ -212,7 +223,7 @@ struct TwoLineContainer {
             // Take all points with x coordinate from convex_indices[ci - 1]
             // to convex_indices[ci + 1] (inclusive), but
             // exclude convex_indices[ci] itself
-            ll prev_idx = convex_indices[max(ci - 1, 0LL)];
+            ll prev_idx = convex_indices[max(ci - 1, ll(0))];
             ll next_idx = convex_indices[min(ci + 1, len(convex_indices) - 1)];
 
             T prev_x = lines[prev_idx].x;
@@ -230,7 +241,8 @@ struct TwoLineContainer {
                 pts.pb(lines[idx]);
                 idx++;
             }
-            secondary_cvx_hulls[convex_indices[ci]] = ConvexHull(pts);
+            if (len(pts) > 0)
+                secondary_cvx_hulls[convex_indices[ci]] = ConvexHull(pts);
         }
     }
 
@@ -327,3 +339,4 @@ bool in_polygon(vector<Point<T>>& p, Point<T> a, bool strict = true)
     return cnt;
 }
 } // namespace geo
+
