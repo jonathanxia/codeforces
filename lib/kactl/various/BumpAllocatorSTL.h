@@ -15,8 +15,8 @@ size_t buf_ind = sizeof buf;
 
 template<class T> struct small {
 	typedef T value_type;
-	smALL() {}
-	template<class U> smALL(const U&) {}
+	small() {}
+	template<class U> small(const U&) {}
 	T* allocate(size_t n) {
 		buf_ind -= n * sizeof(T);
 		buf_ind &= 0 - alignof(T);
