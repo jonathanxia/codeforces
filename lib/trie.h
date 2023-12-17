@@ -1,8 +1,7 @@
 #include <lib/common.h>
 
-class Trie {
-
-public:
+template <size_t NUM_FREQ=1>
+struct Trie {
     // N is number of possible characters in a string
     const static int N = 26;
 
@@ -15,7 +14,7 @@ public:
         // if isEnd is set to true , a string ended here
         bool isEnd;
         // freq is how many times this prefix occurs
-        int freq;
+        array<int, NUM_FREQ> freq;
         // length of the prefix at this node
         int length;
         TrieNode()
@@ -23,7 +22,8 @@ public:
             for (int i = 0; i < N; i++)
                 next[i] = -1;
             isEnd = false;
-            freq = 0;
+            FOR(i, 0, NUM_FREQ - 1)
+                freq[i] = 0;
             length = 0;
         }
         TrieNode(int _length)
@@ -40,29 +40,30 @@ public:
     // Base Constructor
     Trie()
     {
+        // This might be necessary in memory constrained environment
+        // tree.reserve(2000099);
         tree.push_back(TrieNode());
     }
 
     // inserting a string in trie
-    void insert(const string& s)
+    void insert(const string& s, int typ=0)
     {
         int p = 0;
-        tree[p].freq++;
+        tree[p].freq[typ]++;
         for (int i = 0; i < (ll)s.size(); i++) {
-            // tree[]
             if (tree[p].next[s[i] - baseChar] == -1) {
-                tree.push_back(TrieNode(tree[p].length + 1));
+                tree.push_back(TrieNode());
                 tree[p].next[s[i] - baseChar] = tree.size() - 1;
             }
 
             p = tree[p].next[s[i] - baseChar];
-            tree[p].freq++;
+            tree[p].freq[typ]++;
         }
         tree[p].isEnd = true;
     }
 
     // returns number of times the prefix s appears in the trie
-    ll check_prefix(const string& s)
+    ll check_prefix(const string& s, int typ=0)
     {
         int p = 0;
         for (int i = 0; i < (ll)s.size(); i++) {
@@ -71,7 +72,7 @@ public:
 
             p = tree[p].next[s[i] - baseChar];
         }
-        return tree[p].freq;
+        return tree[p].freq[typ];
     }
 
     // check if string s exists
@@ -90,7 +91,7 @@ public:
 
     // persistent insert
     // returns location of new head
-    int persistent_insert(int head, const string& s)
+    int persistent_insert(int head, const string& s, int typ=0)
     {
         int old = head;
 
@@ -104,7 +105,7 @@ public:
             if (old == -1) {
                 tree.push_back(TrieNode());
                 tree[now].next[s[i] - baseChar] = tree.size() - 1;
-                tree[now].freq++;
+                tree[now].freq[typ]++;
                 now = tree[now].next[s[i] - baseChar];
                 continue;
             }
@@ -113,7 +114,7 @@ public:
             tree[now].freq = tree[old].freq;
             tree[now].isEnd = tree[old].isEnd;
 
-            tree[now].freq++;
+            tree[now].freq[typ]++;
 
             tree.push_back(TrieNode());
             tree[now].next[s[i] - baseChar] = tree.size() - 1;
@@ -122,14 +123,14 @@ public:
             now = tree[now].next[s[i] - baseChar];
         }
 
-        tree[now].freq++;
+        tree[now].freq[typ]++;
         tree[now].isEnd = true;
 
         return newHead;
     }
 
     // persistent check prefix
-    ll persistent_check_prefix(int head, const string& s)
+    ll persistent_check_prefix(int head, const string& s, int typ=0)
     {
         int p = head;
         for (int i = 0; i < (ll)s.size(); i++) {
@@ -138,7 +139,7 @@ public:
 
             p = tree[p].next[s[i] - baseChar];
         }
-        return tree[p].freq;
+        return tree[p].freq[typ];
     }
 
     // persistent check string
