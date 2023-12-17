@@ -13,7 +13,7 @@
 
 namespace kactl {
 const ll inf = 1LL << 62;
-void floydWarshALL(vector<vector<ll>>& m) {
+void floydWarshall(vector<vector<ll>>& m) {
 	int n = len(m);
 	rep(i,0,n) m[i][i] = min(m[i][i], 0LL);
 	rep(k,0,n) rep(i,0,n) rep(j,0,n)
