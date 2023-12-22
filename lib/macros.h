@@ -81,6 +81,18 @@ inline ll ceildiv(T x, Y y)
     return x / y + (x % y != 0);
 }
 
+template <typename T, typename Y>
+inline ll floordiv(T x, Y y)
+{
+    if (y < 0) {
+        return floordiv(-x, -y);
+    }
+    if (x < 0) {
+        return -ceildiv(-x, y);
+    }
+    return x / y;
+}
+
 // Looping
 #define repe(i, d, u) for (ll i = (d); i < (u); ++i)
 #define repi(i, d, u) for (ll i = (d); i <= (u); ++i)
