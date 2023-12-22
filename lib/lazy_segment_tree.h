@@ -44,46 +44,46 @@ std::ostream& operator<<(std::ostream& os, const lazynode& mp)
     return os;
 }
 
-template <typename T>
+template <typename T, typename Node=node, typename LazyNode=lazynode>
 struct LazySegmentTree {
 public:
     ll n;
     vector<T> a;
-    function<node(node, node)> merge;
-    function<node(node, int, lazynode)> apply;
-    function<lazynode(lazynode, lazynode)> lazymerge;
+    function<Node(Node, Node)> merge;
+    function<Node(Node, int, LazyNode)> apply;
+    function<LazyNode(LazyNode, LazyNode)> lazymerge;
 
-    vector<lazynode> lazy;
-    vector<node> tr;
+    vector<LazyNode> lazy;
+    vector<Node> tr;
 
-    node truemerge(node node1, node node2)
+    Node truemerge(Node Node1, Node Node2)
     {
-        if (node1.is_empty) {
-            return node2;
+        if (Node1.is_empty) {
+            return Node2;
         }
-        if (node2.is_empty) {
-            return node1;
+        if (Node2.is_empty) {
+            return Node1;
         }
-        return merge(node1, node2);
+        return merge(Node1, Node2);
     }
 
-    node trueapply(node node1, int num, lazynode node2)
+    Node trueapply(Node Node1, int num, LazyNode Node2)
     {
-        if (node2.is_empty) {
-            return node1;
+        if (Node2.is_empty) {
+            return Node1;
         }
-        return apply(node1, num, node2);
+        return apply(Node1, num, Node2);
     }
 
-    lazynode truelazymerge(lazynode node1, lazynode node2)
+    LazyNode truelazymerge(LazyNode Node1, LazyNode Node2)
     {
-        if (node2.is_empty) {
-            return node1;
+        if (Node2.is_empty) {
+            return Node1;
         }
-        if (node1.is_empty) {
-            return node2;
+        if (Node1.is_empty) {
+            return Node2;
         }
-        return lazymerge(node1, node2);
+        return lazymerge(Node1, Node2);
     }
 
     void push(int l, int r, int idx)
@@ -96,14 +96,14 @@ public:
                 lazy[2 * idx + 2] = truelazymerge(lazy[2 * idx + 2], lazy[idx]);
             }
 
-            lazy[idx] = lazynode();
+            lazy[idx] = LazyNode();
         }
     }
 
     void init(int l, int r, int idx)
     {
         if (l == r) {
-            tr[idx] = node(a[l]);
+            tr[idx] = Node(a[l]);
             return;
         }
 
@@ -116,9 +116,9 @@ public:
 
     LazySegmentTree(
         const vector<T>& arr,
-        function<node(node, node)> op,
-        function<node(node, int, lazynode)> applyop,
-        function<lazynode(lazynode, lazynode)> lazyop
+        function<Node(Node, Node)> op,
+        function<Node(Node, int, LazyNode)> applyop,
+        function<LazyNode(LazyNode, LazyNode)> lazyop
 
         )
         : a(arr)
@@ -141,7 +141,7 @@ public:
         }
 
         if (qL <= l && r <= qR) {
-            lazy[idx] = truelazymerge(lazy[idx], lazynode(val));
+            lazy[idx] = truelazymerge(lazy[idx], LazyNode(val));
             push(l, r, idx);
             return;
         }
@@ -158,12 +158,12 @@ public:
         update(qL, qR, val, 0, n - 1, 0);
     }
 
-    node query(int qL, int qR, int l, int r, int idx)
+    Node query(int qL, int qR, int l, int r, int idx)
     {
         push(l, r, idx);
 
         if (l > qR || r < qL) {
-            return node();
+            return Node();
         }
 
         if (qL <= l && r <= qR) {
@@ -175,7 +175,7 @@ public:
     }
 
     // Inclusive query
-    node query(int qL, int qR)
+    Node query(int qL, int qR)
     {
         return query(qL, qR, 0, n - 1, 0);
     }
