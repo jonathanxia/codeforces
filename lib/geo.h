@@ -3,6 +3,7 @@
 namespace geo {
 template <class T>
 int sgn(T x) { return (x > 0) - (x < 0); }
+
 template <class T>
 struct Point {
     typedef Point P;
@@ -16,6 +17,11 @@ struct Point {
     Point(initializer_list<T> values) : x(values.begin()[0]), y(values.begin()[1]) {}
     bool operator<(P p) const { return tie(x, y) < tie(p.x, p.y); }
     bool operator==(P p) const { return tie(x, y) == tie(p.x, p.y); }
+    // GPT generated
+    bool operator<=(P p) const { return *this < p || *this == p; }
+    bool operator>=(P p) const { return !(*this < p); }
+    bool operator>(P p) const { return !(*this <= p); }
+
     P operator+(P p) const { return P(x + p.x, y + p.y); }
     P operator-(P p) const { return P(x - p.x, y - p.y); }
     P operator*(T d) const { return P(x * d, y * d); }
