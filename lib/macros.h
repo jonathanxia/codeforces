@@ -210,6 +210,7 @@ typedef pair<int, int> pi;
 typedef pair<int, int> pii;
 typedef vector<vector<pl>> vvpl;
 typedef vector<pl> vpl;
+typedef vector<pi> vpi;
 typedef vector<double> vd;
 typedef vector<long double> vld;
 
