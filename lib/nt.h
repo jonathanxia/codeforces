@@ -342,15 +342,24 @@ umapll primeFactorization(ll n)
 namespace combo {
 using namespace nt;
 vl factorial;
+vl ifactorial; // Stores 1 / factorial
 bool factorial_computed = false;
 void precompute_fac(ll n, ll m = MOD)
 {
     factorial.resize(n + 1);
+    ifactorial.resize(n + 1);
     factorial[0] = 1;
     FOR(i, 1, n)
     {
         factorial[i] = mod(factorial[i - 1] * i, m);
     }
+    // Stealing idea from ecnerwala
+    ifactorial[n] = mdiv(1, factorial[n], m);
+
+    DOR(i, n - 1, 0) {
+        ifactorial[i] = mod(ifactorial[i + 1] * (i + 1), m);
+    }
+
     factorial_computed = true;
 }
 
@@ -358,8 +367,7 @@ ll choose(ll n, ll k, ll m = MOD)
 {
     if (k > n)
         return 0;
-
-    ll ans = mdiv(factorial[n], factorial[k], m);
-    return mdiv(ans, factorial[n - k], m);
+    if (k < 0) return 0;
+    return mod(mod(factorial[n] * ifactorial[k], m) * ifactorial[n - k], m);
 }
-}
+} // namespace combo
