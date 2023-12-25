@@ -16,14 +16,16 @@ struct FenwickTree {
         }
     }
 
-    T sum(int r) {
+    T sum(ll r) {
+        if (r < 0) return T(0);
+        if (r >= n) r = n - 1;
         T ret = 0;
         for (; r >= 0; r = (r & (r + 1)) - 1)
             ret += bit[r];
         return ret;
     }
 
-    T sum(int l, int r) {
+    T sum(ll l, ll r) {
         if (l > r) return T(0);
         return sum(r) - sum(l - 1);
     }
