@@ -205,6 +205,7 @@ typedef vector<vector<string>> vvstr;
 typedef vector<char> vc;
 typedef vector<ll> vl;
 typedef vector<bool> vb;
+typedef vector<vb> vvb;
 typedef pair<ll, ll> pl;
 typedef pair<int, int> pi;
 typedef pair<int, int> pii;
@@ -296,8 +297,12 @@ void initmap(umap<K, V>& counts)
     lcret;                                                                \
 })
 
-int dx[4] = { 1, 0, -1, 0 };
-int dy[4] = { 0, 1, 0, -1 };
+// The first 4 directions are the normal up down left right
+// the next 4 are diagonal directions, if you need that too
+int dx[8] = { 1, 0, -1, 0, 1, -1, -1, 1 };
+int dy[8] = { 0, 1, 0, -1, 1, 1,  -1, -1 };
+
+
 
 // Binary Search
 // NOTE: lo and hi are inclusive;
@@ -461,3 +466,15 @@ ll cmul(ll a, ll b)
     }
     return a * b;
 }
+
+#define ITERATE_BORDER(arr, i_var, j_var, expr) \
+    ll i_var = 0; \
+    ll j_var = 0; \
+    IFOR(i_var, 0, len(arr) - 1) expr \
+    j_var = len(arr[0]) - 1; \
+    IFOR(i_var, 0, len(arr) - 1) expr \
+    i_var = 0; \
+    IFOR(j_var, 0, len(arr[0]) - 1) expr \
+    i_var = len(arr) - 1; \
+    IFOR(j_var, 0, len(arr[0]) - 1) expr
+
