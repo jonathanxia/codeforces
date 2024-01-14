@@ -3,20 +3,25 @@
 // Solves subset sum when the items are nonnegative.
 // Complexity: O(target * len(items))
 template <int L = 1>
-bool subset_sum(const vl& items, int target)
+vector<bool> subset_sum(const vi& items, int max_reachable)
 {
-    if (target >= L) {
-        return subset_sum<min(2 * L, 1000000)>(items, target);
-    }
+    if (max_reachable >= L)
+        return subset_sum<min(2 * L, 10000000LL)>(items, max_reachable);
 
-    bitset<L> dp;
 
+    bitset<L> dp, tmp;
     dp[0] = 1;
-    for (ll x : items) {
-        dp = dp | (dp << x);
+    for (int x : items) {
+        tmp = dp;
+        tmp <<= x;
+        dp |= tmp;
     }
 
-    return dp[target];
+    // Copy over to vector<bool> so we can actually return something
+    vector<bool> result(dp.size());
+    rep(i, 0, dp.size()-1)
+        result[i] = dp[i];
+    return result;
 }
 
 /*
