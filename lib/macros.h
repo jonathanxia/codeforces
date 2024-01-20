@@ -474,7 +474,7 @@ ll cmul(ll a, ll b)
     j_var = len(arr[0]) - 1; \
     IFOR(i_var, 0, len(arr) - 1) expr \
     i_var = 0; \
-    IFOR(j_var, 0, len(arr[0]) - 1) expr \
+    IFOR(j_var, 1, len(arr[0]) - 2) expr \
     i_var = len(arr) - 1; \
-    IFOR(j_var, 0, len(arr[0]) - 1) expr
+    IFOR(j_var, 1, len(arr[0]) - 2) expr
 
