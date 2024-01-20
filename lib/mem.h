@@ -25,8 +25,9 @@ int getValue(){ //Note: this value is in KB!
 
 const auto beg_time = std::chrono::high_resolution_clock::now();
 // https://stackoverflow.com/questions/47980498/accurate-c-c-clock-on-a-multi-core-processor-with-auto-overclock?noredirect=1&lq=1
+// Returns in ms
 double time_elapsed() {
 	return chrono::duration<double>(std::chrono::high_resolution_clock::now() -
 	                                beg_time)
-	    .count();
+	    .count() * 1000;
 }
