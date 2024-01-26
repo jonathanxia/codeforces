@@ -289,3 +289,8 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr)
     }
     return os;
 }
+
+template <typename T>
+ndarray<T> operator*(const ndarray<T>& mat1, const ndarray<T>& mat2) {
+    return linalg::mult(mat1, mat2);
+}
