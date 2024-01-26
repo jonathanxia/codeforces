@@ -60,6 +60,20 @@ std::ostream &operator<<(std::ostream &os, const std::vector<T> &v)
 }
 
 template <typename T>
+std::ostream &operator<<(std::ostream &os, const std::deque<T> &v)
+{
+    for (auto it = v.begin(); it != v.end(); ++it)
+    {
+        os << *it;
+        if (it != v.end() - 1)
+        {
+            os << " ";
+        }
+    }
+    return os;
+}
+
+template <typename T>
 std::ostream &operator<<(std::ostream &os, const std::vector<std::vector<T>> &vv)
 {
     walk(i, vv)
