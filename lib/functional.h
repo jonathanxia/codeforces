@@ -6,6 +6,9 @@ struct DiscretePiecewiseConstant {
     vector<T> y;
     vector<T> integral;
     ll n;
+    /**
+     * points_: each of the points (a, b) means f(x) = y for x >= a
+    */
     DiscretePiecewiseConstant(const vector<pair<S, T>>& points_)
     {
         n = len(points_);
