@@ -3,11 +3,13 @@ import sys
 import os
 import numpy as np
 from subprocess import run, check_output, STDOUT
+import random
+import string
 
 COMPILE_CMD = "g++ -g -Wno-return-type -Wshadow -O3 -std=c++17 -D_GLIBCXX_DEBUG -fsanitize=undefined,address -ftrapv"
 TESTCASE_FILE = "brute_force.input"
 
-NUM_TRIALS = 20
+NUM_TRIALS = 4
 
 # To use this, create a separate checker called brute.cpp
 # If you want to just catch a runtime error, you can of course
@@ -32,41 +34,65 @@ def generate_tree(N, w_max=10 ** 9):
     
     return edges
 
+def generate_random_string(length):
+    """
+    Generate a random string of the specified length.
+
+    Parameters:
+    - length (int): The length of the random string to generate.
+
+    Returns:
+    - str: The generated random string.
+    """
+    characters = string.ascii_letters + string.digits  # You can customize this if you want other characters
+    random_string = ''.join(random.choice(characters) for _ in range(length))
+    return random_string
+
+def generate_random_lowercase_string(length):
+    """
+    Generate a random string of lowercase letters with the specified length.
+
+    Parameters:
+    - length (int): The length of the random string to generate.
+
+    Returns:
+    - str: The generated random string.
+    """
+    characters = string.ascii_lowercase
+    random_string = ''.join(random.choice(characters) for _ in range(length))
+    return random_string
+
+
 # Create your own test case, you can specify your own parameters
 # and then iterate over them in generate_test_cases
 
 # The prnt function is for convenience
-def create_test_case(N, Q, prnt):
-    prnt(N)
+def create_test_case(N, K, M, prnt):
+    prnt(1)
+    prnt(N, K, M)
 
-    edges = generate_tree(N, 10 ** 9)
-    for edge in edges:
-        prnt(edge[0], edge[1], edge[2])
-    
-    prnt(Q)
-    for q in range(Q):
-        x = np.random.randint(1, N)
-        k = np.random.randint(1, 10 ** 9)
-        prnt(x, k)
+    prnt(generate_random_lowercase_string(M))
 
 def generate_test_cases():
     counter = 0
-    for N in [100000]:
-        for Q in [1]:
-            for _ in range(NUM_TRIALS):
-                counter += 1
-                print("Checking test", counter)
+    for N in range(1, 27):
+        # for M in range(1, 40, 4):
+        for K in range(1, 27):
+            for M in [1, 2, 3, 10, 100, 1000]:
+                for _ in range(NUM_TRIALS):
+                    counter += 1
+                    print("Checking test", counter)
 
-                # Erase the test case file
-                with open(TESTCASE_FILE, "w") as f:
-                    def prnt(*args, **kwargs):
-                        kwargs["file"] = f
-                        print(*args, **kwargs)
-            
-                    create_test_case(N, Q, prnt)
-                    f.flush()
-                    validate_test()
-                    print("OK")
+                    # Erase the test case file
+                    with open(TESTCASE_FILE, "w") as f:
+                        def prnt(*args, **kwargs):
+                            kwargs["file"] = f
+                            print(*args, **kwargs)
+                
+                        create_test_case(N, K, M, prnt)
+                        f.flush()
+                        validate_test()
+                        print("OK")
 
 def validate_test():
     a_result = check_output("./a.out", stdin=open(TESTCASE_FILE, "r"), shell=True, timeout=5)
