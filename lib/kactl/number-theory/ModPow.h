@@ -9,10 +9,10 @@
 #include <lib/common.h>
 
 namespace kactl {
-ll modpow(ll b, ll e) {
+ll modpow(ll b, ll e, ll m=MOD) {
 	ll ans = 1;
-	for (; e; b = b * b % MOD, e /= 2)
-		if (e & 1) ans = ans * b % MOD;
+	for (; e; b = b * b % m, e /= 2)
+		if (e & 1) ans = ans * b % m;
 	return ans;
 }
 }
