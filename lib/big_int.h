@@ -931,3 +931,4 @@ struct MultiPrecisionInteger {
 } // namespace yosupo
 
 using bigint = yosupo::MultiPrecisionInteger;
+using BI = yosupo::MultiPrecisionInteger;
