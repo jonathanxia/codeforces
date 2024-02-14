@@ -426,7 +426,8 @@ int dy[8] = { 0, 1, 0, -1, 1, 1,  -1, -1 };
 })
 // does % but doesn't mess up negatives
 //  mod(4, 5) == mod(-1, 5) == mod(-6, 5)
-ll mod(ll a, ll p)
+template <typename T=ll, typename S=ll>
+T mod(T a, S p)
 {
     if (p > 0) {
         return (a % p + p) % p;
@@ -437,11 +438,14 @@ ll mod(ll a, ll p)
 // important constant to set for some problems
 const ll MOD = 998244353LL;
 // const ll MOD = 1000000007;
-ll mod(ll a)
+
+template <typename T=ll>
+T mod(T a)
 {
     return mod(a, MOD);
 }
-void chkmod(ll& a, ll m = MOD)
+template <typename T=ll, typename S=ll>
+void chkmod(T& a, S m = MOD)
 {
     a = mod(a, m);
 }

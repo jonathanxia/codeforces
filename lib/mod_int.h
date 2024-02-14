@@ -21,6 +21,9 @@ struct ModInt {
     {
         return param.inv();
     }
+
+    ModInt inverse() const { return inv(); }
+
     ModInt pow(ll exponent) const
     {
         return {nt::pow(m_value, exponent, m_mod) };
@@ -97,7 +100,7 @@ struct ModInt {
     template <typename T>
     ModInt operator/(const T& rhs) const
     {
-        return { nt::mdiv(m_value, rhs, m_mod) };
+        return { nt::mdiv(m_value, ll(rhs), m_mod) };
     }
     ModInt operator/(const ModInt& rhs) const
     {

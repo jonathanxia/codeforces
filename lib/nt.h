@@ -51,7 +51,7 @@ bool is_prime(ll n)
 
 ll sum_digits(ll n, ll b)
 {
-    int sum = 0;
+    ll sum = 0;
     while (n > 0) {
         sum += n % b;
         n /= b;
@@ -123,14 +123,15 @@ ll get_digit(ll n, ll b, ll i) {
     }
 }
 
-ll inv(ll x, ll y)
+template <typename T=ll>
+T inv(T x, T y)
 {
-    ll p = y;
+    T p = y;
 
-    ll ax = 1;
-    ll ay = 0;
+    T ax = 1;
+    T ay = 0;
     while (x > 0) {
-        ll q = y / x;
+        T q = y / x;
         tie(ax, ay) = make_tuple(ay - q * ax, ax);
         tie(x, y) = make_tuple(y % x, x);
     }
@@ -138,7 +139,8 @@ ll inv(ll x, ll y)
     return mod(ay, p);
 }
 
-ll mdiv(ll x, ll y, ll m = MOD)
+template <typename T=ll>
+T mdiv(T x, T y, T m = MOD)
 {
     if (m <= 0) {
         return x / y;
@@ -148,7 +150,8 @@ ll mdiv(ll x, ll y, ll m = MOD)
     return mod(x * inv(y, m), m);
 }
 
-ll v_p(ll x, ll p)
+template <typename T=ll, typename S=ll>
+ll v_p(T x, S p)
 {
     ll res = 0;
     while (x % p == 0) {
@@ -158,7 +161,8 @@ ll v_p(ll x, ll p)
     return res;
 }
 
-ll factorial(ll x, ll m = MOD)
+template <typename T, typename S>
+T factorial(T x, S m = MOD)
 {
     ll p = 1;
     FOR(i, 1, x)
@@ -258,6 +262,7 @@ vl get_divisors(ll n) {
                 divisors.pb(n / d);
         }
     }
+    sort(ALL(divisors));
     return divisors;
 }
 
@@ -354,7 +359,7 @@ void precompute_fac(ll n, ll m = MOD)
         factorial[i] = mod(factorial[i - 1] * i, m);
     }
     // Stealing idea from ecnerwala
-    ifactorial[n] = mdiv(1, factorial[n], m);
+    ifactorial[n] = mdiv(ll(1), factorial[n], m);
 
     DOR(i, n - 1, 0) {
         ifactorial[i] = mod(ifactorial[i + 1] * (i + 1), m);
@@ -371,3 +376,4 @@ ll choose(ll n, ll k, ll m = MOD)
     return mod(mod(factorial[n] * ifactorial[k], m) * ifactorial[n - k], m);
 }
 } // namespace combo
+
