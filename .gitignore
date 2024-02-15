@@ -3,7 +3,6 @@ callgrind.*
 **/.cph/**
 codeforces
 leetcode
-atcoder
 usaco
 input
 .vscode
