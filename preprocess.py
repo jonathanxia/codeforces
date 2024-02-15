@@ -2,6 +2,7 @@
 
 import sys
 import re
+import subprocess
 
 included_fnames = set()
 
@@ -38,6 +39,12 @@ def open_filename(fname, comment):
 
     return output
 
+def run_atcoder_process(fname):
+    subprocess.run([
+        "python",
+        "expander.py",
+        fname
+    ])
 
 if __name__ == "__main__":
     fname = sys.argv[1]
@@ -45,6 +52,11 @@ if __name__ == "__main__":
         comment = "#"
     else:
         comment = "//"
+
+        # If we are in c++, we should run the atcoder preprocessor first
+        # This SHOULD be a nop if you don't use the atcoder library at all
+        run_atcoder_process(fname)
+
     out = "\n".join(open_filename(fname, comment))
     preamble = "\n".join(
         [f"{comment} #include<{fname}>" for fname in included_fnames]
