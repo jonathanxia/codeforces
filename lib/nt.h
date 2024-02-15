@@ -49,9 +49,10 @@ bool is_prime(ll n)
     return true;
 }
 
-ll sum_digits(ll n, ll b)
+template <typename T=ll, typename T2=ll>
+T sum_digits(T n, T2 b)
 {
-    ll sum = 0;
+    T sum(0);
     while (n > 0) {
         sum += n % b;
         n /= b;
@@ -59,22 +60,24 @@ ll sum_digits(ll n, ll b)
     return sum;
 }
 
-vl get_digits(ll n, ll b, ll pad = -1)
+template <typename T=ll, typename T2=ll>
+vector<T2> get_digits(T n, T2 b, ll pad = -1)
 {
-    vl ans;
+    vector<T2> ans;
     while (n > 0) {
-        ans.push_back(n % b);
+        ans.push_back(T2(n % b));
         n /= b;
     }
     while (len(ans) < pad) {
-        ans.pb(0);
+        ans.pb(T2(0));
     }
     return ans;
 }
 
-ll digits_to_num(const vl& digs, ll b)
+template <typename T=ll, typename T2=ll>
+T digits_to_num(const vector<T2>& digs, T2 b)
 {
-    ll s = 0;
+    T s(0);
     DOR(i, len(digs) - 1, 0)
     {
         s *= b;
@@ -114,7 +117,8 @@ ll pow(ll base, ll exponent, ll modulus = MOD)
     return result;
 }
 
-ll get_digit(ll n, ll b, ll i) {
+template <typename T1=ll, typename T2=ll>
+T2 get_digit(T1 n, T2 b, ll i) {
     if (b == 2) {
         return ((1LL << i) & n) > 0;
     }
