@@ -86,35 +86,31 @@ T digits_to_num(const vector<T2>& digs, T2 b)
     return s;
 }
 
-// Function to calculate (base^exponent) % modulus using repeated squaring
-ll pow(ll base, ll exponent, ll modulus = MOD)
+/**
+ * Computes pow() under a mod.
+ * 
+ * Specficially, base^e (mod m)
+*/
+template <typename T1=ll, typename T2=ll, typename T3=ll>
+typename std::enable_if<!std::is_same<T1, int>::value, T1>::type
+pow(T1 base, T2 e, T3 m=MOD)
 {
-    base = mod(base, modulus);
-    ll result = 1;
+    base = mod(base, m);
+    T1 result(1); // Assumes 1 is the identity element
 
-    while (exponent > 0) {
-        // If the exponent is odd, multiply the result by base
-        if (exponent & 1) {
-            if (modulus > 0) {
-                result = (result * base) % modulus;
-            } else {
-                result = cmul(result, base);
-            }
-        }
-        exponent >>= 1;
-        if (exponent == 0) {
-            break;
-        }
-
-        // Square the base and reduce the exponent by half
-        if (modulus > 0) {
-            base = (base * base) % modulus;
-        } else {
-            base = cmul(base, base);
-        }
+    while (e > 0) {
+        if (e & 1) result = (result * base) % m;
+        e /= 2;
+        if (e == 0) break;
+        base = (base * base) % m;
     }
-
     return result;
+}
+
+// Specialization for ints, because they are special
+template <typename T2=ll, typename T3=ll>
+ll pow(int base, T2 e, T3 m=MOD) {
+    return pow<ll, T2, T3>(ll(base), e, m);
 }
 
 template <typename T1=ll, typename T2=ll>

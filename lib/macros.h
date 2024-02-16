@@ -482,3 +482,41 @@ ll cmul(ll a, ll b)
     i_var = len(arr) - 1; \
     IFOR(j_var, 1, len(arr[0]) - 2) expr
 
+
+// Function to calculate (base^exponent) using repeated squaring
+template <typename T1=ll, typename T2=ll>
+typename std::enable_if<!std::is_same<T1, int>::value, T1>::type
+power(T1 base, T2 exponent,
+      function<T1(T1, T1)> mul=[](T1 x, T1 y) { return x * y; },
+      function<T1()> e=[]() { return T1(1); })
+{
+    T1 result = e();
+
+    while (exponent > 0) {
+        // If the exponent is odd, multiply the result by base
+        if (exponent & 1) {
+            result = mul(result, base);
+        }
+        exponent >>= 1;
+        if (exponent == 0) {
+            break;
+        }
+
+        // Square the base and reduce the exponent by half
+        base = mul(base, base);
+    }
+
+    return result;
+}
+
+template <typename T2=ll>
+ll power(int base, T2 exponent,
+         function<ll(ll, ll)> mul=[](ll x, ll y) { return x * y; },
+         function<ll()> e=[]() { return 1LL; })
+{
+    return power<ll, T2>(ll(base), exponent, mul, e);
+}
+
+ll cpower(ll base, ll exponent) {
+    return power<ll, ll>(base, exponent, cmul);
+}
