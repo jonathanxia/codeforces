@@ -44,6 +44,16 @@ namespace inp
             }
         }
     }
+
+    void read_tree(vvpl& graph) {
+        ll n = len(graph);
+        FOR(i, 0, n - 2) {
+            ll u, v; cin >> u >> v;
+            u--; v--;
+            graph[u].pb({v, 1});
+            graph[v].pb({u, 1});
+        }
+    }
 }
 
 template <typename S, typename T>
