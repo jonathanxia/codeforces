@@ -91,7 +91,7 @@ struct LCATree {
         }
     }
 
-    ll lca(ll a, ll b)
+    ll lca(ll a, ll b) const
     {
         a = forest.node_to_counter[a];
         b = forest.node_to_counter[b];

@@ -34,7 +34,7 @@ public:
         }
     }
 
-    ll query(int left, int right)
+    ll query(int left, int right) const
     {
         ll k = logTable[right - left + 1];
         return operation(table[left][k], table[right - (1 << k) + 1][k]);
