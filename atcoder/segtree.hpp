@@ -44,6 +44,10 @@ template <class S, S (*op)(S, S), S (*e)()> struct segtree {
         for (int i = 1; i <= log; i++) update(p >> i);
     }
 
+    void update(int p, S x) {
+        set(p, x);
+    }
+
     S get(int p) const {
         assert(0 <= p && p < _n);
         return d[p + size];
@@ -64,7 +68,18 @@ template <class S, S (*op)(S, S), S (*e)()> struct segtree {
         return op(sml, smr);
     }
 
+    /**
+     * Endpoint inclusive!
+    */
+    S query(int l, int r) const {
+        return prod(l, r + 1);
+    }
+
     S all_prod() const { return d[1]; }
+
+    S query_all() const {
+        return all_prod();
+    }
 
     template <bool (*f)(S)> int max_right(int l) const {
         return max_right(l, [](S x) { return f(x); });
