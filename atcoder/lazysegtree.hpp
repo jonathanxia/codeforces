@@ -98,6 +98,11 @@ struct lazy_segtree {
         return op(sml, smr);
     }
 
+    // Inclusive on both ends
+    S query(int l, int r) {
+        return prod(l, r + 1);
+    }
+
     S all_prod() { return d[1]; }
 
     void apply(int p, F f) {
@@ -135,6 +140,10 @@ struct lazy_segtree {
             if (((l >> i) << i) != l) update(l >> i);
             if (((r >> i) << i) != r) update((r - 1) >> i);
         }
+    }
+
+    void update(int l, int r, F f) {
+        apply(l, r + 1, f);
     }
 
     template <bool (*g)(S)> int max_right(int l) {
