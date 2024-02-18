@@ -1,3 +1,4 @@
+#pragma once
 #include <lib/common.h>
 
 // Taken from yosupo's library checker

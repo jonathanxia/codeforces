@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: chilli
  * License: CC0

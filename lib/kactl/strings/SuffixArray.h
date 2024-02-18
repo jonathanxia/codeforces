@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: 罗穗骞, chilli
  * Date: 2019-04-11

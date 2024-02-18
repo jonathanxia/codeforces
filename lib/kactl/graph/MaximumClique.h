@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: chilli, SJTU, Janez Konc
  * Date: 2019-05-10

@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: black_horse2014, chilli
  * Date: 2019-10-29

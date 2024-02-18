@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Simon Lindholm
  * Date: 2016-07-25

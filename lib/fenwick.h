@@ -1,3 +1,4 @@
+#pragma once
 template<typename T>
 struct FenwickTree {
     vector<T> bit;  // binary indexed tree

@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: David Rydh, Per Austrin
  * Date: 2003-03-16

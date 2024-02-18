@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Lucian Bicsi
  * Date: 2015-06-25

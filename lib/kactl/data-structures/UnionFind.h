@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Lukas Polacek
  * Date: 2009-10-26

@@ -1,3 +1,4 @@
+#pragma once
 #include <lib/common.h>
 
 template <size_t NUM_FREQ=1>

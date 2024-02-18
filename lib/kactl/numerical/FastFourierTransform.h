@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Ludo Pulles, chilli, Simon Lindholm
  * Date: 2019-01-09

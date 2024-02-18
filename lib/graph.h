@@ -1,3 +1,4 @@
+#pragma once
 #include <lib/vv.h>
 
 namespace graph

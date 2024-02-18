@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Per Austrin, Simon Lindholm
  * Date: 2004-02-08

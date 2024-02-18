@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Philippe Legault
  * Date: 2016

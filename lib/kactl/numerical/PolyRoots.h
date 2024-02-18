@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Per Austrin
  * Date: 2004-02-08

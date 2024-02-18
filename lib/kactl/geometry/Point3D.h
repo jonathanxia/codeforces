@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Ulf Lundstrom with inspiration from tinyKACTL
  * Date: 2009-04-14

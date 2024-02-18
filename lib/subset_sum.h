@@ -1,3 +1,4 @@
+#pragma once
 #include <lib/common.h>
 
 // Solves subset sum when the items are nonnegative.

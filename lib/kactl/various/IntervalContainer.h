@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Simon Lindholm
  * License: CC0

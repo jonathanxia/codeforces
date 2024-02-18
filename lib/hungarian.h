@@ -1,3 +1,4 @@
+#pragma once
 #include <lib/common.h>
 /*
  * Given a weighted bipartite graph, matches every node on

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef DEBUG // Don't optimize locally
 #pragma GCC optimize("O3")
 #endif

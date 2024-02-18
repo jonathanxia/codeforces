@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Stanford
  * Source: Stanford Notebook

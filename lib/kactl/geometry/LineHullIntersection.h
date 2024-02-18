@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Oleksandr Bacherikov, chilli
  * Date: 2019-05-07

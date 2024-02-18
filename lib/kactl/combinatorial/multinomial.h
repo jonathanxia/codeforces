@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Mattias de Zalenski, Fredrik Niemelä, Per Austrin, Simon Lindholm
  * Date: 2002-09-26

@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Mårten Wiman
  * License: CC0

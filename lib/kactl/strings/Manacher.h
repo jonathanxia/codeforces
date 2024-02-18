@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: User adamant on CodeForces
  * Source: http://codeforces.com/blog/entry/12143

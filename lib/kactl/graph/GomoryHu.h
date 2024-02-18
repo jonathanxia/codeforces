@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: chilli, Takanori MAEHARA
  * Date: 2020-04-03

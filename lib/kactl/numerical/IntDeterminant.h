@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Unknown
  * Date: 2014-11-27

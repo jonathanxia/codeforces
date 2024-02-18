@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: chilli, Takanori MAEHARA, Benq, Simon Lindholm
  * Date: 2019-05-10

@@ -1,3 +1,4 @@
+#pragma once
 #include <lib/lazy_segment_tree.h>
 
 template <typename T, typename Node=node>

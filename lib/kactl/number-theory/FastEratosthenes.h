@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Jakob Kogler, chilli, pajenegod
  * Date: 2020-04-12

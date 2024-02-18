@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Simon Lindholm, chilli
  * Date: 2018-07-23

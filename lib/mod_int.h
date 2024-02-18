@@ -1,3 +1,4 @@
+#pragma once
 #include <lib/common.h>
 #include <lib/nt.h>
 

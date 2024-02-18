@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Bjorn Martinsson
  * Date: 2020-06-03

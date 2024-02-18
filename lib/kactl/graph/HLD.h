@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Benjamin Qi, Oleksandr Kulkov, chilli
  * Date: 2020-01-12

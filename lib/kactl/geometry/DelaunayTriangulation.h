@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Mattias de Zalenski
  * Date: Unknown

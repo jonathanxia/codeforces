@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: someone on Codeforces
  * Date: 2017-03-14

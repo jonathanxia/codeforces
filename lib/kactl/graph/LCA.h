@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: chilli, pajenegod
  * Date: 2020-02-20

@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Max Bennedich
  * Date: 2004-02-08

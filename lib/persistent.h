@@ -1,3 +1,4 @@
+#pragma once
 #include <lib/common.h>
 
 template <typename T=ll>

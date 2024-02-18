@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Noam527
  * Date: 2019-04-24

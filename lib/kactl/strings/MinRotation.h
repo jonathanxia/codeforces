@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Stjepan Glavina
  * License: Unlicense

@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Author: Ulf Lundstrom
  * Date: 2009-04-07

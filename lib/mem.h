@@ -1,3 +1,4 @@
+#pragma once
 int parseLine(char* line){
     // This assumes that a digit will be found and the line ends in " Kb".
     int i = strlen(line);
