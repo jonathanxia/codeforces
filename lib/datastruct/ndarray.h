@@ -1,7 +1,15 @@
 #include <lib/common.h>
 
-// arbitrarily high dimension array
-// by default will return a default_value on OOB access
+/**
+ * arbitrarily high dimension array
+ * by default will return a default_value on OOB access
+ * 
+ * Example usage:
+ * 
+ * ndarray<ll> arr({3, 5, 2}, 27);
+ * arr(2, 2, 0) = 8;
+ * arr(-1, -1, -1) // Gives 27
+*/
 template<typename T, int num_dimensions>
 struct ndarray {
     ndarray(array<int, num_dimensions> _dimensions, T default_value=0) {
