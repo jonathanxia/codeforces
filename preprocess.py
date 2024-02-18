@@ -41,7 +41,7 @@ def open_filename(fname, comment):
 
 def run_atcoder_process(fname):
     subprocess.run([
-        "python",
+        "python3",
         "expander.py",
         fname
     ])
