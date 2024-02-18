@@ -8,4 +8,5 @@ input
 .vscode
 lib/snippets
 lib/testing
-
+*.ipynb
+.ipynb_checkpoints
