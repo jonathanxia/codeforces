@@ -14,6 +14,9 @@ def open_filename(fname, comment):
         for line in f.readlines():
             line = line.rstrip()
 
+            if "#pragma once" in line:
+                continue
+
             mm = re.match("^" + REG, line)
             mm_comment = re.match(comment + r"\s*" + REG, line)
 
