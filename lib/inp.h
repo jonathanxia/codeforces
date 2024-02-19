@@ -55,6 +55,17 @@ namespace inp
             graph[v].pb({u, 1});
         }
     }
+
+    template<typename T>
+    void read(T& t) {
+        cin >> t;
+    }
+
+    template<typename T, typename... Args>
+    void read(T& t, Args&... args) {
+        cin >> t;
+        read(args...);
+    }
 }
 
 template <typename S, typename T>
@@ -69,6 +80,14 @@ istream &operator>>(istream &input, vector<T> &vec)
 {
     for (auto &element : vec)
     {
+        input >> element;
+    }
+    return input;
+}
+
+template<typename T>
+istream& operator>>(istream& input, deque<T>& vec) {
+    for (auto& element : vec) {
         input >> element;
     }
     return input;
