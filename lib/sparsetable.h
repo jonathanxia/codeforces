@@ -40,6 +40,25 @@ public:
         ll k = logTable[right - left + 1];
         return operation(table[left][k], table[right - (1 << k) + 1][k]);
     }
+
+    /* Works for non-idempotent operations, e.g. sum, product. Has log(n) query time*/
+    ll query_nonidempotent(int left, int right) const
+    {
+        ll ans;
+        bool first_loop = true;
+        while(left <= right) {
+            ll k = logTable[right - left + 1];
+            int v = table[left][k];
+            if (first_loop) {
+                first_loop = false;
+                ans = v;
+            } else {
+                ans = operation(ans, v);
+            }
+            left += (1L << k);
+        }
+        return ans;
+    }
 };
 
 template <typename T>
