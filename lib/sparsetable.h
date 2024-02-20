@@ -35,20 +35,20 @@ public:
         }
     }
 
-    ll query(int left, int right) const
+    T query(int left, int right) const
     {
         ll k = logTable[right - left + 1];
         return operation(table[left][k], table[right - (1 << k) + 1][k]);
     }
 
     /* Works for non-idempotent operations, e.g. sum, product. Has log(n) query time*/
-    ll query_nonidempotent(int left, int right) const
+    T query_nonidempotent(int left, int right) const
     {
-        ll ans;
+        T ans;
         bool first_loop = true;
         while(left <= right) {
             ll k = logTable[right - left + 1];
-            int v = table[left][k];
+            T v = table[left][k];
             if (first_loop) {
                 first_loop = false;
                 ans = v;
