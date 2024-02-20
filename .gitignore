@@ -10,3 +10,4 @@ lib/snippets
 lib/testing
 *.ipynb
 .ipynb_checkpoints
+solutions
