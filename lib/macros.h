@@ -70,6 +70,9 @@ inline ll len(const T& v)
 #define ALL(x) (x).begin(), (x).end()
 #define SLC(x, i1, i2) (x).begin() + i1, (x).begin() + i2
 
+/**
+ * Computes ceildiv, but handles negatives properly
+*/
 template <typename T, typename Y>
 inline ll ceildiv(T x, Y y)
 {
@@ -82,6 +85,9 @@ inline ll ceildiv(T x, Y y)
     return x / y + (x % y != 0);
 }
 
+/**
+ * Computes floordiv, but handles negatives properly
+*/
 template <typename T, typename Y>
 inline ll floordiv(T x, Y y)
 {
@@ -192,6 +198,11 @@ struct custom_hash {
 
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
+/**
+ * Generate a random number between a and b inclusive
+ * 
+ * Ex: uid(4, 9);
+*/
 #define uid(a, b) uniform_int_distribution<ll>(a, b)(rng)
 
 typedef vector<vector<int>> vvi;
@@ -234,6 +245,9 @@ using maxheap = priority_queue<T, vector<T>, less<T>>;
 template <typename T>
 using minheap = priority_queue<T, vector<T>, greater<T>>;
 
+/**
+ * Allows addition of dicts. Merges and adds values when keys overlap.
+*/
 template <typename K, typename V>
 umap<K, V> operator+(const umap<K, V>& lhs, const umap<K, V>& rhs)
 {
@@ -246,6 +260,13 @@ umap<K, V> operator+(const umap<K, V>& lhs, const umap<K, V>& rhs)
     return result;
 }
 
+/**
+ * Extract value from a map without modification.
+ * 
+ * Ex. map << 5
+ * is equivalent to map[5], but it does not insert the 5 into the map
+ * if it is not there
+*/
 template <typename Key, typename Value>
 Value operator<<(const umap<Key, Value>& map, const Key& key)
 {
@@ -451,6 +472,12 @@ void chkmod(T& a, S m = MOD)
     a = mod(a, m);
 }
 
+/**
+ * Clipped multiplication (cmul)
+ * 
+ * Returns a * b, unless a * b will overflow, in which case it
+ * clips it between LONG_LONG_MIN and LONG_LONG_MAX
+*/
 ll cmul(ll a, ll b)
 {
     if (b == 0)
