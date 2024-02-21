@@ -46,7 +46,7 @@ public:
     {
         T ans;
         bool first_loop = true;
-        while(left <= right) {
+        while (left <= right) {
             ll k = logTable[right - left + 1];
             T v = table[left][k];
             if (first_loop) {
