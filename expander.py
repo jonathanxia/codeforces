@@ -31,6 +31,7 @@ class Expander:
         self.lib_paths = lib_paths
 
     included = set()  # type: Set[Path]
+    included_names = set() # type: Set[str]
 
     def find_acl(self, acl_name: str) -> Path:
         for lib_path in self.lib_paths:
@@ -57,6 +58,7 @@ class Expander:
             m = self.atcoder_include.match(line)
             if m:
                 name = m.group(1)
+                self.included_names.add(name)
                 result.extend(self.expand_acl(self.find_acl(name)))
                 continue
 
@@ -70,11 +72,18 @@ class Expander:
             m = self.atcoder_include.match(line)
             if m:
                 acl_path = self.find_acl(m.group(1))
+                self.included_names.add(m.group(1))
                 result.extend(self.expand_acl(acl_path))
                 continue
 
             result.append(line)
-        return '\n'.join(result)
+        
+        # Include the stuff that was included at the top of the
+        # file as comments
+        header = []
+        for fname in self.included_names:
+            header.append(f"// #include<{fname}>")
+        return '\n'.join(header + result)
 
 
 if __name__ == "__main__":

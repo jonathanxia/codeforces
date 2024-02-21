@@ -51,14 +51,12 @@ def run_atcoder_process(fname):
 
 if __name__ == "__main__":
     fname = sys.argv[1]
+    is_cpp = False
     if fname.endswith(".py"):
         comment = "#"
     else:
+        is_cpp = True
         comment = "//"
-
-        # If we are in c++, we should run the atcoder preprocessor first
-        # This SHOULD be a nop if you don't use the atcoder library at all
-        run_atcoder_process(fname)
 
     out = "\n".join(open_filename(fname, comment))
     preamble = "\n".join(
@@ -67,3 +65,9 @@ if __name__ == "__main__":
 
     with open(fname, "w") as f:
         f.write(preamble + "\n" + out)
+
+    # If we are in c++, we should run the atcoder preprocessor first
+    # This SHOULD be a nop if you don't use the atcoder library at all
+    if is_cpp:
+        run_atcoder_process(fname)
+
