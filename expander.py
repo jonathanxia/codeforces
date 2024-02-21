@@ -15,6 +15,8 @@ logger = getLogger(__name__)  # type: Logger
 class Expander:
     atcoder_include = re.compile(
         r'#include\s*["<](atcoder/[a-z_]*(|.hpp))[">]\s*')
+    atcoder_ghost_include = re.compile(
+        r'//\s*#include\s*["<](atcoder/[a-z_]*(|.hpp))[">]\s*')
 
     include_guard = re.compile(r'#.*ATCODER_[A-Z_]*_HPP')
 
@@ -76,8 +78,18 @@ class Expander:
                 result.extend(self.expand_acl(acl_path))
                 continue
 
+            m = self.atcoder_ghost_include.match(line)
+            if m:
+                # This means we already included a library and
+                # we should mark that we have but not recurse
+                # into it
+                self.included_names.add(m.group(1))
+                acl_path = self.find_acl(m.group(1))
+                self.included.add(acl_path)
+                continue
+
             result.append(line)
-        
+
         # Include the stuff that was included at the top of the
         # file as comments
         header = []
