@@ -5,7 +5,7 @@
 void init()
 {
     ios_base::sync_with_stdio(false), cin.tie(nullptr);
-    cout << setprecision(9);
+    cout << setprecision(16) << std::fixed;
 }
 
 template <typename T1, typename T2>
