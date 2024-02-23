@@ -3,14 +3,13 @@
 // Numpy
 
 template <typename T>
-class ndarray {
-public:
+struct matrix {
     int n_rows; // number of rows
     int n_cols; // number of columns
     vector<T> data; // vector to store the data
 
     // Constructor to initialize the 2D array with given shape
-    ndarray(int n_rows_, int n_cols_)
+    matrix(int n_rows_, int n_cols_)
         : n_rows(n_rows_)
         , n_cols(n_cols_)
         , data(n_rows_ * n_cols_)
@@ -18,14 +17,14 @@ public:
     }
 
     // Fill constructor
-    ndarray(int n_rows_, int n_cols_, T value_)
-        : ndarray(n_rows_, n_cols_)
+    matrix(int n_rows_, int n_cols_, T value_)
+        : matrix(n_rows_, n_cols_)
     {
         fill(value_);
     }
 
     // Member list constructor
-    ndarray(int n_rows_, int n_cols_, initializer_list<T> values_)
+    matrix(int n_rows_, int n_cols_, initializer_list<T> values_)
         : n_rows(n_rows_)
         , n_cols(n_cols_)
         , data(values_)
@@ -34,7 +33,7 @@ public:
     }
 
     // Vector constructor 
-    ndarray(int n_rows_, int n_cols_, vector<T> values_)
+    matrix(int n_rows_, int n_cols_, vector<T> values_)
         : n_rows(n_rows_)
         , n_cols(n_cols_)
         , data(values_)
@@ -172,9 +171,9 @@ public:
         return ret;
     }
 
-    ndarray<T> slice(int istart, int iend, int jstart, int jend)
+    matrix<T> slice(int istart, int iend, int jstart, int jend)
     {
-        ndarray<T> subarray(iend - istart + 1, jend - jstart + 1);
+        matrix<T> subarray(iend - istart + 1, jend - jstart + 1);
         FOR(i, istart, iend)
         {
             FOR(j, jstart, jend)
@@ -185,9 +184,9 @@ public:
         return subarray;
     }
 
-    ndarray<T> transpose()
+    matrix<T> transpose()
     {
-        ndarray<T> output(n_cols, n_rows);
+        matrix<T> output(n_cols, n_rows);
 
         repe(i, 0, n_rows)
         {
@@ -201,7 +200,7 @@ public:
 };
 namespace linalg {
 template <typename T>
-T sum(const ndarray<T>& arr)
+T sum(const matrix<T>& arr)
 {
     int n_rows = arr.get_n_rows();
     int n_cols = arr.get_n_cols();
@@ -216,12 +215,12 @@ T sum(const ndarray<T>& arr)
     return tot;
 }
 template <typename T>
-ndarray<T> mult(const ndarray<T>& left, const ndarray<T>& right)
+matrix<T> mult(const matrix<T>& left, const matrix<T>& right)
 {
     if (left.get_n_cols() != right.get_n_rows())
         throw std::out_of_range("mult: Matrices have mismatching dimensions");
 
-    ndarray<T> result(left.get_n_rows(), right.get_n_cols(), T(0));
+    matrix<T> result(left.get_n_rows(), right.get_n_cols(), T(0));
 
     int i_max = left.get_n_rows();
     int j_max = right.get_n_cols();
@@ -241,9 +240,9 @@ ndarray<T> mult(const ndarray<T>& left, const ndarray<T>& right)
     return result;
 }
 template <typename T>
-ndarray<T> identity(ll size)
+matrix<T> identity(ll size)
 {
-    ndarray<T> I(size, size, T(0));
+    matrix<T> I(size, size, T(0));
     repe(i, 0, size)
     {
         I(i, i) = T(1);
@@ -253,12 +252,12 @@ ndarray<T> identity(ll size)
 // given cos and sin of some theta, returns rotation matrix for rotating
 // counter-clockwise
 template <typename T>
-ndarray<T> rotation(T cos, T sin)
+matrix<T> rotation(T cos, T sin)
 {
-    return ndarray<T>(2, 2, { cos, -sin, sin, cos });
+    return matrix<T>(2, 2, { cos, -sin, sin, cos });
 }
 template <typename T>
-ndarray<T> pow(ndarray<T> base, ll exp)
+matrix<T> pow(matrix<T> base, ll exp)
 {
     if (base.get_n_cols() != base.get_n_rows())
         throw std::out_of_range("pow: Matrix is not square");
@@ -266,19 +265,19 @@ ndarray<T> pow(ndarray<T> base, ll exp)
         return identity<T>(base.get_n_rows());
     if (exp == 1)
         return base;
-    ndarray<T> result = pow(base, exp / 2);
+    matrix<T> result = pow(base, exp / 2);
     result = mult(result, result);
     if (exp % 2)
         result = mult(result, base);
     return result;
 }
 }
-typedef ndarray<ll> llarray;
-typedef ndarray<int> intarray;
+typedef matrix<ll> llarray;
+typedef matrix<int> intarray;
 
 // Overload the << operator to print the elements of the 2D array
 template <typename T>
-std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr)
+std::ostream& operator<<(std::ostream& os, const matrix<T>& arr)
 {
     for (int i = 0; i < arr.get_n_rows(); i++) {
         for (int j = 0; j < arr.get_n_cols(); j++) {
@@ -292,6 +291,6 @@ std::ostream& operator<<(std::ostream& os, const ndarray<T>& arr)
 }
 
 template <typename T>
-ndarray<T> operator*(const ndarray<T>& mat1, const ndarray<T>& mat2) {
+matrix<T> operator*(const matrix<T>& mat1, const matrix<T>& mat2) {
     return linalg::mult(mat1, mat2);
 }
