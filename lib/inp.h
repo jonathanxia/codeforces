@@ -1,6 +1,31 @@
 #pragma once
 #include <lib/macros.h>
 
+template <typename S, typename T>
+istream &operator>>(istream &input, pair<S, T> &p)
+{
+    input >> p.first >> p.second;
+    return input;
+}
+
+template <typename T>
+istream &operator>>(istream &input, vector<T> &vec)
+{
+    for (auto &element : vec)
+    {
+        input >> element;
+    }
+    return input;
+}
+
+template<typename T>
+istream& operator>>(istream& input, deque<T>& vec) {
+    for (auto& element : vec) {
+        input >> element;
+    }
+    return input;
+}
+
 // Input
 namespace inp
 {
@@ -66,29 +91,4 @@ namespace inp
         cin >> t;
         read(args...);
     }
-}
-
-template <typename S, typename T>
-istream &operator>>(istream &input, pair<S, T> &p)
-{
-    input >> p.first >> p.second;
-    return input;
-}
-
-template <typename T>
-istream &operator>>(istream &input, vector<T> &vec)
-{
-    for (auto &element : vec)
-    {
-        input >> element;
-    }
-    return input;
-}
-
-template<typename T>
-istream& operator>>(istream& input, deque<T>& vec) {
-    for (auto& element : vec) {
-        input >> element;
-    }
-    return input;
 }
