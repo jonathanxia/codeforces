@@ -41,6 +41,14 @@ namespace str
         return ll(idx);
     }
 
+    ll indexof(string s, char c)
+    {
+        auto idx = s.find(c);
+        if (idx == std::string::npos)
+            return -1;
+        return ll(idx);
+    }
+
     ll contains(string s, string s2)
     {
         return indexof(s, s2) != -1;
