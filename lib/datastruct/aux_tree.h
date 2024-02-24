@@ -16,6 +16,24 @@
  * of the size of G.
  *
  * Inspired by radoslav11
+ * 
+ * Usage: https://codeforces.com/contest/1923/submission/248043301
+ * 
+ *  // vvl colors...
+ *  DfsTree tree(graph, 0);
+    LCATree lca_tree(tree);
+    FOR(c, 1, n) {
+        if (len(colors[c]) == 0) continue;
+        AuxTree aux_tree(lca_tree, colors[c]);
+        function<void(ll)> dfs = [&](ll node) {
+            // stuff...
+            foreach(child, aux_tree.vg[node]) {
+                dfs(child);
+            }
+            // Post process
+        };
+        dfs(aux_tree.root);
+    }
 */
 
 struct AuxTree {
