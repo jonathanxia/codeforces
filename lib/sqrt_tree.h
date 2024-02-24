@@ -19,6 +19,37 @@ You need to override:
 runtimes:
     update - O(sqrt(n) * O(merge_small + merge_large))
     query - O(get_answer)
+
+Usage: https://atcoder.jp/contests/abc342/submissions/50620496
+
+    using MS = multiset<int>;
+    SqrtTree<MS, MS, int, int> st(
+        n+1,
+        [](MS& ms, int x) { if(x > 0) ms.insert(x); else ms.erase(ms.find(-x));  },
+        [](MS& ms, int x) { if(x > 0) ms.insert(x); else ms.erase(ms.find(-x));  },
+        [](MS& a, MS& b) {
+            int ans = -1e9;
+            if (!a.empty()) chkmax(ans, *a.rbegin());
+            if (!b.empty()) chkmax(ans, *b.rbegin());
+            return ans;
+        }
+    );
+
+    //...
+
+    FOR(num, 1, q) {
+        int t; read(t);
+        if (t == 1) {
+            int l,r,x; read(l,r,x);
+            st.update(l,r,x);
+            //...
+        }
+        //...
+        } else {
+            int i; read(i);
+            print(st.query(i));
+        }
+    }
 */
 template<typename S, typename B, typename M, typename O>
 struct SqrtTree {
