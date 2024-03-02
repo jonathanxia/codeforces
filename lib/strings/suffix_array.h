@@ -7,12 +7,22 @@
  * \texttt{sa[i]} is the starting index of the suffix which
  * is $i$'th in the sorted suffix array.
  * The returned vector is of size $n+1$, and \texttt{sa[0] = n}.
- * The \texttt{lcp} array contains longest common prefixes for
+ * The lcp array contains longest common prefixes for
  * neighbouring strings in the suffix array:
- * \texttt{lcp[i] = lcp(sa[i], sa[i-1])}, \texttt{lcp[0] = 0}.
- * The input string must not contain any zero bytes.
+ * 
+ *     lcp[i] = lcp(sa[i], sa[i-1]),
+ *     lcp[0] = 0.
+ * 
  * Time: O(n \log n)
  * Status: stress-tested
+ * 
+ * Usage: https://codeforces.com/contest/1923/submission/249026778
+ * 
+ * vi rbits(...);
+ * SuffixArray sfx(rbits);
+ * 
+ * sfx.rank[x] // gets the rank (starting from 1) of the suffix starting at x -> $
+ * 
  */
 
 struct SuffixArray {
