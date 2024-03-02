@@ -33,7 +33,7 @@ template <class S, S (*op)(S, S), S (*e)()> struct segtree {
         d = std::vector<S>(2 * size, e());
         for (int i = 0; i < _n; i++) d[size + i] = v[i];
         for (int i = size - 1; i >= 1; i--) {
-            update(i);
+            update_(i);
         }
     }
 
@@ -41,9 +41,12 @@ template <class S, S (*op)(S, S), S (*e)()> struct segtree {
         assert(0 <= p && p < _n);
         p += size;
         d[p] = x;
-        for (int i = 1; i <= log; i++) update(p >> i);
+        for (int i = 1; i <= log; i++) update_(p >> i);
     }
 
+    /**
+     * Equivalent to set(), just to match Rado interface.
+    */
     void update(int p, S x) {
         set(p, x);
     }
@@ -139,7 +142,7 @@ template <class S, S (*op)(S, S), S (*e)()> struct segtree {
     int _n, size, log;
     std::vector<S> d;
 
-    void update(int k) { d[k] = op(d[2 * k], d[2 * k + 1]); }
+    void update_(int k) { d[k] = op(d[2 * k], d[2 * k + 1]); }
 };
 
 }  // namespace atcoder
