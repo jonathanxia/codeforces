@@ -74,8 +74,6 @@ struct DfsTree {
     }
 };
 
-
-
 struct LCATree {
     const DfsTree& forest;
     SparseTable<int> st;
@@ -92,6 +90,9 @@ struct LCATree {
         }
     }
 
+    /**
+     * Returns the lca of nodes a and b in the tree
+    */
     ll lca(ll a, ll b) const
     {
         a = forest.node_to_counter[a];
@@ -102,7 +103,25 @@ struct LCATree {
         ll mn = st.query(min(idxa, idxb), max(idxa, idxb));
         return forest.counter_to_node[mn];
     }
+
+    /**
+     * Returns the distance between nodes a and b in the tree.
+    */
+    ll dist(ll a, ll b) const {
+        ll l = lca(a, b);
+        return forest.height[a] + forest.height[b] - 2 * forest.height[l];
+    }
+
+    /**
+     * Returns the weighted distance between nodes a and b in the tree.
+    */
+    ll weighted_dist(ll a, ll b) const {
+        ll l = lca(a, b);
+        return forest.weighted_height[a] + forest.weighted_height[b] - 2 * forest.weighted_height[l];
+    }
 };
+
+
 
 struct AncestorTree {
     vvi ancestors; // ancestors[i][v] gives the 2^i-th ancestor of v
