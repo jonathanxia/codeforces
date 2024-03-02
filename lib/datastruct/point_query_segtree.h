@@ -1,3 +1,4 @@
+#pragma once
 #include <lib/common.h>
 /**
  * A segment tree that allows range updates, but does not push down those updates.
