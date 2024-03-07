@@ -170,6 +170,14 @@ struct SuffixAutomaton
     vi endpos_size;
     vb _eps_visited;
 
+    // Smallest element of the endpos set
+    vi endpos_min;
+
+    // Number of unique substrings that start from
+    // node. Needs to be ll since answer could be n^2
+    vl count;
+    vb _count_visited;
+
     // The finalize method. Needs to be called manually for
     // generalised setting, since the finalization of
     // main path depends on which string s you query for.
@@ -182,6 +190,9 @@ struct SuffixAutomaton
         is_main_path.resize(len(length));
         main_path_idx.resize(len(length), -1);
         endpos_size.resize(len(length), 0);
+        endpos_min.resize(n, n + 3);
+
+        count.resize(n, 1);
 
         ll p = 0;
         is_main_path[p] = true;
@@ -190,6 +201,7 @@ struct SuffixAutomaton
             is_main_path[p] = true;
             main_path_idx[p] = i;
             endpos_size[p] = 1;
+            endpos_min[p] = i;
         }
 
         inv_link.resize(len(length));
@@ -199,6 +211,9 @@ struct SuffixAutomaton
         // Calculate endpos size properly, by performing dfs
         _eps_visited.resize(n, false);
         _endpos_size_dfs(0);
+
+        _count_visited.resize(n, false);
+        _count_dfs(0);
     }
 
     void _endpos_size_dfs(ll node) {
@@ -207,6 +222,15 @@ struct SuffixAutomaton
             if (!_eps_visited[child])
                 _endpos_size_dfs(child);
             endpos_size[node] += endpos_size[child];
+            chkmin(endpos_min[node], endpos_min[child]);
+        }
+    }
+
+    void _count_dfs(ll node) {
+        _count_visited[node] = true;
+        foreachp(ch, child, to[node]) {
+            if (!_count_visited[child]) _count_dfs(child);
+            count[node] += count[child];
         }
     }
 
@@ -251,6 +275,37 @@ struct SuffixAutomaton
 
         assert(finalized);
         return endpos_size[node];
+    }
+
+    // Returns the first position the string s
+    // shows up. -1 if s is not a substring
+    ll first_position(const string& s) {
+        ll node = find_node(s);
+        if (node == -1) return -1;
+        return endpos_min[node] - len(s) + 1;
+    }
+
+    // Computes the kth smallest distinct string (lexographically)
+    // in the automata
+    // Usage: https://atcoder.jp/contests/abc097/submissions/50970383
+    string kth_lexo_string(int k) {
+        string s;
+
+        ll node = 0;
+        while (k > 0) {
+            ll c = 1;
+            foreachp(ch, child, to[node]) {
+                if (c + count[child] > k) {
+                    node = child;
+                    s += ch;
+                    break;
+                }
+                c += count[child];
+            }
+            k -= c;
+        }
+
+        return s;
     }
 };
 
