@@ -11,6 +11,8 @@
  * cp-algorithms for why these are useful.
  *
  * Usage: https://cses.fi/problemset/result/8658481/
+ * 
+ * Advanced usage: https://codeforces.com/contest/235/submission/250301663
 */
 struct SuffixAutomaton
 {
@@ -175,7 +177,10 @@ struct SuffixAutomaton
 
     // Number of unique substrings that start from
     // node. Needs to be ll since answer could be n^2
-    vl count;
+    vl uniq_count;
+    // Number of substrings that start from node, where
+    // duplicates will be counted
+    vl tot_count;
     vb _count_visited;
 
     // The finalize method. Needs to be called manually for
@@ -192,7 +197,8 @@ struct SuffixAutomaton
         endpos_size.resize(len(length), 0);
         endpos_min.resize(n, n + 3);
 
-        count.resize(n, 1);
+        uniq_count.resize(n, 1);
+        tot_count.resize(n, 0);
 
         ll p = 0;
         is_main_path[p] = true;
@@ -228,9 +234,11 @@ struct SuffixAutomaton
 
     void _count_dfs(ll node) {
         _count_visited[node] = true;
+        tot_count[node] = endpos_size[node]; // Initialize
         foreachp(ch, child, to[node]) {
             if (!_count_visited[child]) _count_dfs(child);
-            count[node] += count[child];
+            uniq_count[node] += uniq_count[child];
+            tot_count[node] += tot_count[child];
         }
     }
 
@@ -286,26 +294,54 @@ struct SuffixAutomaton
     }
 
     // Computes the kth smallest distinct string (lexographically)
-    // in the automata
-    // Usage: https://atcoder.jp/contests/abc097/submissions/50970383
-    string kth_lexo_string(int k) {
+    // in the automata. Note that the empty string is counted as the
+    // 0th string.
+    // Usage: https://atcoder.jp/contests/abc097/submissions/50987820
+    string kth_unique_lexo_string(int k) {
         string s;
 
         ll node = 0;
         while (k > 0) {
             ll c = 1;
             foreachp(ch, child, to[node]) {
-                if (c + count[child] > k) {
+                if (c + uniq_count[child] > k) {
                     node = child;
                     s += ch;
                     break;
                 }
-                c += count[child];
+                c += uniq_count[child];
             }
             k -= c;
         }
 
         return s;
     }
+
+    // Computes the kth smallest string (lexographically)
+    // in the automata. This includes duplicates.
+    // Note: the empty string is counted once as the 0th
+    // Usage: https://codeforces.com/contest/128/submission/250275110
+    string kth_lexo_string(int k) {
+        string s;
+        ll n = length[last];
+        k += n - 1; // have to skip the empty strings
+
+        ll node = 0;
+        while (k >= endpos_size[node]) {
+            ll c = endpos_size[node];
+            foreachp(ch, child, to[node]) {
+                if (c + tot_count[child] > k) {
+                    node = child;
+                    s += ch;
+                    break;
+                }
+                c += tot_count[child];
+            }
+            k -= c;
+        }
+
+        return s;
+    }
+
 };
 
