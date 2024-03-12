@@ -183,6 +183,8 @@ struct SuffixAutomaton
     vl tot_count;
     vb _count_visited;
 
+    vb is_end; // Whether this is a terminal node
+
     // The finalize method. Needs to be called manually for
     // generalised setting, since the finalization of
     // main path depends on which string s you query for.
@@ -200,6 +202,8 @@ struct SuffixAutomaton
         uniq_count.resize(n, 1);
         tot_count.resize(n, 0);
 
+        is_end.resize(n, false);
+
         ll p = 0;
         is_main_path[p] = true;
         walk(i, s) {
@@ -208,6 +212,18 @@ struct SuffixAutomaton
             main_path_idx[p] = i;
             endpos_size[p] = 1;
             endpos_min[p] = i;
+        }
+
+        {
+            // Terminal nodes are anybody with an
+            // endpos set that ends with index {n - 1}
+            // This of course is just all the parents of the
+            // last node
+            ll q = p;
+            while (q != 0) {
+                is_end[q] = true;
+                q = link[q];
+            }
         }
 
         inv_link.resize(len(length));
