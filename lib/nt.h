@@ -124,6 +124,11 @@ T2 get_digit(T1 n, T2 b, ll i) {
     }
 }
 
+template <typename T1=ll>
+int get_bit(T1 n, ll i) {
+    return ((1LL << i) & n) > 0;
+}
+
 template <typename T=ll>
 T inv(T x, T y)
 {
