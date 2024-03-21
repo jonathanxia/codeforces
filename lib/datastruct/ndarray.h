@@ -32,9 +32,20 @@ struct ndarray {
         return data[flatIndex];
     }
 
+    T sum() {
+        T tot(0);
+        FOR(i, 0, len(data) - 2) tot += data[i];
+        return tot;
+    }
+
     array<int, num_dimensions> multiplier;
     array<int, num_dimensions> dimensions;
     vector<T> data;
+
+    friend std::istream& operator>>(std::istream& os, ndarray& arr) {
+        FOR(i, 0, len(arr.data) - 2) os >> arr.data[i];
+        return os;
+    }
 
     friend std::ostream& operator<<(std::ostream& os, const ndarray& arr) {
         // For a 1D array, just print the array
