@@ -491,6 +491,8 @@ struct MultiPrecisionInteger {
   M& operator*=(const M& rhs) { return (*this) = (*this) * rhs; }
   M& operator/=(const M& rhs) { return (*this) = (*this) / rhs; }
   M& operator%=(const M& rhs) { return (*this) = (*this) % rhs; }
+  M& operator++() { return (*this) = (*this) + 1; }
+  const M operator++(int) { (*this) = (*this) + 1; return (*this) - 1; }
 
   M operator-() const {
     if (is_zero()) return *this;
