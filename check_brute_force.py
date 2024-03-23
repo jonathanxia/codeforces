@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 import sys
 import os
-import numpy as np
-from subprocess import run, check_output, STDOUT
-import random
-import string
+import argparse
+from subprocess import run, check_output, STDOUT, PIPE
+import subprocess
 
 COMPILE_CMD = "g++ -g -Wno-return-type -Wshadow -O3 -std=c++17 -D_GLIBCXX_DEBUG -fsanitize=undefined,address -ftrapv"
 TESTCASE_FILE = "brute_force.input"
+SAVE_TESTCASE_FILE = "bad_input"
 
-NUM_TRIALS = 4
+NUM_TRIALS = 1000
 
 # To use this, create a separate checker called brute.cpp
 # If you want to just catch a runtime error, you can of course
@@ -19,104 +19,125 @@ NUM_TRIALS = 4
 
 # Then, run check_brute_force.py <your src code>
 
-def list_to_str(arr):
-    return " ".join([str(x) for x in arr])
-
-def generate_tree(N, w_max=10 ** 9):
+def run_script_and_save_output(script_path, output_file):
     """
-    Generates a tree with N vertices and weights
-
-    A list of triples (u, v, w) which are 1 indexed.
+    Runs a script and saves the output
     """
-    edges = []
-    for i in range(2, N + 1):
-        edges.append((i, np.random.randint(1, i), np.random.randint(1, w_max + 1)))
-    
-    return edges
+    with open(output_file, 'w') as f:
+        run(['python', script_path], stdout=f, stderr=PIPE, text=True)
 
-def generate_random_string(length):
-    """
-    Generate a random string of the specified length.
+def generate_test_cases(mode, gen_script):
+    for counter in range(NUM_TRIALS):
+        print("Checking test", counter)
+        run_script_and_save_output(gen_script, TESTCASE_FILE)
 
-    Parameters:
-    - length (int): The length of the random string to generate.
+        if mode == "stress" or mode == "check":
+            check_test()
+        elif mode == "validate":
+            validate_test()
+        else:
+            raise ValueError(f"Unknown mode {mode}")
 
-    Returns:
-    - str: The generated random string.
-    """
-    characters = string.ascii_letters + string.digits  # You can customize this if you want other characters
-    random_string = ''.join(random.choice(characters) for _ in range(length))
-    return random_string
+        print("OK")
 
-def generate_random_lowercase_string(length):
-    """
-    Generate a random string of lowercase letters with the specified length.
+def copy_file_contents(source_file, destination_file):
+    try:
+        with open(source_file, 'r') as source:
+            with open(destination_file, 'w') as destination:
+                destination.write(source.read())
+    except FileNotFoundError:
+        print("File not found:", source_file)
 
-    Parameters:
-    - length (int): The length of the random string to generate.
-
-    Returns:
-    - str: The generated random string.
-    """
-    characters = string.ascii_lowercase
-    random_string = ''.join(random.choice(characters) for _ in range(length))
-    return random_string
-
-
-# Create your own test case, you can specify your own parameters
-# and then iterate over them in generate_test_cases
-
-# The prnt function is for convenience
-def create_test_case(N, K, M, prnt):
-    prnt(1)
-    prnt(N, K, M)
-
-    prnt(generate_random_lowercase_string(M))
-
-def generate_test_cases():
-    counter = 0
-    for N in range(1, 27):
-        # for M in range(1, 40, 4):
-        for K in range(1, 27):
-            for M in [1, 2, 3, 10, 100, 1000]:
-                for _ in range(NUM_TRIALS):
-                    counter += 1
-                    print("Checking test", counter)
-
-                    # Erase the test case file
-                    with open(TESTCASE_FILE, "w") as f:
-                        def prnt(*args, **kwargs):
-                            kwargs["file"] = f
-                            print(*args, **kwargs)
-                
-                        create_test_case(N, K, M, prnt)
-                        f.flush()
-                        validate_test()
-                        print("OK")
-
-def validate_test():
+def check_test():
     a_result = check_output("./a.out", stdin=open(TESTCASE_FILE, "r"), shell=True, timeout=5)
     b_result = check_output("./b.out", stdin=open(TESTCASE_FILE, "r"), shell=True, timeout=5)
 
     if a_result != b_result:
         print("Received different results on test case, see", TESTCASE_FILE)
-        print("Result from a.out:")
+        print("Input test case also saved in", SAVE_TESTCASE_FILE)
+        print("Result from your file (a.out):")
         print(a_result.decode("utf-8"))
         print()
-        print("Result from b.out:")
+        print("Result from brute force (b.out):")
         print(b_result.decode("utf-8"))
+
+        # Do this at the end in case copy file contents has a bug
+        copy_file_contents(TESTCASE_FILE, SAVE_TESTCASE_FILE)
         sys.exit(1)
 
+
+def run_executable_with_input(executable, input_data, timeout):
+    result = subprocess.run(
+        executable,
+        input=input_data.encode(),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        timeout=timeout
+    )
+    return result.stdout.decode("utf-8").strip(), result.stderr.decode("utf-8").strip()
+
+def validate_test():
+    # Run executable a.out with input from TESTCASE_FILE
+    A_OUT_EXECUTABLE = "./a.out"
+    B_OUT_EXECUTABLE = "./b.out"
+
+    with open(TESTCASE_FILE, 'r') as f:
+        input_data = f.read()
+    
+    a_out_stdout, _ = run_executable_with_input(A_OUT_EXECUTABLE, input_data, 5)
+    if a_out_stdout == "Timeout":
+        print("Executable a.out timed out.")
+        return
+    
+    # Append a_out_stdout to the input data and run executable b.out
+    input_data_with_a_out_stdout = input_data + "\n" + a_out_stdout
+    b_out_stdout, b_out_stderr = run_executable_with_input(B_OUT_EXECUTABLE, input_data_with_a_out_stdout, 5)
+    
+    # Check if b_out_stdout is exactly "OK"
+    if b_out_stdout == "OK":
+        print("Test passed.")
+    else:
+        print("Test failed.")
+        print("Output message from b.out:", b_out_stdout)
+        print("Error message from b.out:", b_out_stderr)
+        print(f"Contents of {TESTCASE_FILE}:")
+        print(input_data)
+        print("Output of a.out:")
+        print(a_out_stdout)
+
+
+def parse_arguments():
+    """
+    Parses arguments for the various modes
+    """
+    parser = argparse.ArgumentParser(description='Parse command line arguments.')
+    parser.add_argument('filename', type=str, help='Main filename')
+    parser.add_argument('--brute_force', type=str, default='brute.cpp', help='Filename of the brute force file (default: brute.cpp)')
+    parser.add_argument('--generate_script', type=str, default='generate.py', help='Script the will output a test case')
+    parser.add_argument('--mode', type=str, default='brute', help='Check mode. Options are "brute", "stress", "validate"')
+    args = parser.parse_args()
+    return args
+
 if __name__ == "__main__":
-    src_code = sys.argv[1]
+    opts = parse_arguments()
+
+    src_code = opts.filename
+    mode     = opts.mode
+
     # Compile the source code
     print("Compiling", src_code, "...")
     os.system(f"{COMPILE_CMD} {src_code} -o a.out")
 
-    print("Compiling", "brute.cpp", "...")
-    os.system(f"{COMPILE_CMD} brute.cpp -o b.out")
-
-    if len(sys.argv) >= 3 and sys.argv[2] == "chk":
-        validate_test()
+    # The second file depends on the mode that we are running
+    if mode == "check" or mode == "validate":
+        truth_code = opts.brute_force
+    elif mode == "stress":
+        truth_code = src_code
     else:
-        generate_test_cases()
+        raise ValueError(f"Unknown mode: {mode}")
+
+    print("Compiling", truth_code, "...")
+    os.system(f"{COMPILE_CMD} {truth_code} -o b.out")
+
+    generate_test_cases(mode, opts.generate_script)
