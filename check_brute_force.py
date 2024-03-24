@@ -85,11 +85,13 @@ def validate_test():
     with open(TESTCASE_FILE, 'r') as f:
         input_data = f.read()
     
-    a_out_stdout, _ = run_executable_with_input(A_OUT_EXECUTABLE, input_data, 5)
-    if a_out_stdout == "Timeout":
-        print("Executable a.out timed out.")
-        return
-    
+    a_out_stdout, a_out_stderr = run_executable_with_input(A_OUT_EXECUTABLE, input_data, 5)
+    if a_out_stderr:
+        print("Received stderr:")
+        print(a_out_stderr)
+        print(f"Check {TESTCASE_FILE} for test case")
+        sys.exit(1)
+
     # Append a_out_stdout to the input data and run executable b.out
     input_data_with_a_out_stdout = input_data + "\n" + a_out_stdout
     b_out_stdout, b_out_stderr = run_executable_with_input(B_OUT_EXECUTABLE, input_data_with_a_out_stdout, 5)
