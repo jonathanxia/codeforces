@@ -69,13 +69,13 @@ def check_test():
 def run_executable_with_input(executable, input_data, timeout):
     result = subprocess.run(
         executable,
-        input=input_data.encode(),
+        input=input_data,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
         timeout=timeout
     )
-    return result.stdout.decode("utf-8").strip(), result.stderr.decode("utf-8").strip()
+    return result.stdout.strip(), result.stderr.strip()
 
 def validate_test():
     # Run executable a.out with input from TESTCASE_FILE
@@ -97,7 +97,7 @@ def validate_test():
     b_out_stdout, b_out_stderr = run_executable_with_input(B_OUT_EXECUTABLE, input_data_with_a_out_stdout, 5)
     
     # Check if b_out_stdout is exactly "OK"
-    if b_out_stdout == "OK":
+    if b_out_stdout.strip() == "OK":
         print("Test passed.")
     else:
         print("Test failed.")
@@ -107,6 +107,7 @@ def validate_test():
         print(input_data)
         print("Output of a.out:")
         print(a_out_stdout)
+        sys.exit(1)
 
 
 def parse_arguments():
