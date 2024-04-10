@@ -6,7 +6,10 @@ def list_to_str(arr):
     return " ".join([str(x) for x in arr])
 
 def uid(a, b, n=1):
-    return np.random.randint(a, b + 1, size=n)
+    if n == 1:
+        return np.random.randint(a, b + 1)
+    else:
+        return np.random.randint(a, b + 1, size=n)
 
 def generate_tree(N, w_max=10 ** 9):
     """
@@ -58,9 +61,8 @@ def generate_permutation(n, zero_indexed=False):
         return [x + 1 for x in random.sample(range(n), n)]
 
 # Create your own test case
-N = 10 ** 12
-S = 10 ** 5
-T = 10 ** 5
-print(N)
-print(generate_random_lowercase_string(S))
-print(generate_random_lowercase_string(T))
+n = uid(1000, 1000)
+m = uid(1, n // 2)
+print(n, m)
+for i in range(n):
+    print(list_to_str(uid(0, 10 ** 9, n)))
