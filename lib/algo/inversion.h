@@ -40,7 +40,7 @@ namespace algo {
     }
 
     template <typename T>
-    long long count_inversions(std::vector<T>& arr) {
+    long long count_inversions(std::vector<T> arr) {
         std::size_t n = arr.size();
         long long inversions = 0;
 
