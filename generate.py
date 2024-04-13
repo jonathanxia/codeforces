@@ -61,8 +61,6 @@ def generate_permutation(n, zero_indexed=False):
         return [x + 1 for x in random.sample(range(n), n)]
 
 # Create your own test case
-n = uid(1000, 1000)
-m = uid(1, n // 2)
-print(n, m)
-for i in range(n):
-    print(list_to_str(uid(0, 10 ** 9, n)))
+arr = uid(-5, 5, (3, 3))
+for i in range(3):
+    print(list_to_str(arr[i]))
