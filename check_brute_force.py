@@ -118,7 +118,7 @@ def parse_arguments():
     parser.add_argument('filename', type=str, help='Main filename')
     parser.add_argument('--brute_force', type=str, default='brute.cpp', help='Filename of the brute force file (default: brute.cpp)')
     parser.add_argument('--generate_script', type=str, default='generate.py', help='Script the will output a test case')
-    parser.add_argument('--mode', type=str, default='brute', help='Check mode. Options are "brute", "stress", "validate"')
+    parser.add_argument('--mode', type=str, required=True, help='Check mode. Options are "check", "stress", "validate"')
     args = parser.parse_args()
     return args
 
