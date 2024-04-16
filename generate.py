@@ -3,13 +3,23 @@ import random
 import string
 
 def list_to_str(arr):
-    return " ".join([str(x) for x in arr])
+    if is_iterable(arr):
+        return " ".join([str(x) for x in arr])
+    else:
+        return arr
 
 def uid(a, b, n=1):
     if n == 1:
         return np.random.randint(a, b + 1)
     else:
         return np.random.randint(a, b + 1, size=n)
+
+def is_iterable(obj):
+    try:
+        iter(obj)
+        return True
+    except TypeError:
+        return False
 
 def generate_tree(N, w_max=10 ** 9):
     """
@@ -61,6 +71,12 @@ def generate_permutation(n, zero_indexed=False):
         return [x + 1 for x in random.sample(range(n), n)]
 
 # Create your own test case
-arr = uid(-5, 5, (3, 3))
-for i in range(3):
-    print(list_to_str(arr[i]))
+n = uid(4, 10)
+p = uid(1, 10 ** 9)
+q = uid(1, 10 ** 9)
+m = p * q
+a = [p, q] + list(uid(1, 10 ** 16, n - 2))
+
+
+print(n, m)
+print(list_to_str(a))
