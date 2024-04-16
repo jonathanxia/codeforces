@@ -118,6 +118,9 @@ inline ll floordiv(T x, Y y)
 #define foreach(i, c) for (auto& i : c)
 #define foreachp(k, v, c) for (auto& [k, v] : c)
 
+// Loops over all submasks of mask m
+#define foreach_subset(u, m) for (ll u=m; u >= 0; u = u == 0 ? -1 : (u - 1) & m)
+
 // Looping through a container
 #define walk(i, container) for (ll i = 0; i < len(container); ++i)
 #define reverse_walk(i, container) for (ll i = len(container) - 1; i >= 0; --i)
