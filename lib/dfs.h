@@ -72,6 +72,14 @@ struct DfsTree {
             dfs_order.pb(my_counter);
         }
     }
+
+    // Returns if u is an ancestor of v
+    bool is_ancestor(ll u, ll v) {
+        ll cu = node_to_counter[u];
+        ll cv = node_to_counter[v];
+
+        return ordered(cu, cv, cu + num_desc[u] - 1);
+    }
 };
 
 struct LCATree {
