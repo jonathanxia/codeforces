@@ -66,7 +66,9 @@ if __name__ == "__main__":
     with open(fname, "w") as f:
         f.write(preamble + "\n" + out)
 
-    # If we are in c++, we should run the atcoder preprocessor first
+    # If we are in c++, we should run the atcoder preprocessor last.
+    # This is because if something in lib includes atcoder, it will expand
+    # all lib first so it can expand atcoder.
     # This SHOULD be a nop if you don't use the atcoder library at all
     if is_cpp:
         run_atcoder_process(fname)
