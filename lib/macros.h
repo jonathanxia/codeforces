@@ -161,7 +161,7 @@ struct custom_hash {
     template <typename T1, typename T2>
     size_t operator()(const std::pair<T1, T2>& key) const
     {
-        return (*this)(((*this)(key.first) * 37) ^ (*this)(key.second));
+        return (do_hash(key.first) << 21) ^ do_hash(key.second);
     }
 
     size_t operator()(const string& s) const
