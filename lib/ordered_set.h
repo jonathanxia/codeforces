@@ -11,7 +11,10 @@ using ordered_set = tree<
     rb_tree_tag,
     tree_order_statistics_node_update>;
 // find_by_order, order_of_key
-// Note: find_by_order returns number of elements < parameter
+// Detailed doc:
+//    order_of_key(param): returns number of elements < param
+//    find_by_order(idx): returns iterator to the idx-th element of the tree, 0-indexed
+//        e.g., find_by_order(0) is the smallest element
 
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const ordered_set<T> &s)
