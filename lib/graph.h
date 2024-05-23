@@ -273,6 +273,8 @@ namespace graph
         const vl& adj;
         vvl cycs;
 
+        vvl children; // Each node in the cycle has a tree, this defines it
+
         vl cycle_number;
         vl dist_from_cycle;
 
@@ -281,7 +283,8 @@ namespace graph
             in_chain(len(adj_)),
             adj(adj_),
             cycle_number(len(adj_), -1),
-            dist_from_cycle(len(adj_))
+            dist_from_cycle(len(adj_)),
+            children(len(adj_))
         {
             cycs = cycles(adj, in_cycle, in_chain, is1idx);
 
@@ -292,6 +295,10 @@ namespace graph
             ll n = len(adj);
             FOR(i, (int) is1idx, n - 1) {
                 dfs(i);
+            }
+
+            FOR(i, (int) is1idx, n - 1) {
+                if (in_chain[i]) children[adj[i]].pb(i);
             }
         }
 
