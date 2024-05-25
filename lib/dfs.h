@@ -19,6 +19,11 @@ struct DfsTree {
     vi subtree_order; // With node values
     vi dfs_order; // With counters
 
+    // These are "time in" and "time out" when traversing
+    // DFS through the tree.
+    vi tin; // node->time
+    vi tout; // node->time
+
     vi parent;
 
     int cnter = 0;
@@ -37,9 +42,18 @@ struct DfsTree {
         counter_to_node.resize(n, -1);
         node_to_counter.resize(n, -1);
 
+        tin.resize(n, 1e9);
+        tout.resize(n, -1);
+
         cnter = 0;
 
         dfs(root, -1, g);
+
+        walk(t, dfs_order) {
+            ll node = counter_to_node[dfs_order[t]];
+            chkmin(tin[node], t);
+            chkmax(tout[node], t);
+        }
     }
 
     void dfs(ll node, ll par, const vvpl& g)
