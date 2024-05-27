@@ -190,6 +190,8 @@ struct ModInt {
         return is;
     }
 
+    #ifdef DEBUG
+    #ifndef ONLINE_JUDGE
     std::string as_frac() {
         ll denom = 1;
         while (denom * denom <= m_mod) {
@@ -205,6 +207,9 @@ struct ModInt {
         // Give up
         return to_str(m_value) + "/1";
     }
+    #endif
+    #endif
+
 };
 
 typedef ModInt<MOD> MI;
