@@ -54,4 +54,25 @@ void fill(bitset<N>& b, int start, int end) {
     }
 }
 
+/**
+ * Returns the number of 1 <= x <= n such that
+ * the pos-th bit of x is set. Remember that pos is 0-indexed
+ * 
+ * Usage: https://atcoder.jp/contests/abc356/tasks/abc356_d
+*/
+ll num_with_bit_set(ll n, ll pos) {
+    if ((1LL << pos) > n)
+        return 0LL;
+
+    // How many odd numbers < n0?
+    ll n0 = n >> pos;
+    ll ans = (n0 / 2) * (1LL << pos);
+
+    // Tack on the extra numbers
+    if (n0 & 1) {
+        ans += ((1LL << pos) - 1) & n;
+        ans++;
+    }
+    return ans;
+}
 } // namespace bitster
