@@ -68,7 +68,7 @@ inline ll len(const T& v)
 #define eb emplace_back
 #define mp make_pair
 #define ALL(x) (x).begin(), (x).end()
-#define SLC(x, i1, i2) (x).begin() + i1, (x).begin() + i2
+#define SLC(x, i1, i2) (x).begin() + i1, (x).begin() + i2 + 1
 
 /**
  * Computes ceildiv, but handles negatives properly
