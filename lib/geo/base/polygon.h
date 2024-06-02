@@ -19,9 +19,8 @@ namespace geo {
 
     // NOTE: You must call this with the template argument so it knows
     // what type to return
-    template <typename REAL>
     REAL area() {
-        return m_area * 0.5;
+        return REAL(m_area) * 0.5;
     }
 
     T area_2() {
@@ -37,7 +36,6 @@ namespace geo {
         return true;
     }
 
-    template <typename REAL>
     REAL perimeter() {
         REAL ans(0);
         walk(i, points) {
