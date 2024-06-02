@@ -282,9 +282,9 @@ namespace graph
             in_cycle(len(adj_)),
             in_chain(len(adj_)),
             adj(adj_),
+            children(len(adj_)),
             cycle_number(len(adj_), -1),
-            dist_from_cycle(len(adj_)),
-            children(len(adj_))
+            dist_from_cycle(len(adj_))
         {
             cycs = cycles(adj, in_cycle, in_chain, is1idx);
 

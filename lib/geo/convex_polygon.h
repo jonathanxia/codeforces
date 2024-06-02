@@ -17,7 +17,9 @@ struct ConvexPolygon
     int n;
     vc<P> points;
 
-    ConvexPolygon(vc<P> points_, bool is_conv) : n(len(points_)), points(points_)
+    ConvexPolygon() { n = 0; }
+
+    ConvexPolygon(vc<P> points_, bool is_conv=false) : n(len(points_)), points(points_)
     {
         if (!is_conv)
         {
@@ -94,6 +96,7 @@ struct ConvexPolygon
      */
     pair<int, T> min_dot(P p) const
     {
+        if (n == 0) return {-1, numeric_limits<T>::max()};
         int idx = periodic_min_comp([&](int i, int j) -> bool
                                     { return points[i % n].dot(p) < points[j % n].dot(p); });
         return {idx, points[idx].dot(p)};
@@ -104,6 +107,7 @@ struct ConvexPolygon
      */
     pair<int, T> max_dot(P p) const
     {
+        if (n == 0) return {-1, numeric_limits<T>::min()};
         int idx = periodic_min_comp([&](int i, int j) -> bool
                                     { return points[i % n].dot(p) > points[j % n].dot(p); });
         return {idx, points[idx].dot(p)};
