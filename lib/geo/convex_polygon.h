@@ -2,6 +2,10 @@
 #include <lib/vv.h>
 #include <lib/geo/convex_hull_indices.h>
 
+/**
+ * The ConvexPolygon<T> object stores a convex polygon with vertices of type Point<T>.
+ * The points are stored in ccw order and can be accessed through the `points` attribute.
+*/
 namespace geo {
 template <typename T>
 struct ConvexPolygon
@@ -67,7 +71,6 @@ struct ConvexPolygon
         T b = (points[R] - points[0]).det(p - points[0]);
         if (a < 0 || b > 0)
             return -1;
-        // p は 0 から見て [L,R] 方向
         while (R - L >= 2)
         {
             int M = (L + R) / 2;

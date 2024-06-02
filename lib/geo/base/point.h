@@ -1,12 +1,14 @@
 /**
  * Base objects for geometry: Point
- * 
- * Source: maspy, with own edits
 */
 #pragma once
 #include <lib/common.h>
 
 namespace geo {
+    // We define the REAL type here, where you can change this in
+    // later. Basically, Point, Line, etc can be integers if you want, but
+    // some concepts require going to the real numbers, such as area and perimeter.
+    using REAL=long double;
 
 template <class T>
 int sgn(T x) { return (x > 0) - (x < 0); }
@@ -49,11 +51,14 @@ struct Point {
     bool operator>(P p) const { return !(*this <= p); }
 
     // Descriptive methods
-    double norm() { return sqrtl(x * x + y * y); }
+    REAL norm() { return sqrtl(x * x + y * y); }
+
     T dist2() const { return x * x + y * y; }
-    double dist() const { return sqrt((double)dist2()); }
+
+    REAL dist() const { return sqrt(REAL(dist2())); }
+
     // angle to x-axis in interval [-pi, pi]
-    double angle() const { return atan2(y, x); }
+    REAL angle() const { return atan2(y, x); }
 
     T dot(P p) const { return x * p.x + y * p.y; }
     T cross(P p) const { return x * p.y - y * p.x; }
@@ -100,13 +105,11 @@ int ccw(Point<T> A, Point<T> B, Point<T> C) {
   return 0;
 }
 
-template <typename REAL, typename T>
+template <typename T>
 REAL dist(Point<T> A, Point<T> B) {
   A = A - B;
   T p = A.dot(A);
   return sqrt(REAL(p));
 }
-
-
 
 } // namespace geo
