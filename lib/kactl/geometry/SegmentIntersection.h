@@ -23,7 +23,7 @@ Products of three coordinates are used in intermediate steps so watch out for ov
 #include <lib/common.h>
 
 #include <lib/kactl/geometry/Point.h>
-#include <lib/kactl/OnSegment.h>
+#include <lib/kactl/geometry/OnSegment.h>
 
 namespace kactl {
 template<class P> vector<P> segInter(P a, P b, P c, P d) {
