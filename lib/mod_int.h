@@ -144,6 +144,11 @@ struct ModInt {
         update();
         return *this + 1;
     }
+
+    template <typename T>
+    bool operator<(const T& rhs) const {
+        return this->m_value < rhs;
+    }
     // Comparison operators
     template <typename T>
     bool operator==(const T& rhs) const
