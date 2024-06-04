@@ -25,6 +25,7 @@
  * 
  * Usage: 
  *  https://codesprintla24.kattis.com/contests/codesprintla24open/submissions/13774050
+ *  https://codeforces.com/contest/1981/submission/264068967
 */
 namespace graph {
 vector<vector<int>> findEulerianToursAndPaths(vvpl& adjList) {
