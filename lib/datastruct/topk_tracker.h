@@ -2,20 +2,24 @@
 #include <lib/common.h>
 
 // You should use TopKTrackerWithCounts unless you are memory constrained
-template <typename T, std::size_t K>
+// Usage: https://codeforces.com/contest/1980/submission/264982487
+// DEDUP is true means that inserting the same element twice does nothing
+template <typename T, std::size_t K, bool DEDUP=true>
 struct TopKTracker {
     std::array<T, K> topKElements;
     int size;
 
     TopKTracker() : size(0) {}
+    // Fills the array with the dflt value
+    TopKTracker(T dflt) : size(0) { FOR(i, 0, (int) K - 1) addElement(dflt); }
 
     void addElement(T element) {
-        if (containsElement(element)) {
+        if (DEDUP && containsElement(element)) {
             // If the element is already in the top K, do nothing
             return;
         }
 
-        if (size < K) {
+        if (size < int(K)) {
             topKElements[size++] = element;
             manualInsertionSort();
         } else if (element > topKElements[K - 1]) {
@@ -29,7 +33,7 @@ struct TopKTracker {
     TopKTracker operator+(const TopKTracker<T, K>& other) const {
         TopKTracker result = *this;
 
-        for (std::size_t i = 0; i < other.size; ++i) {
+        for (std::size_t i = 0; i < (int) other.size; ++i) {
             result.addElement(other.topKElements[i]);
         }
 
@@ -48,7 +52,7 @@ struct TopKTracker {
     }
 
     void manualInsertionSort() {
-        for (std::size_t i = size - 1; i > 0 && topKElements[i] > topKElements[i - 1]; --i) {
+        for (int i = int(size) - 1; i > 0 && topKElements[i] > topKElements[i - 1]; --i) {
             std::swap(topKElements[i], topKElements[i - 1]);
         }
     }
