@@ -24,7 +24,9 @@ struct TopKTracker {
         }
     }
 
-    TopKTracker operator+(const TopKTracker& other) const {
+    void insert(T element) { addElement(element); }
+
+    TopKTracker operator+(const TopKTracker<T, K>& other) const {
         TopKTracker result = *this;
 
         for (std::size_t i = 0; i < other.size; ++i) {
@@ -32,6 +34,17 @@ struct TopKTracker {
         }
 
         return result;
+    }
+
+    T operator[](size_t idx) { return topKElements[idx]; }
+    friend std::ostream& operator<<(std::ostream& os, const TopKTracker<T, K>& tkt) {
+        os << "{";
+        for (int i = 0; i < tkt.size; i++) {
+            os << tkt.topKElements[i];
+            if (i != tkt.size - 1) os << ", ";
+        }
+        os << "}";
+        return os;
     }
 
     void manualInsertionSort() {
@@ -65,14 +78,30 @@ struct TopKTrackerWithCounts {
         if (size < K) {
             topKElements[size++] = mp(element, count);
             manualInsertionSort();
-        } else if (element > topKElements[K - 1]) {
+        } else if (element > topKElements[K - 1].first) {
             topKElements[K - 1] = mp(element, count);
             manualInsertionSort();
         }
     }
 
-    TopKTracker operator+(const TopKTracker& other) const {
-        TopKTracker result = *this;
+    // Just different name
+    void insert(T element, ll count) { addElement(element, count); }
+
+    pair<T, ll> operator[](size_t idx) { return topKElements[idx]; }
+    friend std::ostream& operator<<(std::ostream& os, const TopKTrackerWithCounts<T, K>& tkt) {
+        os << "{";
+        for (int i = 0; i < tkt.size; i++) {
+            os << tkt.topKElements[i].first << " (x" << tkt.topKElements[i].second << ")";
+            if (i != tkt.size - 1) os << ", ";
+        }
+        os << "}";
+        return os;
+    }
+
+
+
+    TopKTrackerWithCounts operator+(const TopKTrackerWithCounts& other) const {
+        TopKTrackerWithCounts result = *this;
 
         for (std::size_t i = 0; i < other.size; ++i) {
             result.addElement(other.topKElements[i]);
