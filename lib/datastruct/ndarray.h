@@ -10,8 +10,11 @@
  * ndarray<ll> arr({3, 5, 2}, 27);
  * arr(2, 2, 0) = 8;
  * arr(-1, -1, -1) // Gives 27
+ * 
+ * CHECK_DEFAULT_VALUE means that we reset the default value to the
+ * right thing each time. This is safer but costlier.
 */
-template<typename T, int num_dimensions, typename K=ll>
+template<typename T, int num_dimensions, bool CHECK_DEFAULT_VALUE=true>
 struct ndarray {
     T m_default_value;
     // We cannot make this const because the operator= gets deleted
@@ -24,7 +27,7 @@ struct ndarray {
     array<int, num_dimensions> dimensions;
     vector<T> data;
 
-    ndarray(array<K, num_dimensions> _dimensions, T default_value=0) : m_default_value(default_value), saved_default_value(default_value) {
+    ndarray(array<ll, num_dimensions> _dimensions, T default_value=0) : m_default_value(default_value), saved_default_value(default_value) {
         FOR(i, 0, num_dimensions - 1) dimensions[i] = _dimensions[i];
         int rolling_mult = 1;
         DOR(i, num_dimensions-1, 0) {
@@ -38,8 +41,11 @@ struct ndarray {
     T& operator() (Indices... args) {
         array<int, num_dimensions> indices = {static_cast<int>(args)...};
         int flatIndex = 0;
-        m_default_value = saved_default_value; // In case it was modified for some reason
-        FOR(i, 0, num_dimensions-1) if(indices[i] < 0 or indices[i] >= dimensions[i]) return m_default_value;
+
+        FOR(i, 0, num_dimensions-1) if(indices[i] < 0 or indices[i] >= dimensions[i]) {
+            if (CHECK_DEFAULT_VALUE) m_default_value = saved_default_value;
+            return m_default_value;
+        }
         FOR(i, 0, num_dimensions-1) flatIndex += indices[i] * multiplier[i];
         return data[flatIndex];
     }
