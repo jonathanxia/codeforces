@@ -479,25 +479,25 @@ void chkmod(T& a, S m = MOD)
  * Clipped multiplication (cmul)
  * 
  * Returns a * b, unless a * b will overflow, in which case it
- * clips it between LONG_LONG_MIN and LONG_LONG_MAX
+ * clips it between LLONG_MIN and LLONG_MAX
 */
 ll cmul(ll a, ll b)
 {
     if (b == 0)
         return 0;
     if (b > 0) {
-        if (a >= LONG_LONG_MAX / b) {
-            return LONG_LONG_MAX;
-        } else if (a <= LONG_LONG_MIN / b) {
-            return LONG_LONG_MIN;
+        if (a >= LLONG_MAX / b) {
+            return LLONG_MAX;
+        } else if (a <= LLONG_MIN / b) {
+            return LLONG_MIN;
         }
         return a * b;
     }
     // b is negative
-    if (a <= LONG_LONG_MAX / b) {
-        return LONG_LONG_MAX;
-    } else if (a >= LONG_LONG_MIN / b) {
-        return LONG_LONG_MIN;
+    if (a <= LLONG_MAX / b) {
+        return LLONG_MAX;
+    } else if (a >= LLONG_MIN / b) {
+        return LLONG_MIN;
     }
     return a * b;
 }

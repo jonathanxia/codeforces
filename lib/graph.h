@@ -9,7 +9,7 @@ namespace graph
     {
         repe(i, 0, len(dist))
         {
-            dist[i] = LONG_LONG_MAX;
+            dist[i] = LLONG_MAX;
         }
         set<pl> pq;
 
@@ -45,7 +45,7 @@ namespace graph
 
     // Runs bfs on a graph and stores the distances in dist
     // Starts need to be passed in, can have multiple start points
-    vl bfs(const vvl& graph, const vl& starts, ll default_dist = LONG_LONG_MAX) {
+    vl bfs(const vvl& graph, const vl& starts, ll default_dist = LLONG_MAX) {
         ll n = len(graph);
         vl dist(n);
         FOR(i, 0, n - 1) dist[i] = -1;
@@ -74,7 +74,7 @@ namespace graph
     // Runs bfs on a grid problem
     // Starts need to be passed in, can have multiple start points
     // allowed should be set to true if you just want to run BFS on the whole grid
-    void grid_bfs(const vector<vb>& allowed, const vpl& starts, vvl& dist, ll default_dist = LONG_LONG_MAX, bool allow_diag = false) {
+    void grid_bfs(const vector<vb>& allowed, const vpl& starts, vvl& dist, ll default_dist = LLONG_MAX, bool allow_diag = false) {
         ll n = len(allowed);
         ll m = len(allowed[0]);
 
@@ -110,7 +110,7 @@ namespace graph
         }
     }
 
-    vvl grid_bfs(const vector<vb>& allowed, const vpl& starts, ll default_dist = LONG_LONG_MAX, bool allow_diag = false) {
+    vvl grid_bfs(const vector<vb>& allowed, const vpl& starts, ll default_dist = LLONG_MAX, bool allow_diag = false) {
         ll n = len(allowed);
         ll m = len(allowed[0]);
         vvl dist(n, vl(m, -1));
