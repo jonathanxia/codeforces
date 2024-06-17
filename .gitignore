@@ -1,4 +1,5 @@
 *.out
+*.bin
 callgrind.*
 **/.cph/**
 codeforces
@@ -11,3 +12,6 @@ lib/testing
 *.ipynb
 .ipynb_checkpoints
 solutions
+
+*.out.dSYM
+*.bin.dSYM
