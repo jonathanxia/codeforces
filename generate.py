@@ -8,8 +8,8 @@ def list_to_str(arr):
     else:
         return arr
 
-def uid(a, b, n=1):
-    if n == 1:
+def uid(a, b, n=None):
+    if n == None:
         return np.random.randint(a, b + 1)
     else:
         return np.random.randint(a, b + 1, size=n)
@@ -70,13 +70,24 @@ def generate_permutation(n, zero_indexed=False):
     else:
         return [x + 1 for x in random.sample(range(n), n)]
 
+def generate_binary_string(n):
+    """
+    Generates a binary string of length n, randomly
+    """
+    return "".join([str(x) for x in uid(0, 1, n)])
+
 # Create your own test case
-n = uid(4, 10)
-p = uid(1, 10 ** 9)
-q = uid(1, 10 ** 9)
-m = p * q
-a = [p, q] + list(uid(1, 10 ** 16, n - 2))
+print(1)
+n = uid(1, 20)
+print(n)
+s = generate_binary_string(n)
+t = generate_binary_string(n)
 
-
-print(n, m)
-print(list_to_str(a))
+print(s)
+print(t)
+q = uid(1, 10)
+print(q)
+for i in range(q):
+    l = uid(1, n)
+    r = uid(1, n)
+    print(min(l, r), max(l, r))
