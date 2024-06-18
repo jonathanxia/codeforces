@@ -56,6 +56,7 @@ struct cum {
 
     T query(ll idx1, ll idx2) const
     {
+        if (idx1 > idx2) return identity;
         if (idx1 <= 0)
             return prefix(idx2);
         if (idx2 >= n)
