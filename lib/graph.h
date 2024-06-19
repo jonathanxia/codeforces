@@ -161,7 +161,7 @@ namespace graph
             // add endpoint to tree
             in_tree[get<2>(edge)] = true;
             total_weight += get<0>(edge);
-            edges.pb({get<1>(edge), get<0>(edge)});
+            edges.pb({get<1>(edge), get<2>(edge)});
 
             // look through neighbors of endpoint and add them to the heap
             foreachp(neighbor, weight, graph[get<2>(edge)])
