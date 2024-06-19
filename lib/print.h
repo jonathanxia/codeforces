@@ -8,6 +8,20 @@ void init()
     cout << setprecision(16) << std::fixed;
 }
 
+// Declarations of operator<< to avoid circular dependencies
+template <typename T, size_t N> std::ostream &operator<<(std::ostream& os, const array<T, N>& a);
+template <typename T1, typename T2> std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p);
+template <typename K, typename V> std::ostream &operator<<(std::ostream &os, const unordered_map<K, V, custom_hash> &mp);
+template <typename K, typename V> std::ostream &operator<<(std::ostream &os, const map<K, V> &mp);
+template <typename T> std::ostream &operator<<(std::ostream &os, const std::vector<T> &v);
+template <typename T> std::ostream &operator<<(std::ostream &os, const std::deque<T> &v);
+template <typename T> std::ostream &operator<<(std::ostream &os, const std::vector<std::vector<T>> &vv);
+template <typename T> std::ostream &operator<<(std::ostream &os, const std::set<T> &s);
+template <typename T> std::ostream &operator<<(std::ostream &os, const std::multiset<T> &s);
+template <typename T> std::ostream &operator<<(std::ostream &os, const std::unordered_set<T, custom_hash> &s);
+template <typename K, typename V> std::ostream &operator<<(std::ostream &os, const std::unordered_map<K, V> &mp);
+
+// Actual definitions
 template <typename T1, typename T2>
 std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p)
 {
@@ -95,10 +109,12 @@ std::ostream &operator<<(std::ostream &os, const std::vector<std::vector<T>> &vv
 
 template <typename T, size_t N>
 std::ostream &operator<<(std::ostream& os, const array<T, N>& a) {
+    os << "{";
     FOR(i, 0, (int) N - 1) {
-        cout << a[i];
-        if (i < (int) N - 1) cout << " ";
+        os << a[i];
+        if (i < (int) N - 1) os << " ";
     }
+    os << "}";
     return os;
 }
 
@@ -210,4 +226,3 @@ int recur_depth = 0;
 #else
 #define dbg(x)
 #endif
-

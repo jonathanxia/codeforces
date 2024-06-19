@@ -26,6 +26,14 @@ istream& operator>>(istream& input, deque<T>& vec) {
     return input;
 }
 
+template <typename T, size_t N>
+istream& operator>>(istream& input, array<T, N>& arr) {
+    for (size_t i = 0; i < N; i++) {
+        input >> arr[i];
+    }
+    return input;
+}
+
 // Input
 namespace inp
 {
