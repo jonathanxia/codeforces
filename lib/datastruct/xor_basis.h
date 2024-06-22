@@ -6,14 +6,16 @@
  * a[0], a[1], ..., a[n], query what sorts of numbers
  * can be expressed as an XOR of some subset.
 */
-template<class T>
-struct basis {
-    int max_log;
-    vector<T> base;
+template<class T, int max_log=31>
+struct XORBasis {
+    array<T, max_log> base;
+
+    XORBasis() {
+        init();
+    }
  
-    void init(int _max_log) {
-        max_log = _max_log;
-        base.assign(max_log, 0);
+    void init() {
+        base.fill(0);
     }
  
     void add(T val) {
@@ -29,7 +31,7 @@ struct basis {
         }
     }
  
-    inline int size() {
+    inline int size() const {
         int sz = 0;
         for(int i = 0; i < max_log; i++) {
             sz += (bool)(base[i]);
@@ -37,7 +39,7 @@ struct basis {
         return sz;
     }
  
-    T max_xor() {
+    T max_xor() const {
         T res = 0;
         for(int i = max_log - 1; i >= 0; i--) {
             if(!((res >> i) & 1) && base[i]) {
@@ -48,7 +50,7 @@ struct basis {
         return res;
     }
  
-    bool can_create(T val) {
+    bool can_create(T val) const {
         for(int i = max_log - 1; i >= 0; i--) {
             if(((val >> i) & 1) && base[i]) {
                 val ^= base[i];
@@ -58,7 +60,7 @@ struct basis {
         return (val == 0);
     }
  
-    vector<T> get_basis() {
+    vector<T> get_basis() const {
         vector<T> res;
         for(int i = 0; i < max_log; i++) {
             if(base[i]) {
@@ -68,18 +70,24 @@ struct basis {
         return res;
     }
  
-    basis<T> merge(basis<T> other) {
+    XORBasis<T> merge(XORBasis<T> other) const {
         if(max_log < other.max_log) {
             return other.merge(*this);
         }
  
-        basis<T> res = *this;
+        XORBasis<T> res = *this;
         for(auto x: other.base) {
             if(x) {
                 res.add(x);
             }
         }
         return res;
+    }
+
+    friend ostream& operator<<(ostream& os, const XORBasis x) {
+        os << "XORBasis{";
+        os << x.get_basis() << "}";
+        return os;
     }
 };
  
