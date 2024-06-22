@@ -18,6 +18,7 @@
  * Inspired by radoslav11
  * 
  * Usage: https://codeforces.com/contest/1923/submission/248043301
+ * Usage: https://atcoder.jp/contests/abc359/submissions/54855611
  * 
  *  // vvl colors...
  *  DfsTree tree(graph, 0);
