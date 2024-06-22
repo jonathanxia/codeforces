@@ -7,6 +7,8 @@
  * can be expressed as an XOR of some subset.
  * 
  * Source: neal
+ * 
+ * Usage: https://codeforces.com/problemset/problem/1902/F
 */
 template<typename T, int BITS=30>
 struct XORBasis {

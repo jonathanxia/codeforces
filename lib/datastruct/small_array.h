@@ -4,6 +4,8 @@
 /**
  * A small array that has a notion of size so you can
  * do push_back but it will be backed by a static arr
+ * 
+ * Usage: https://codeforces.com/problemset/problem/1902/F
  */
 template <typename T, int K>
 struct small_array {
