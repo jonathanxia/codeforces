@@ -87,4 +87,35 @@ namespace str
         }
         return ret;
     }
+
+    // Function to convert an integer to its binary string representation
+    template <typename T>
+    std::string bin(T number) {
+        if (number == 0) return "0";
+        std::string output;
+        bool is_neg = false;
+        if (number < 0) {
+            is_neg = true;
+            number *= -1;
+        }
+        while (number > 0) {
+            output += (number & 1) ? "1" : "0";
+            number >>= 1;
+        }
+        if (is_neg) output += "-";
+        reverse(output.begin(), output.end());
+        return output;
+    }
+
+    // Function to convert an integer to its hexadecimal string representation
+    template <typename T>
+    std::string hex(T number) {
+        std::ostringstream oss;
+        if (number < 0) {
+            oss << "-";
+            number = -number;
+        }
+        oss << std::hex << number;
+        return oss.str();
+    }
 }
