@@ -162,7 +162,7 @@ struct ModInt {
     template <typename T>
     friend bool operator==(const T& lhs, const ModInt& rhs)
     {
-        return rhs == lhs;
+        return rhs.m_value == lhs;
     }
     template <typename T>
     bool operator!=(const T& rhs) const
@@ -176,7 +176,7 @@ struct ModInt {
     template <typename T>
     friend bool operator!=(const T& lhs, const ModInt& rhs)
     {
-        return rhs != lhs;
+        return rhs.m_value != lhs;
     }
     // Casting
     template <typename T>
@@ -223,4 +223,3 @@ typedef vector<vMI> vvMI;
 typedef pair<MI, MI> pMI;
 typedef vector<pMI> vpMI;
 typedef vector<vpMI> vvpMI;
-
