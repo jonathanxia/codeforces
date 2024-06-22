@@ -379,6 +379,9 @@ ll choose(ll n, ll k, ll m = MOD)
     if (k > n)
         return 0;
     if (k < 0) return 0;
+    if (!factorial_computed) {
+        throw out_of_range("Make sure to call combo::precompute_fac");
+    }
     return mod(mod(factorial[n] * ifactorial[k], m) * ifactorial[n - k], m);
 }
 } // namespace combo
