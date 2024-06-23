@@ -226,3 +226,9 @@ int recur_depth = 0;
 #else
 #define dbg(x)
 #endif
+
+#define SAY_YES { print("YES"); return; }
+#define SAY_NO { print("NO"); return; }
+#define SAY_Yes { print("Yes"); return; }
+#define SAY_No { print("No"); return; }
+#define SAY_NEG1 { print(-1); return; }
