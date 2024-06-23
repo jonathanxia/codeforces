@@ -188,9 +188,9 @@ struct matrix {
     {
         matrix<T> output(n_cols, n_rows);
 
-        repe(i, 0, n_rows)
+        rep(i, 0, n_rows)
         {
-            repe(j, 0, n_cols)
+            rep(j, 0, n_cols)
             {
                 output(j, i) = (*this)(i, j);
             }
@@ -205,9 +205,9 @@ T sum(const matrix<T>& arr)
     int n_rows = arr.get_n_rows();
     int n_cols = arr.get_n_cols();
     T tot(0);
-    repe(i, 0, n_rows)
+    rep(i, 0, n_rows)
     {
-        repe(j, 0, n_cols)
+        rep(j, 0, n_cols)
         {
             tot += arr(i, j);
         }
@@ -226,12 +226,12 @@ matrix<T> mult(const matrix<T>& left, const matrix<T>& right)
     int j_max = right.get_n_cols();
     int k_max = left.get_n_cols();
 
-    repe(k, 0, k_max)
+    rep(k, 0, k_max)
     {
-        repe(i, 0, i_max)
+        rep(i, 0, i_max)
         {
             T r = left(i, k);
-            repe(j, 0, j_max)
+            rep(j, 0, j_max)
             {
                 result(i, j) += r * right(k, j);
             }
@@ -243,7 +243,7 @@ template <typename T>
 matrix<T> identity(ll size)
 {
     matrix<T> I(size, size, T(0));
-    repe(i, 0, size)
+    rep(i, 0, size)
     {
         I(i, i) = T(1);
     }

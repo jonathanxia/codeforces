@@ -7,7 +7,7 @@ namespace kmp {
 vi pi(const string& s)
 {
     vi p(len(s));
-    repe(i, 1, len(s))
+    rep(i, 1, len(s))
     {
         int g = p[i - 1];
         while (g && s[i] != s[g])
@@ -21,7 +21,7 @@ vi pi(const string& s)
 vi match(const string& s, const string& pat)
 {
     vi p = pi(pat + '\0' + s), res;
-    repe(i, len(p) - len(s), len(p))
+    rep(i, len(p) - len(s), len(p))
     {
         if (p[i] == len(pat))
             res.push_back(i - 2 * len(pat));

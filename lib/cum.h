@@ -30,7 +30,7 @@ struct cum {
         , inv(inverse)
         , identity { _identity }
     {
-        repe(i, 1, n)
+        rep(i, 1, n)
             cum_data[i] = op(cum_data[i], cum_data[i - 1]);
         dep(i, n - 2, 0)
             rcum_data[i] = op(rcum_data[i], rcum_data[i + 1]);

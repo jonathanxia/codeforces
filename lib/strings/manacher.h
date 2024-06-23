@@ -5,7 +5,7 @@ array<vl, 2> manacher(const string& s)
 {
     int n = s.size();
     array<vl, 2> p = { vl(n + 1), vl(n) };
-    repi(z, 0, 1)
+    FOR(z, 0, 1)
     {
         for (int i = 0, l = 0, r = 0; i < n; i++) {
             int t = r - i + !z;
@@ -21,13 +21,14 @@ array<vl, 2> manacher(const string& s)
     return p;
 }
 
-int main()
-{
-    string s = "abbcdcb";
+// Usage:
+// int main()
+// {
+//     string s = "abbcdcb";
 
-    auto stuff = manacher(s);
+//     auto stuff = manacher(s);
 
-    print("even palindromes", stuff[0]);
-    print("odd palindromes", stuff[1]);
-    return 0;
-}
+//     print("even palindromes", stuff[0]);
+//     print("odd palindromes", stuff[1]);
+//     return 0;
+// }

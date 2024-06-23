@@ -7,7 +7,7 @@ namespace graph
     // target's neighbors)
     void dijkstra(const vvpl &graph, vl &dist, const vl& starts, ll target = -1LL)
     {
-        repe(i, 0, len(dist))
+        rep(i, 0, len(dist))
         {
             dist[i] = LLONG_MAX;
         }
@@ -207,7 +207,7 @@ namespace graph
             DFS_processing[node] = false;
             order.pb(node);
         };
-        repe(i, 0, n)
+        rep(i, 0, n)
         {
             DFS(i);
         }
@@ -222,8 +222,8 @@ namespace graph
     void floyd_warshall(vvl& m)
     {
         int n = len(m);
-        repe(i, 0, n) m[i][i] = min(m[i][i], ll(0));
-        repe(k, 0, n) repe(i, 0, n) repe(j, 0, n) if (m[i][k] != inf && m[k][j] != inf)
+        rep(i, 0, n) m[i][i] = min(m[i][i], ll(0));
+        rep(k, 0, n) rep(i, 0, n) rep(j, 0, n) if (m[i][k] != inf && m[k][j] != inf)
         {
             auto newDist = max(m[i][k] + m[k][j], -inf);
             m[i][j] = min(m[i][j], newDist);

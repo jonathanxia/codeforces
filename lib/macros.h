@@ -86,20 +86,26 @@ inline ll floordiv(T x, Y y)
     return x / y;
 }
 
-// Looping
-#define repe(i, d, u) for (ll i = (d); i < (u); ++i)
-#define repi(i, d, u) for (ll i = (d); i <= (u); ++i)
+// Looping macros
+// The "rep/dep" family, where rep(L, R) is [L, R)
+// but dep is [R, L].
+#define rep(i, d, u) for (ll i = (d); i < (u); ++i)
 #define dep(i, u, d) for (ll i = (u); i >= (d); --i)
-#define irepi(i, d, u) for (i = (d); i <= (u); ++i)
-#define irepe(i, d, u) for (i = (d); i < (u); ++i)
+#define irep(i, d, u) for (i = (d); i < (u); ++i)
 #define idep(i, u, d) for (i = (u); i >= (d); --i)
-#define srepi(i, d, u, s) for (ll i = (d); i <= (u); i += s)
-#define srepe(i, d, u, s) for (ll i = (d); i < (u); i += s)
+#define srep(i, d, u, s) for (ll i = (d); i < (u); i += s)
+
+// The "FOR/DOR" family, everything is endpoint inclusive
+#define FOR(i, d, u) for (ll i = (d); i <= (u); ++i)
+#define SFOR(i, d, u, s) for (ll i = (d); i <= (u); i += s)
+#define IFOR(i, d, u) for (i = (d); i <= (u); ++i)
+#define DOR dep
+#define IDOR idep
 
 #define cep(t) while (t--)
 #define CEPEAT_CAT_(a, b) a##b
 #define CEPEAT_CAT(a, b) CEPEAT_CAT_(a, b)
-#define cepeat(t) repe(CEPEAT_CAT(CEPEAT_COPY, __COUNTER__), 0, t)
+#define cepeat(t) rep(CEPEAT_CAT(CEPEAT_COPY, __COUNTER__), 0, t)
 
 #define foreach(i, c) for (auto& i : c)
 #define foreachp(k, v, c) for (auto& [k, v] : c)
@@ -112,16 +118,6 @@ inline ll floordiv(T x, Y y)
 #define reverse_walk(i, container) for (ll i = len(container) - 1; i >= 0; --i)
 #define iter_walk(i, container) for (auto i = container.begin(); i != container.end(); i++)
 #define reverse_iter_walk(i, container) for (auto i = container.rbegin(); i != container.rend(); i++)
-
-#define rep repe
-#define srep srepe
-#define irep irepe
-
-#define FOR repi
-#define DOR dep
-#define SFOR srepi
-#define IFOR irepi
-#define IDOR idep
 
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x)
