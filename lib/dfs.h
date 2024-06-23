@@ -26,6 +26,8 @@ struct DfsTree {
 
     vi parent;
 
+    vb visited;
+
     int cnter = 0;
 
     DfsTree(const vvpl& g, ll root_) : root(root_)
@@ -45,6 +47,8 @@ struct DfsTree {
         tin.resize(n, 1e9);
         tout.resize(n, -1);
 
+        visited.resize(n, false);
+
         cnter = 0;
 
         dfs(root, -1, g);
@@ -58,6 +62,8 @@ struct DfsTree {
 
     void dfs(ll node, ll par, const vvpl& g)
     {
+        visited[node] = true;
+
         parent[node] = par;
         // Visiting a new node, get a counter
         ll my_counter = cnter++;
@@ -72,8 +78,7 @@ struct DfsTree {
         deepest_weighted_leaf[node] = 0;
         foreachp(child, w, g[node])
         {
-            if (child == par)
-                continue;
+            if (visited[child]) continue;
 
             weighted_height[child] = weighted_height[node] + w;
             height[child] = height[node] + 1;
