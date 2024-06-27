@@ -11,7 +11,7 @@ lib/snippets
 lib/testing
 *.ipynb
 .ipynb_checkpoints
-solutions
+old_solutions
 
 *.out.dSYM
 *.bin.dSYM
