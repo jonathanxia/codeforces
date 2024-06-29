@@ -9,9 +9,10 @@
 // #include<lib/dp/digit_dp.h>
 
 using namespace vv;
-umap<array3, MI> cache;
+umap<array3, ModInt<1'000'000'007LL>> cache;
 
 void solve() {
+    using MI =ModInt<1'000'000'007LL>; 
     ll n; ll k; cin >> n >> k;
     n--;
     vi s = nt::get_digits(n, 2);
