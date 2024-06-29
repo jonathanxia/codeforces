@@ -39,10 +39,13 @@ struct ndarray {
         FOR(i, 0, num_dimensions - 1) base_index[i] = 0;
     }
 
-    ndarray(array<ll, num_dimensions> base_index_, array<ll, num_dimensions> _dimensions, T default_value=0)
+    // Note that this constructor is different convention!
+    // You specify the start and end index of each dimension, and they are
+    // INCLUSIVE on both endpoints.
+    ndarray(array<ll, num_dimensions> base_index_, array<ll, num_dimensions> end_index_, T default_value=0)
         : m_default_value(default_value), saved_default_value(default_value)
     {
-        FOR(i, 0, num_dimensions - 1) dimensions[i] = _dimensions[i] - base_index_[i];
+        FOR(i, 0, num_dimensions - 1) dimensions[i] = end_index_[i] - base_index_[i] + 1;
         int rolling_mult = 1;
         DOR(i, num_dimensions-1, 0) {
            multiplier[i] = rolling_mult;
@@ -56,6 +59,7 @@ struct ndarray {
 
     template <typename... Indices>
     T& operator() (Indices... args) {
+        static_assert(sizeof...(args) == num_dimensions, "Number of arguments must equal num_dimensions");
         array<int, num_dimensions> indices = {static_cast<int>(args)...};
         FOR(i, 0, num_dimensions - 1) indices[i] -= base_index[i];
         int flatIndex = 0;
