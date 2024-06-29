@@ -10,8 +10,6 @@
 using namespace std;
 
 //  Definition of the macro.
-// ass (a, b, x, y) is equivalent to a = x; b = y;
-#define ass(a, b, x, y) (tie(a, b) = make_tuple(x, y));
 // if x, y, z are ordered non-descendingly
 #define ordered(x, y, z) ((x) <= (y) && (y) <= (z))
 
