@@ -64,7 +64,7 @@ public:
 template <typename T>
 struct MinSparseTable : SparseTable<T> {
     MinSparseTable(const vector<T>& v) : SparseTable<T>(
-        v, [](ll x, ll y) {return min(x, y);}
+        v, [](T x, T y) {return min(x, y);}
     )
     {}
 };
@@ -72,7 +72,7 @@ struct MinSparseTable : SparseTable<T> {
 template <typename T>
 struct MaxSparseTable : SparseTable<T> {
     MaxSparseTable(const vector<T>& v) : SparseTable<T>(
-        v, [](ll x, ll y) {return max(x, y);}
+        v, [](T x, T y) {return max(x, y);}
     )
     {}
 };
