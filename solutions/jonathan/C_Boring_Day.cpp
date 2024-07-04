@@ -1,5 +1,5 @@
 // Link: https://codeforces.com/contest/1982/problem/C
-#include <lib/vv.h>
+#include <lib/vv/init.h>
 #include <lib/cum.h>
 using namespace vv;
 

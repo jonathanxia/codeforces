@@ -1,8 +1,6 @@
 // Link: https://codeforces.com/contest/1986/problem/F
-#include <lib/vv.h>
 #include <lib/graph/bridges.h>
 #include <lib/dfs.h>
-using namespace vv;
 
 void solve() {
     ll n, m; cin >> n >> m;

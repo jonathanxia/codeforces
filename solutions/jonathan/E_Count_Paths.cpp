@@ -1,10 +1,8 @@
 // Link: https://codeforces.com/contest/1923/problem/E
 
 #include<lib/tree/aux_tree.h>
-#include<lib/vv.h>
 #include<lib/common.h>
 
-using namespace vv;
 
 void solve() {
     ll n; cin >> n;

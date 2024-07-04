@@ -6,7 +6,7 @@
 #include<lib/print.h>
 #include<lib/ndarray.h>
 #include<lib/nt.h>
-#include<lib/vv.h>
+#include <lib/vv/init.h>
 using namespace vv;
 
 void solve() {

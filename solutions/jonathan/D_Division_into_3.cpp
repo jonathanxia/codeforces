@@ -5,7 +5,8 @@
 #include<atcoder/internal_bit>
 #include<lib/macros.h>
 #include<lib/print.h>
-#include<lib/vv.h>
+#include<lib/vv/sort.h>
+#include <lib/vv/with_idx.h>
 #include<lib/inp.h>
 #include<lib/common.h>
 #include<lib/sparsetable.h>

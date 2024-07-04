@@ -1,8 +1,6 @@
 // Link: https://codeforces.com/contest/1942/problem/G
 #include<lib/mod_int.h>
 #include<lib/nt.h>
-#include<lib/vv.h>
-using namespace vv;
 
 void solve() {
     ll a, b, c; cin >> a >> b >> c;

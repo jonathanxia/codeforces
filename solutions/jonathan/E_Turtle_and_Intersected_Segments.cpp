@@ -6,8 +6,7 @@
 #include<lib/print.h>
 #include<lib/persistent.h>
 #include<lib/commit_dsu.h>
-#include<lib/vv.h>
-using namespace vv;
+#include <lib/vv/sort.h>
 
 void solve() {
     ll n; cin >> n;

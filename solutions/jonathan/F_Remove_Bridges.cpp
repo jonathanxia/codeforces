@@ -1,8 +1,6 @@
 // Link: https://codeforces.com/contest/1976/problem/F
-#include <lib/vv.h>
 #include <lib/dfs.h>
 #include <atcoder/lazysegtree>
-using namespace vv;
 
 using S = pl;
 S op(S l, S r) {

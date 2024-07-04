@@ -1,5 +1,5 @@
 // Link: https://codeforces.com/contest/1978/problem/F
-#include<lib/vv.h>
+#include<lib/vv/sum.h>
 #include<lib/persistent.h>
 #include<lib/common.h>
 #include<lib/inp.h>
@@ -8,19 +8,18 @@
 #include<lib/print.h>
 #include<lib/commit_dsu.h>
 
-using namespace vv;
 const ll MX = 1000 * 1000 + 1;
 vvl prime_divisors(MX + 1);
 
 void solve() {
     ll n, k; cin >> n >> k; vl a(n); cin >> a;
-    ll n_ones = sum(LC(ll(x == 1), x, a));
+    ll n_ones = vv::sum(LC(ll(x == 1), x, a));
 
     vl b;
     FOR(i, 1, n - 1) b.push_back(a[i]);
     FOR(i, 0, n - 1) b.push_back(a[i]);
     a = b;
-    ll n_new_ones = sum(LC(ll(x == 1), x, a));
+    ll n_new_ones = vv::sum(LC(ll(x == 1), x, a));
 
     DSU dsu(len(a));
     map<ll, vl> pset;
