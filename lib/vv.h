@@ -275,99 +275,6 @@ void fill(vector<T>& a, S elem)
     }
 }
 
-template <typename T>
-vector<T> cumsum(const vector<T>& a, bool reverse = false)
-{
-    vector<T> ret(a);
-    if (reverse) {
-        DOR(i, len(a) - 2, 0)
-        {
-            ret[i] += ret[i + 1];
-        }
-    } else {
-        FOR(i, 1, len(a) - 1)
-        {
-            ret[i] += ret[i - 1];
-        }
-    }
-    return ret;
-}
-
-template <typename T>
-vector<T> cummax(const vector<T>& a, bool reverse = false)
-{
-    vector<T> ret(a);
-    ll n = len(a);
-    if (reverse) {
-        DOR(i, n - 2, 0)
-        {
-            ret[i] = std::max(ret[i + 1], ret[i]);
-        }
-    } else {
-        FOR(i, 1, n - 1)
-        {
-            ret[i] = std::max(ret[i], ret[i - 1]);
-        }
-    }
-    return ret;
-}
-
-template <typename T>
-vector<T> cumxor(const vector<T>& a, bool reverse = false)
-{
-    vector<T> ret(a);
-    if (reverse) {
-        DOR(i, len(a) - 2, 0)
-        {
-            ret[i] ^= ret[i + 1];
-        }
-    } else {
-        FOR(i, 1, len(a) - 1)
-        {
-            ret[i] ^= ret[i - 1];
-        }
-    }
-    return ret;
-}
-
-template <typename T>
-vector<T> cummin(const vector<T>& a, bool reverse = false)
-{
-    vector<T> ret(a);
-    ll n = len(a);
-    if (reverse) {
-        DOR(i, n - 2, 0)
-        {
-            ret[i] = std::min(ret[i + 1], ret[i]);
-        }
-    } else {
-        FOR(i, 1, n - 1)
-        {
-            ret[i] = std::min(ret[i], ret[i - 1]);
-        }
-    }
-    return ret;
-}
-
-template <typename T>
-vector<T> cumprod(const vector<T>& a, bool reverse = false)
-{
-    vector<T> ret(a);
-    ll n = len(a);
-    if (reverse) {
-        DOR(i, n - 2, 0)
-        {
-            ret[i] *= ret[i + 1];
-        }
-    } else {
-        FOR(i, 1, n - 1)
-        {
-            ret[i] *= ret[i - 1];
-        }
-    }
-    return ret;
-}
-
 vl cumcprod(const vl& a, bool reverse = false)
 {
     vl ret(a);
@@ -384,12 +291,6 @@ vl cumcprod(const vl& a, bool reverse = false)
         }
     }
     return ret;
-}
-template <typename T>
-bool is_lex_less(const vector<T>& a, const vector<T>& perm)
-{
-    // Compare the permutations lexicographically
-    return std::lexicographical_compare(a.begin(), a.end(), perm.begin(), perm.end());
 }
 
 template <typename T>
