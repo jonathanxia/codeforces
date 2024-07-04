@@ -1,5 +1,6 @@
 #pragma once
-#include <lib/dfs.h>
+#include <lib/tree/dfs_tree.h>
+#include <lib/tree/lca_tree.h>
 
 /**
  * An aux tree (or virtual tree)
