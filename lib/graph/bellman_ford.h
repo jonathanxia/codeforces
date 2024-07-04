@@ -1,4 +1,5 @@
-#include <lib/vv.h>
+#pragma once
+#include<lib/common.h>
 
 namespace kactl {
     const ll inf = LLONG_MAX;

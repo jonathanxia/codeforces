@@ -1,5 +1,6 @@
 #pragma once
-#include <lib/vv.h>
+#include <lib/common.h>
+#include <lib/vv/slc.h>
 #include <lib/geo/convex_hull_indices.h>
 
 /**

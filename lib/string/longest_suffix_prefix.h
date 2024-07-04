@@ -2,7 +2,7 @@
 
 // Just use atcoder's interface, it is nice
 #include <atcoder/string>
-#include <lib/vv.h>
+#include <lib/common.h>
 #include <lib/str.h>
 
 /**
