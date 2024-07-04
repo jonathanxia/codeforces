@@ -17,6 +17,7 @@
  * h1.hashInterval(3, 5) == h1.hashInterval(5, 7)
  */
 #pragma once
+#include <lib/common.h>
 #include <sys/time.h>
 
 namespace kactl {
