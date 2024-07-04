@@ -1,7 +1,7 @@
 // Link: https://codeforces.com/contest/1989/problem/E
 // Classic dp question
 #include<lib/mod_int.h>
-#include<lib/datastruct/ndarray.h>
+#include<lib/ndarray.h>
 #include<lib/common.h>
 
 void solve() {

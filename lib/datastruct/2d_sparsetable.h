@@ -1,6 +1,6 @@
 #pragma once
 #include <lib/common.h>
-#include <lib/datastruct/ndarray.h>
+#include <lib/ndarray.h>
 
 
 /**

@@ -1,6 +1,6 @@
 // Link: https://codeforces.com/contest/1982/problem/D
 #include <lib/vv.h>
-#include <lib/datastruct/ndarray.h>
+#include <lib/ndarray.h>
 #include <lib/cum2d.h>
 using namespace vv;
 

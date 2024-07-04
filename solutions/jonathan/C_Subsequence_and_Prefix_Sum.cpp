@@ -4,7 +4,7 @@
 #include<lib/mod_int.h>
 #include<lib/inp.h>
 #include<lib/print.h>
-#include<lib/datastruct/ndarray.h>
+#include<lib/ndarray.h>
 #include<lib/nt.h>
 #include<lib/vv.h>
 using namespace vv;

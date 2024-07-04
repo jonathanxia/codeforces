@@ -1,6 +1,6 @@
 // Link: https://codeforces.com/contest/1987/problem/F2
 #include <lib/common.h>
-#include<lib/datastruct/ndarray.h>
+#include<lib/ndarray.h>
 
 void solve() {
     ll n; cin >> n; vl a(n); cin >> a;
