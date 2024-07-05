@@ -6,6 +6,7 @@ from subprocess import run, check_output, STDOUT, PIPE
 import subprocess
 
 COMPILE_CMD = "g++ -g -Wno-return-type -Wshadow -O3 -std=c++17 -D_GLIBCXX_DEBUG -fsanitize=undefined,address -ftrapv -I ."
+COMPILE_CMD = "g++ -g -Wno-return-type -Wshadow -O3 -std=c++17 -I . -Wl,-stack_size,0x20000000"
 TESTCASE_FILE = "brute_force.input"
 SAVE_TESTCASE_FILE = "bad_input"
 
