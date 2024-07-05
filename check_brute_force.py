@@ -25,7 +25,7 @@ def run_script_and_save_output(script_path, output_file):
     Runs a script and saves the output
     """
     with open(output_file, 'w') as f:
-        run(['python', script_path], stdout=f, stderr=PIPE, text=True)
+        run(['python3', script_path], stdout=f, stderr=PIPE, text=True)
 
 def generate_test_cases(mode, gen_script):
     for counter in range(NUM_TRIALS):

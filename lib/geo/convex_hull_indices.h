@@ -1,6 +1,7 @@
 #pragma once
+#include <lib/common.h>
 #include <lib/geo/base/point.h>
-#include <lib/vv.h>
+#include <lib/vv/argsort.h>
 
 namespace geo
 {

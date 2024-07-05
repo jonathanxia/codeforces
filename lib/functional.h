@@ -1,5 +1,7 @@
 #pragma once
-#include <lib/vv.h>
+#include <lib/common.h>
+#include <lib/vv/slc.h>
+#include <lib/vv/argsort.h>
 
 template <typename S, typename T>
 struct DiscretePiecewiseConstant {
