@@ -6,7 +6,6 @@ from subprocess import run, check_output, STDOUT, PIPE
 import subprocess
 
 COMPILE_CMD = "g++ -g -Wno-return-type -Wshadow -O3 -std=c++17 -D_GLIBCXX_DEBUG -fsanitize=undefined,address -ftrapv -I ."
-COMPILE_CMD = "g++ -g -Wno-return-type -Wshadow -O3 -std=c++17 -I . -Wl,-stack_size,0x20000000"
 TESTCASE_FILE = "brute_force.input"
 SAVE_TESTCASE_FILE = "bad_input"
 
@@ -120,6 +119,7 @@ def parse_arguments():
     parser.add_argument('--brute_force', type=str, default='brute.cpp', help='Filename of the brute force file (default: brute.cpp)')
     parser.add_argument('--generate_script', type=str, default='generate.py', help='Script the will output a test case')
     parser.add_argument('--mode', type=str, required=True, help='Check mode. Options are "check", "stress", "validate"')
+    parser.add_argument('--mac', action='store_true')
     args = parser.parse_args()
     return args
 
@@ -128,6 +128,9 @@ if __name__ == "__main__":
 
     src_code = opts.filename
     mode     = opts.mode
+
+    if opts.mac:
+        COMPILE_CMD = "g++ -g -Wno-return-type -Wshadow -O3 -std=c++17 -I . -Wl,-stack_size,0x20000000"
 
     # Compile the source code
     print("Compiling", src_code, "...")
