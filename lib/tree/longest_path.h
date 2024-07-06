@@ -2,6 +2,7 @@
 #include <lib/common.h>
 
 // Only works for trees!
+// FInds the longest path i.e. diameter of a tree
 pair<ll, vl> longest_path(vvpl &graph, ll n)
 {
     vl dist(n);
