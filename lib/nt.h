@@ -129,6 +129,12 @@ int get_bit(T1 n, ll i) {
     return ((1LL << i) & n) > 0;
 }
 
+template <typename T1=ll>
+void set_bit(T1& n, ll i, ll b) {
+    T1 c = (1LL << i) & n;
+    n ^= c ^ (b << i);
+}
+
 template <typename T=ll>
 T inv(T x, T y)
 {
