@@ -1,5 +1,8 @@
 #pragma once
 #include <lib/common.h>
+#include <lib/vv/max.h>
+#include <lib/cum.h>
+#include <lib/vv/sort.h>
 
 namespace intervals {
 
@@ -15,7 +18,7 @@ ll max_coverage(const vpl& intervals) {
         events.pb({intervals[i].second + 1, -1});
     }
 
-    sort(events);
+    vv::sort(events);
 
     // Collapse into singletons I guess?
     vl cumulative;
@@ -31,7 +34,7 @@ ll max_coverage(const vpl& intervals) {
         prev = events[i].first;
     }
 
-    return max(cumsum(cumulative));
+    return vv::max(cum::sum(cumulative).cum_data);
 }
 // Minimum number of intervals in I needed to cover G. Returns a vector of
 // indices pointing to intervals in I in the minimal covering. Returns empty
