@@ -9,6 +9,14 @@
 
 using namespace std;
 
+typedef long long ll;
+// typedef __int128_t ll;
+
+// important constant to set for some problems
+// const ll MOD = 998244353LL;
+// const ll MOD = 1000000007;
+const ll MOD = 0;
+
 //  Definition of the macro.
 // if x, y, z are ordered non-descendingly
 #define ordered(x, y, z) ((x) <= (y) && (y) <= (z))
@@ -35,9 +43,6 @@ bool chkmax(T& lhs, S rhs)
         return false;
     }
 }
-
-typedef long long ll;
-// typedef __int128_t ll;
 
 // Because unsigned sizes are absolutely stupid
 // Got burned on 1841C
@@ -439,11 +444,6 @@ T mod(T a, S p)
     }
     return a;
 }
-
-// important constant to set for some problems
-// const ll MOD = 998244353LL;
-// const ll MOD = 1000000007;
-const ll MOD = 0;
 
 template <typename T=ll>
 T mod(T a)
