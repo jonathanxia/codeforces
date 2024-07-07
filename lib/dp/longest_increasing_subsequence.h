@@ -2,30 +2,37 @@
 #include <lib/common.h>
 
 template <typename T>
-std::vector<int> longest_increasing_subsequence(const std::vector<T>& arr, bool strictly=true) {
+std::vector<int> longest_increasing_subsequence(const std::vector<T>& arr) {
     if (arr.empty()) return {};
+    ll n = len(arr);
     
+    // tails[i] = smallest possible last value for subsequence of length i + 1
     std::vector<T> tails;
-    std::vector<int> indices(arr.size());
-    std::vector<int> prev(arr.size(), -1);
+    std::vector<int> indices(n);
+    std::vector<int> prev(n, -1);
 
-    for (size_t i = 0; i < arr.size(); ++i) {
-        auto it = (strictly) ? std::lower_bound(tails.begin(), tails.end(), arr[i]) 
-                             : std::upper_bound(tails.begin(), tails.end(), arr[i]);
+    for (int i = 0; i < n; ++i) {
+        ll pos_in_tails;
+        if (len(tails) > 0)
+            pos_in_tails = smallest_st(pos, tails[pos] >= arr[i], 0, len(tails) - 1);
+        else
+            pos_in_tails = 0;
 
-        int pos = std::distance(tails.begin(), it);
-        if (it == tails.end()) {
+        if (pos_in_tails == len(tails)) {
             tails.push_back(arr[i]);
-        } else {
-            *it = arr[i];
+        }
+        else {
+            tails[pos_in_tails] = arr[i];
         }
 
-        indices[pos] = i;
-        if (pos > 0) {
-            prev[i] = indices[pos - 1];
+        indices[pos_in_tails] = i;
+
+        if (pos_in_tails > 0) {
+            prev[i] = indices[pos_in_tails - 1];
         }
     }
 
+    // Now it is just answer extraction
     std::vector<int> result;
     for (int i = indices[len(tails) - 1]; i >= 0; i = prev[i]) {
         result.push_back(i);
