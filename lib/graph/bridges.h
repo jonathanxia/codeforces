@@ -42,7 +42,6 @@ namespace graph {
         FOR(i, 0, n - 1) {
             if (!visited[i]) dfs(i, -1);
         }
-        dbg(smallest_desc);
 
         return output;
     }
