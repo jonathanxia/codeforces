@@ -15,3 +15,9 @@ old_solutions
 
 *.out.dSYM
 *.bin.dSYM
+
+brute_force.input
+bad_input
+failed_test
+brute.cpp
+.DS_Store
