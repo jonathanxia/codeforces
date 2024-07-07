@@ -70,24 +70,17 @@ def generate_permutation(n, zero_indexed=False):
     else:
         return [x + 1 for x in random.sample(range(n), n)]
 
-def generate_binary_string(n):
+def generate_binary_string(n, char_set = ("0", "1")):
     """
     Generates a binary string of length n, randomly
     """
-    return "".join([str(x) for x in uid(0, 1, n)])
+    return "".join([char_set[x] for x in uid(0, 1, n)])
 
 # Create your own test case
-print(1)
-n = uid(1, 20)
+n = uid(2, 4)
 print(n)
-s = generate_binary_string(n)
-t = generate_binary_string(n)
+s = generate_binary_string(n, ["B", "W"])
+t = generate_binary_string(n, ["B", "W"])
 
 print(s)
 print(t)
-q = uid(1, 10)
-print(q)
-for i in range(q):
-    l = uid(1, n)
-    r = uid(1, n)
-    print(min(l, r), max(l, r))
