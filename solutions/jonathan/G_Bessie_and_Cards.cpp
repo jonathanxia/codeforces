@@ -1,4 +1,5 @@
 // Link: https://codeforces.com/contest/1942/problem/G
+#include <lib/constants/mod998244353.h>
 #include<lib/mod_int.h>
 #include<lib/nt.h>
 

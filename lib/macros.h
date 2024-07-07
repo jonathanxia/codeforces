@@ -13,9 +13,15 @@ typedef long long ll;
 // typedef __int128_t ll;
 
 // important constant to set for some problems
-// const ll MOD = 998244353LL;
-// const ll MOD = 1000000007;
-const ll MOD = 0;
+#ifdef GLOBAL_MOD
+    const ll MOD = GLOBAL_MOD;
+#else
+    // Set the default MOD to 0 so that for a problem
+    // that actually uses MOD you get a clear division
+    // by zero error to remind you to include
+    // lib/constants/mod*
+    const ll MOD = 0;
+#endif
 
 //  Definition of the macro.
 // if x, y, z are ordered non-descendingly

@@ -1,0 +1,1 @@
+#define GLOBAL_MOD 0

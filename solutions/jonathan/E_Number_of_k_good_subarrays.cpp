@@ -1,4 +1,5 @@
 // Link: https://codeforces.com/contest/1982/problem/E
+#include <lib/constants/mod1000000007.h>
 #include<lib/mod_int.h>
 #include<lib/nt.h>
 #include<lib/macros.h>
@@ -7,10 +8,9 @@
 #include<lib/inp.h>
 // #include<lib/dp/digit_dp.h>
 
-umap<array3, ModInt<1'000'000'007LL>> cache;
+umap<array3, MI> cache;
 
 void solve() {
-    using MI =ModInt<1'000'000'007LL>; 
     ll n; ll k; cin >> n >> k;
     n--;
     vi s = nt::get_digits(n, 2);
