@@ -441,8 +441,9 @@ T mod(T a, S p)
 }
 
 // important constant to set for some problems
-const ll MOD = 998244353LL;
+// const ll MOD = 998244353LL;
 // const ll MOD = 1000000007;
+const ll MOD = 0;
 
 template <typename T=ll>
 T mod(T a)
