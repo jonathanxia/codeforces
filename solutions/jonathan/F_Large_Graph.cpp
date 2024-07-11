@@ -1,11 +1,7 @@
 // Link: https://codeforces.com/contest/1978/problem/F
 #include<lib/vv/sum.h>
-#include<lib/persistent.h>
 #include<lib/common.h>
-#include<lib/inp.h>
-#include<lib/macros.h>
 #include<lib/nt.h>
-#include<lib/print.h>
 #include<lib/commit_dsu.h>
 
 const ll MX = 1000 * 1000 + 1;

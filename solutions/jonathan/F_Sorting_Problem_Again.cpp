@@ -1,6 +1,5 @@
 // Link: https://codeforces.com/contest/1982/problem/F
 #include<atcoder/segtree>
-#include<lib/inp.h>
 #include<lib/common.h>
 #include<lib/mset.h>
 

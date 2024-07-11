@@ -1,9 +1,6 @@
 // Link: https://atcoder.jp/contests/arc180/tasks/arc180_c
 #include<lib/common.h>
-#include<lib/macros.h>
 #include<lib/mod_int.h>
-#include<lib/inp.h>
-#include<lib/print.h>
 #include<lib/ndarray.h>
 #include<lib/nt.h>
 #include <lib/vv/init.h>

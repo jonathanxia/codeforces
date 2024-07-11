@@ -1,9 +1,6 @@
 // Link: https://codeforces.com/contest/1981/problem/E
 #include<lib/common.h>
 #include<lib/graph/prim.h>
-#include<lib/inp.h>
-#include<lib/macros.h>
-#include<lib/print.h>
 #include<lib/persistent.h>
 #include<lib/commit_dsu.h>
 #include <lib/vv/sort.h>

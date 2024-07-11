@@ -2,10 +2,7 @@
 #include <lib/constants/mod1000000007.h>
 #include<lib/mod_int.h>
 #include<lib/nt.h>
-#include<lib/macros.h>
-#include<lib/print.h>
 #include<lib/common.h>
-#include<lib/inp.h>
 // #include<lib/dp/digit_dp.h>
 
 umap<array3, MI> cache;
