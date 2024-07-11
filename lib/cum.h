@@ -7,7 +7,7 @@ namespace cum {
 
 // Note that all queries are inclusive
 template <typename T = ll>
-struct cum {
+struct GenericCum {
     using cumfunc_t = function<T(T, T)>;
 
     vector<T> cum_data;
@@ -20,9 +20,9 @@ struct cum {
     T identity;
 
     // Default ctor
-    cum() {}
+    GenericCum() {}
 
-    cum(vector<T> raw_data, cumfunc_t operation, cumfunc_t inverse, T _identity = 0)
+    GenericCum(vector<T> raw_data, cumfunc_t operation, cumfunc_t inverse, T _identity = 0)
         : cum_data(raw_data)
         , rcum_data(raw_data)
         , n { len(raw_data) }
@@ -59,29 +59,30 @@ struct cum {
         if (idx1 > idx2) return identity;
         if (idx1 <= 0)
             return prefix(idx2);
-        if (idx2 >= n)
-            idx2 = n - 1;
+        if (idx2 >= n - 1)
+            return suffix(idx1);
         return inv(cum_data[idx2], cum_data[idx1 - 1]);
     }
 };
+typedef GenericCum<ll> ming;
 
 template <typename T = ll>
-class sum : public cum<T> {
+class sum : public GenericCum<T> {
 public:
     sum() = default;
     sum(vector<T> raw_data)
-        : cum<T>(
+        : GenericCum<T>(
             raw_data, [](T a, T b) { return a + b; }, [](T a, T b) { return a - b; }, T(0))
     {
     }
 };
 
 template <typename T = ll>
-class prod : public cum<T> {
+class prod : public GenericCum<T> {
 public:
     prod() = default;
     prod(vector<T> raw_data)
-        : cum<T>(
+        : GenericCum<T>(
             raw_data, [](T a, T b) { return a * b; }, [](T a, T b) { return a / b; }, T(1))
     {
     }
@@ -89,37 +90,35 @@ public:
 
 // c++ has overloaded the "xor" token, so we must use "XOR" instead
 template <typename T = ll>
-class XOR : public cum<T> {
+class XOR : public GenericCum<T> {
 public:
     XOR() = default;
     XOR(vector<T> raw_data)
-        : cum<T>(
+        : GenericCum<T>(
             raw_data, [](T a, T b) { return a ^ b; }, [](T a, T b) { return a ^ b; }, T(0))
     {
     }
 };
 
 template <typename T = ll>
-class min : public cum<T> {
+class min : public GenericCum<T> {
 public:
     min() = default;
     min(vector<T> raw_data)
-        : cum<T>(
+        : GenericCum<T>(
             raw_data, [](T a, T b) { return ::min(a, b); }, [](T a, T b) { return numeric_limits<T>::max(); }, numeric_limits<T>::max())
     {
     }
 };
 
 template <typename T = ll>
-class max : public cum<T> {
+class max : public GenericCum<T> {
 public:
     max() = default;
     max(vector<T> raw_data)
-        : cum<T>(
+        : GenericCum<T>(
             raw_data, [](T a, T b) { return ::max(a, b); }, [](T a, T b) { return numeric_limits<T>::min(); }, numeric_limits<T>::min())
     {
     }
 };
-
-typedef cum<ll> ming;
 }
