@@ -1,4 +1,5 @@
 #pragma once
+#include <lib/common.h>
 
 template<int ALPHABET_SIZE=26, int ALPHABET_OFFSET='a'>
 struct Trie {
