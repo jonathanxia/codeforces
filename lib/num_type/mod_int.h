@@ -223,3 +223,13 @@ typedef vector<vMI> vvMI;
 typedef pair<MI, MI> pMI;
 typedef vector<pMI> vpMI;
 typedef vector<vpMI> vvpMI;
+
+MI operator"" MI(unsigned long long int num)
+{
+    return MI(num);
+}
+
+MI operator"" mi(unsigned long long int num)
+{
+    return MI(num);
+}
