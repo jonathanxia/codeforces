@@ -154,7 +154,7 @@ T inv(T x, T y)
 template <typename T=ll>
 T mdiv(T x, T y, T m = MOD)
 {
-    if (m <= 0) {
+    if (m < 0) {
         return x / y;
     }
     x = mod(x, m);

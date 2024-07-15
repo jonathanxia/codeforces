@@ -445,7 +445,7 @@ int dy[8] = { 0, 1, 0, -1, 1, 1,  -1, -1 };
 template <typename T=ll, typename S=ll>
 T mod(T a, S p)
 {
-    if (p > 0) {
+    if (p >= 0) {
         return (a % p + p) % p;
     }
     return a;
