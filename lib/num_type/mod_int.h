@@ -224,6 +224,9 @@ typedef pair<MI, MI> pMI;
 typedef vector<pMI> vpMI;
 typedef vector<vpMI> vvpMI;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wliteral-suffix"
+
 MI operator"" MI(unsigned long long int num)
 {
     return MI(num);
@@ -233,3 +236,5 @@ MI operator"" mi(unsigned long long int num)
 {
     return MI(num);
 }
+
+#pragma GCC diagnostic pop
