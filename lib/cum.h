@@ -36,13 +36,20 @@ struct GenericCum {
             rcum_data[i] = op(rcum_data[i], rcum_data[i + 1]);
     }
 
-    T prefix(ll idx) const
+    T& prefix(ll idx)
     {
         if (idx < 0)
             return identity;
         if (idx >= n)
             return cum_data.back();
         return cum_data[idx];
+    }
+
+    const T& operator[](int idx) const {
+        return prefix(idx);
+    }
+    T& operator[](int idx) {
+        return prefix(idx);
     }
 
     T suffix(ll idx) const
