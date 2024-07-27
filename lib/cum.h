@@ -36,7 +36,7 @@ struct GenericCum {
             rcum_data[i] = op(rcum_data[i], rcum_data[i + 1]);
     }
 
-    T& prefix(ll idx)
+    const T& prefix(ll idx) const
     {
         if (idx < 0)
             return identity;
@@ -49,7 +49,7 @@ struct GenericCum {
         return prefix(idx);
     }
     T& operator[](int idx) {
-        return prefix(idx);
+        return const_cast<T&>(prefix(idx));
     }
 
     T suffix(ll idx) const
