@@ -10,6 +10,7 @@ struct DfsTree {
     vi num_desc; // Including myself
     vi deepest_leaf; // Leaf is 0
     vl deepest_weighted_leaf; // Leaf is 0
+    vi num_leaf;
 
     vi counter_to_node;
     vi node_to_counter;
@@ -38,6 +39,7 @@ struct DfsTree {
         deepest_leaf.resize(n, 0);
         deepest_weighted_leaf.resize(n, 0);
         parent.resize(n, -1);
+        num_leaf.resize(n, 0);
 
         counter_to_node.resize(n, -1);
         node_to_counter.resize(n, -1);
@@ -85,8 +87,12 @@ struct DfsTree {
             num_desc[node] += num_desc[child];
             chkmax(deepest_leaf[node], 1 + deepest_leaf[child]);
             chkmax(deepest_weighted_leaf[node], w + deepest_weighted_leaf[child]);
+            num_leaf[node] += num_leaf[child];
 
             dfs_order.pb(my_counter);
+        }
+        if (deepest_leaf[node] == 0) {
+            num_leaf[node] = 1;
         }
     }
 
