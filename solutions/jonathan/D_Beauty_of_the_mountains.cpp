@@ -30,6 +30,10 @@ void solve() {
     ll g = 0;
     foreach(c, coeffs) g = gcd(g, c);
     dprint("Target tot=", tot, "gcd=", g);
+    if (g == 0) {
+        print(tot == 0 ? "YES": "NO");
+        return;
+    }
     print(mod(tot, g) == 0 ? "YES":"NO");
 }
 
