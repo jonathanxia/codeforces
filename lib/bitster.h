@@ -18,6 +18,17 @@ ll msb(ll n) {
     return last_st(i, (1LL << i) & n, 62, 0);
 }
 
+template <typename T1=ll>
+int get_bit(T1 n, ll i) {
+    return ((1LL << i) & n) > 0;
+}
+
+template <typename T1=ll>
+void set_bit(T1& n, ll i, ll b) {
+    T1 c = (1LL << i) & n;
+    n ^= c ^ (b << i);
+}
+
 template <size_t N>
 string to_string(const bitset<N>& b, int n, bool reverse=false) {
     string s;
