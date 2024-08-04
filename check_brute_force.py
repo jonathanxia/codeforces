@@ -130,10 +130,11 @@ if __name__ == "__main__":
     mode     = opts.mode
 
     if opts.mac:
-        COMPILE_CMD = "g++ -g -Wno-return-type -Wshadow -O3 -std=c++17 -I . -Wl,-stack_size,0x20000000"
+        COMPILE_CMD = "g++ -g -Wno-return-type -Wshadow -O3 -std=c++17 -I . -Wl,-stack_size,0x20000000 -D_GLIBCXX_DEBUG -fsanitize=undefined,address -ftrapv"
 
     # Compile the source code
     print("Compiling", src_code, "...")
+    print("Compile cmd:", COMPILE_CMD)
     os.system(f"{COMPILE_CMD} {src_code} -o a.out")
 
     # The second file depends on the mode that we are running
