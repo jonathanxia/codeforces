@@ -146,6 +146,16 @@ struct lazy_segtree {
         apply(l, r + 1, f);
     }
 
+    // Circular update means that if r extends past
+    // the end of the array, it wraps around
+    // Assumes that r does not wrap all the way around to l though
+    void circular_update(int l, int r, F f) {
+        update(l, min(r, this->_n - 1), f);
+        if (r >= this->_n) {
+            update(0, r - this->_n, f);
+        }
+    }
+
     template <bool (*g)(S)> int max_right(int l) {
         return max_right(l, [](S x) { return g(x); });
     }
