@@ -74,13 +74,13 @@ def generate_binary_string(n, char_set = ("0", "1")):
     """
     Generates a binary string of length n, randomly
     """
-    return "".join([char_set[x] for x in uid(0, 1, n)])
+    return "".join([char_set[x] for x in uid(0, len(char_set) - 1, n)])
 
 # Create your own test case
-n = uid(2, 4)
-print(n)
-s = generate_binary_string(n, ["B", "W"])
-t = generate_binary_string(n, ["B", "W"])
-
-print(s)
-print(t)
+n = 10
+k = uid(1, 20)
+w = uid(1, 9)
+h = uid(1, 9)
+print(1)
+print(n, k, w, h)
+print(generate_binary_string(n, ("L", "R", "D", "U")))
