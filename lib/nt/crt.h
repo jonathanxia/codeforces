@@ -2,6 +2,29 @@
 
 #include <lib/nt.h>
 
+namespace nt {
+    /**
+     * Solves a linear congruence of the form ax = b (mod m)
+     * 
+     * Returns the solution c (mod n) where n is some divisor of m,
+     * if it is possible to have a solution.
+     * 
+     * Otherwise, it returns (-1, -1)
+     */
+    template <typename T=ll, bool CHECK_POSSIBLE=true>
+    pair<T, T> solve_linear(T a, T b, T m) {
+        chkmod(a, m); chkmod(b, m);
+        T g = gcd(a, m);
+        if (CHECK_POSSIBLE && mod(b, g) != 0) {
+            return {-1, -1};
+        }
+        // Now it is possible, remove common factors
+        a /= g; b /= g; m /= g;
+        return {nt::mdiv(b, a, m), m};
+    }
+} // namespace nt
+
+
 namespace nt_crt {
     /**
      * Checks if the congruence
@@ -21,15 +44,18 @@ namespace nt_crt {
         chkmod(a, m);
         chkmod(b, n);
         if (CHECK_POSSIBLE && !check_possible(a, m, b, n)) return {-1, -1};
-        T g = gcd(m, n);
-        n /= g;
-        b = b % n;
+        // Solve the equation x = t * m + a
+        // t * m + a = b (mod n)
+        // t * m = b - a (mod n) <-- Solve this for t
+        auto [c, p] = nt::solve_linear(m, b - a, n);
+        // Now we get t = c (mod p)
+        // so then x = t * m + a = (ps + c) * m + a
+        // x = s * (mp) + c * m + a
+        pair<T, T> res;
+        res.second = m * p;
+        res.first = mod(c * m + a, res.second);
 
-        T y = nt::inv<T>(m, n) * (b - a);
-        y = y % n;
-
-        T p = m * n;
-        return  {mod(m * y + a, p), p};
+        return res;
     }
 
     /**
@@ -52,6 +78,10 @@ namespace nt_crt {
         }
         return ret;
     }
+
 } // namespace nt_crt
 
-using nt_crt::crt;
+namespace nt {
+    using nt_crt::crt;
+}
+
