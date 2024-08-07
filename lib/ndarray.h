@@ -9,7 +9,7 @@
 //  ndarray<ll> arr({3, 5, 2}, 27);
 //  arr(2, 2, 0) = 8;
 //  arr(-1, -1, -1) // Gives 27
-// 
+//
 //  CHECK_DEFAULT_VALUE means that we reset the default value to the
 //  right thing each time. This is safer but costlier.
 template<typename T, int num_dimensions, bool CHECK_DEFAULT_VALUE=true>
@@ -23,11 +23,11 @@ struct ndarray {
     // {d2*d3*d4, d3*d4, d4, 1}
     array<int, num_dimensions> multiplier;
     array<int, num_dimensions> dimensions;
-    array<int, num_dimensions> base_index;
+    const array<int, num_dimensions> base_index;
     vector<T> data;
 
     ndarray(array<ll, num_dimensions> _dimensions, T default_value=0)
-        : m_default_value(default_value), saved_default_value(default_value)
+        : m_default_value(default_value), saved_default_value(default_value), base_index()
     {
         FOR(i, 0, num_dimensions - 1) dimensions[i] = _dimensions[i];
         int rolling_mult = 1;
@@ -36,14 +36,13 @@ struct ndarray {
            rolling_mult *= dimensions[i];
         }
         data = vector<T>(rolling_mult, default_value);
-        FOR(i, 0, num_dimensions - 1) base_index[i] = 0;
     }
 
     // Note that this constructor is different convention!
     // You specify the start and end index of each dimension, and they are
     // INCLUSIVE on both endpoints.
-    ndarray(array<ll, num_dimensions> base_index_, array<ll, num_dimensions> end_index_, T default_value=0)
-        : m_default_value(default_value), saved_default_value(default_value)
+    ndarray(array<int, num_dimensions> base_index_, array<ll, num_dimensions> end_index_, T default_value=0)
+        : m_default_value(default_value), saved_default_value(default_value), base_index(base_index_)
     {
         FOR(i, 0, num_dimensions - 1) dimensions[i] = end_index_[i] - base_index_[i] + 1;
         int rolling_mult = 1;
@@ -52,7 +51,6 @@ struct ndarray {
            rolling_mult *= dimensions[i];
         }
         data = vector<T>(rolling_mult, default_value);
-        FOR(i, 0, num_dimensions - 1) base_index[i] = base_index_[i];
     }
 
 
