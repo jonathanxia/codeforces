@@ -43,13 +43,14 @@ def normalize_output(output):
     return '\n'.join(line.rstrip() for line in output.strip().splitlines())
 
 def check_cpp_file(file_path, exit_on_fail):
+    tests_passed = True
     with open(file_path, 'r') as file:
         first_line = file.readline().strip()
         match = re.match(r'// Link: (https://(codeforces|atcoder).(com|jp)/[\S]+)', first_line)
         
         if not match:
             print(f"Skipping {file_path}: No valid Link comment found.")
-            return
+            return True
         
         url = match.group(1)
         filename = os.path.splitext(os.path.basename(file_path))[0]
@@ -62,7 +63,7 @@ def check_cpp_file(file_path, exit_on_fail):
             
             if compile_process.returncode != 0:
                 print(f"Error compiling {file_path}:\n{compile_process.stderr}")
-                return
+                return False
             
             for i, (input_data, expected_output) in enumerate(zip(inputs, outputs)):
                 result = subprocess.run(exec_path, input=input_data, text=True, capture_output=True)
@@ -73,8 +74,11 @@ def check_cpp_file(file_path, exit_on_fail):
                 else:
                     print(f"{file_path} test case {i+1}: Error\nExpected: {expected_output}\nGot: {actual_output}")
                     save_failed_test_case(filename, i+1, input_data, expected_output, actual_output)
+                    tests_passed = False
                     if exit_on_fail:
-                        return
+                        return False
+    
+    return tests_passed
 
 def main():
     parser = argparse.ArgumentParser(description='Check C++ solutions against sample test cases.')
@@ -83,11 +87,21 @@ def main():
     
     args = parser.parse_args()
     
+    failed_tests = []
     for root, _, files in os.walk('solutions'):
         for file in files:
             if file.endswith('.cpp') and (args.filename is None or args.filename in file):
                 file_path = os.path.join(root, file)
-                check_cpp_file(file_path, args.exit_on_fail)
+                tests_passed = check_cpp_file(file_path, args.exit_on_fail)
+                if not tests_passed:
+                    failed_tests.append(file_path)
+                
+    if len(failed_tests) == 0:
+        print("All test passed: OK")
+    else:
+        print(len(failed_tests), "tests failed:")
+        for t in failed_tests:
+            print(t)
 
 if __name__ == "__main__":
     main()
