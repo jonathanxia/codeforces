@@ -4,7 +4,11 @@ import sys
 import re
 import subprocess
 
-included_fnames = set()
+included_fnames = []
+def check_and_add(elem):
+    if elem in included_fnames:
+        return
+    included_fnames.append(elem)
 
 REG = r"#include\s*<(lib/.*\.(h|py))"
 
@@ -25,7 +29,7 @@ def open_filename(fname, comment):
             # imports
             if mm_comment is not None:
                 incl_fn = mm_comment.group(1)
-                included_fnames.add(incl_fn)
+                check_and_add(incl_fn)
                 continue
         
             if mm is not None:
@@ -34,7 +38,7 @@ def open_filename(fname, comment):
                     continue
 
                 output.extend(open_filename(incl_fn, comment))
-                included_fnames.add(incl_fn)
+                check_and_add(incl_fn)
 
             else:
                 output.append(line)
