@@ -6,6 +6,24 @@
 
 namespace intervals {
 
+// Assumes inclusive intervals
+// Returns `[exists, interval]`
+// `exists`: bool on whether `interval` there exists an interval that is included in all intervals
+// `interval`: the interval that is included in all intervals. Can be anything if `exists` is false
+template <class T>
+pair<bool, pair<T, T>> intersection(vector<pair<T, T>> intervals_list)
+{
+    auto [l, r] = intervals_list[0];
+    walk(i, intervals_list)
+    {
+        if (i == 0)
+            continue;
+        chkmax(l, intervals_list[i].first);
+        chkmin(r, intervals_list[i].second);
+    }
+    return { l <= r, { l, r } };
+}
+
 // Returns the maximum number of intervals
 // covering some point from a bunch of intervals.
 // The intervals are inclusive in both start and end
