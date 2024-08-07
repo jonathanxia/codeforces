@@ -66,6 +66,6 @@ int main() {
     assert(res.first == 6 && res.second == 12);
 
     res = nt::crt({{3, 4}, {2, 12}});
-    assert(res == mp(-1, -1));
+    assert(res.first == -1 && res.second == -1);
     return 0;
 }

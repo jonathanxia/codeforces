@@ -1,4 +1,5 @@
 // Link: https://atcoder.jp/contests/arc180/tasks/arc180_c
+#include <lib/constants/mod1000000007.h>
 #include<lib/common.h>
 #include<lib/mod_int.h>
 #include<lib/ndarray.h>
@@ -7,7 +8,6 @@
 using namespace vv;
 
 void solve() {
-    using MI = ModInt<1'000'000'007LL>;
     ll n; cin >> n;
     vl a(n + 1); inp::read1(a);
 
