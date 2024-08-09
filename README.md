@@ -9,7 +9,8 @@ Project list:
 # Constant Factors
 
 Here are some notes about the CF server's constant factors. Everything is quoted
-as `ms/1 mil ops`.
+as `ms/1 mil ops`. These are slight upper bounds, as in I take the worst performance I
+see on the codeforces servers.
 
 * vec.push_back(vl(2)): 100ms
 * vec.push_back(ll): 10ms
@@ -22,6 +23,18 @@ as `ms/1 mil ops`.
 * a[rand] = a[rand] + a[rand]: 6 ms
 
 Cache locality can make things about 4x slower
+
+## STL Data structures
+
+* vec.push_back(ll): 10ms
+* vec[i] (access): 1.4ms
+* set<ll>.insert(ll): 250ms
+* set<ll>.erase(ll): 150ms
+* uset<ll>.insert(ll): 670ms
+* uset<ll>.find(ll): 1ms
+* uset<ll>.erase(ll): 320ms
+
+Interestingly, uset<> is actually quite slow.
 
 ## lib/nt.h
 Each thing run 1mil times
