@@ -65,6 +65,7 @@ template <typename T=ll, typename T2=ll>
 vector<T2> get_digits(T n, T2 b, ll pad = -1)
 {
     vector<T2> ans;
+    ans.reserve(max(pad, 30LL));
     while (n > 0) {
         ans.push_back(T2(n % b));
         n /= b;
