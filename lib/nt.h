@@ -61,18 +61,29 @@ T sum_digits(T n, T2 b)
     return sum;
 }
 
-template <typename T=ll, typename T2=ll>
-vector<T2> get_digits(T n, T2 b, ll pad = -1)
-{
-    vector<T2> ans;
-    ans.reserve(max(pad, 30LL));
-    while (n > 0) {
-        ans.push_back(T2(n % b));
-        n /= b;
+template <typename T = ll, typename T2 = ll>
+std::vector<T2> get_digits(T n, T2 b, ll pad = -1) {
+    std::vector<T2> ans;
+    ans.reserve(std::max(pad, 30LL));
+
+    if (b == 2 && std::is_same<T, ll>::value) {
+        // Special case for base 2 and T as long long
+        while (n > 0) {
+            ans.push_back(T2(n & 1));  // Extract the least significant bit
+            n >>= 1;  // Shift right by 1 to divide by 2
+        }
+    } else {
+        // General case for any base
+        while (n > 0) {
+            ans.push_back(T2(n % b));
+            n /= b;
+        }
     }
+
     while (len(ans) < pad) {
-        ans.pb(T2(0));
+        ans.push_back(T2(0));
     }
+
     return ans;
 }
 
