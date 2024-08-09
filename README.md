@@ -23,5 +23,5 @@ as `ms/1 mil ops`.
 
 ## lib/nt.h
 Each thing run 1mil times
-* `nt::get_digits(1bil): 100ms` 
+* `nt::get_digits(1bil, any base): 120ms` 
 * `nt::sum_digits(1bil): 20ms`
