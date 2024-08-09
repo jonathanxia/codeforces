@@ -11,15 +11,17 @@ Project list:
 Here are some notes about the CF server's constant factors. Everything is quoted
 as `ms/1 mil ops`.
 
-* Construction of vl(2): 100ms
-* push_back(ll): 10ms
-* DfsTree Constructor: 200ms
-* Simple dfs w/ lambda: 60ms
+* vec.push_back(vl(2)): 100ms
+* vec.push_back(ll): 10ms
+* DfsTree(1mil node tree): 200ms
+* 1mil recursive func calls: 60ms
 * Constructing vector(1mil): 2.3ms
-* Addition on vector access (close by): 1.4ms
-* Multiply on vector access (close by): 1.4ms
-* Division on vector access (close by): 11.2ms
-* Addition on vector access (random access): 6 ms
+* a[i] += a[i - 1] + a[i - 2]: 1.4ms
+* a[i] *= a[i - 1] * a[i - 2]: 1.4ms
+* a[i] = a[i - 1] / a[i - 2]: 11.2ms
+* a[rand] = a[rand] + a[rand]: 6 ms
+
+Cache locality can make things about 4x slower
 
 ## lib/nt.h
 Each thing run 1mil times
