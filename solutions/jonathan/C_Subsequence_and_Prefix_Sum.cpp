@@ -13,7 +13,7 @@ void solve() {
 
     // (i, c, active) = position i is "used" and has cumsum of c and if active
     ll MX = 0; foreach(x, a) chkmax(MX, abs(x));
-    ndarray<MI, 3> dp({0, -MX * n, 0}, {n, MX * n, 1});
+    ndarray<MI, 3> dp({0, int(-MX * n), 0}, {n, MX * n, 1LL});
     // Base case
     dp(0, 0, 1) = 1;
 
