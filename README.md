@@ -31,6 +31,7 @@ Cache locality can make things about 4x slower
 * set<ll>.insert(ll): 250ms
 * set<ll>.erase(ll): 150ms
 * uset<ll>.insert(ll): 670ms
+    * Reserving 250K beforehand -> 300ms
 * uset<ll>.find(ll): 1ms
 * uset<ll>.erase(ll): 320ms
 
