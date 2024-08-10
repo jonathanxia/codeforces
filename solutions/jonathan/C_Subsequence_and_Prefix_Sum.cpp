@@ -2,7 +2,7 @@
 #include <lib/constants/mod1000000007.h>
 #include<lib/common.h>
 #include<lib/mod_int.h>
-#include<lib/ndarray.h>
+#include<lib/datastruct/based_ndarray.h>
 #include<lib/nt.h>
 #include <lib/vv/init.h>
 using namespace vv;
@@ -13,7 +13,7 @@ void solve() {
 
     // (i, c, active) = position i is "used" and has cumsum of c and if active
     ll MX = 0; foreach(x, a) chkmax(MX, abs(x));
-    ndarray<MI, 3> dp({0, int(-MX * n), 0}, {n, MX * n, 1LL});
+    based_ndarray<MI, 3> dp({0, int(-MX * n), 0}, {n, MX * n, 1LL});
     // Base case
     dp(0, 0, 1) = 1;
 

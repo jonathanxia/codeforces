@@ -2,7 +2,6 @@
 #include <lib/constants/mod998244353.h>
 #include <lib/algo/binomial_prod.h>
 #include <lib/nt.h>
-#include <lib/ndarray.h>
 #include <lib/mod_int.h>
 
 void solve() {
