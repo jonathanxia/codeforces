@@ -40,3 +40,4 @@ Interestingly, uset<> is actually quite slow.
 Each thing run 1mil times
 * `nt::get_digits(1bil, any base): 120ms` 
 * `nt::sum_digits(1bil): 20ms`
+* `MI * MI`: 12ms
