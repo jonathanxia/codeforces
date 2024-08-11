@@ -42,3 +42,9 @@ Each thing run 1mil times
 * `nt::get_digits(1bil, any base): 120ms` 
 * `nt::sum_digits(1bil): 20ms`
 * `MI * MI`: 12ms
+
+## lib/ndarray.h
+
+The performance of this thing is unclear.
+* `dp(i, j, k, l) += dp(i - 1, j - 2, k - 3, l - 4)` = 3.4ms
+It is 2.8ms if CHECK=false template arg is set.
