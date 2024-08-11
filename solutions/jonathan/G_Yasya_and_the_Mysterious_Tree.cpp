@@ -1,6 +1,5 @@
 // Link: https://codeforces.com/contest/1980/problem/G
 #include<lib/string/bit_trie.h>
-#include<lib/sparsetable.h>
 #include<lib/dfs.h>
 #include<lib/common.h>
 
