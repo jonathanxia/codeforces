@@ -90,8 +90,8 @@ def main():
     failed_tests = []
     for root, _, files in os.walk('solutions'):
         for file in files:
-            if file.endswith('.cpp') and (args.filename is None or args.filename in file):
-                file_path = os.path.join(root, file)
+            file_path = os.path.join(root, file)
+            if file.endswith('.cpp') and (args.filename is None or args.filename in file_path):
                 tests_passed = check_cpp_file(file_path, args.exit_on_fail)
                 if not tests_passed:
                     failed_tests.append(file_path)

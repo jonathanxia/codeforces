@@ -118,4 +118,12 @@ namespace str
         oss << std::hex << number;
         return oss.str();
     }
+
+    ll char_bitset(const std::string& s) {
+        ll set = 0; 
+        foreach(c, upper(s)) {
+            set |= 1ll << (c - 'A');
+        }
+        return set;
+    }
 }
