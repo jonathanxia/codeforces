@@ -119,11 +119,13 @@ namespace str
         return oss.str();
     }
 
+    // Create a LL bitmask that represents which
+    // characters are present in the given string s
     ll char_bitset(const std::string& s) {
-        ll set = 0; 
+        ll ret = 0; 
         foreach(c, upper(s)) {
-            set |= 1ll << (c - 'A');
+            ret |= 1ll << (c - 'A');
         }
-        return set;
+        return ret;
     }
 }
