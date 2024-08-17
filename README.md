@@ -45,6 +45,20 @@ Each thing run 1mil times
 
 ## lib/ndarray.h
 
-The performance of this thing is unclear.
-* `dp(i, j, k, l) += dp(i - 1, j - 2, k - 3, l - 4)` = 3.4ms
-It is 2.8ms if CHECK=false template arg is set.
+Used F_Chips_on_a_Line to benchmark this, which had 550M iterations in the hot-loop and
+a time limit of 5s. The update was of the form
+```
+dp(n, i, w) = dp(n, i - 1, w) + dp(n - 1, i, w - fib[i]);
+```
+where `dp` was of type `MI`.
+
+Comparison of performances
+* Using C-style array `MI dp[2][11][50000]`: 2ms
+* `std::array<>`: 2ms
+* `ndarray` with bounds checking and `CHECK_DEFAULT=true`: 2.5ms
+* `ndarray` with bounds checking and `CHECK_DEFAULT=false`: 2.4ms
+* `ndarray` without bounds checking, and `CHECK_DEFAULT_VALUE=false`: 2.2ms
+* `vvvMI`: 2.5ms
+
+Using `std::array` seems to still have a 20% advantage over `ndarray` in general. For a `2s` time
+limit problem, this means C-style can do `1e9` accesses while `ndarray` can do `8e8`.
