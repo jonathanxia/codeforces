@@ -217,25 +217,25 @@ struct lazy_segtree {
     // Returns the largest right such that
     // f(segtree.query(left, right)) = true
     //    Equivalent to largest_st(right, f(segtree.query(left, right)), left, n - 1)
-    template <class F> int largest_right_st(int left, F f) const {
+    template <class G> int largest_right_st(int left, G f) const {
         return this->max_right(left, f) - 1;
     }
 
     // Returns the smallest right such that
     // f(segtree.query(left, right)) = true
-    template <class F> int smallest_right_st(int left, F f) const {
+    template <class G> int smallest_right_st(int left, G f) const {
         return this->max_right(left, [&](S x) { return !f(x); });
     }
 
     // Returns the smallest left such that
     // f(segtree.query(left, right)) = true
-    template <class F> int smallest_left_st(int right, F f) const {
+    template <class G> int smallest_left_st(int right, G f) const {
         return this->min_left(right + 1, f);
     }
 
     // Returns the largest left such that
     // f(segtree.query(left, right)) = true
-    template <class F> int largest_left_st(int right, F f) const {
+    template <class G> int largest_left_st(int right, G f) const {
         return this->min_left(right + 1, [&](S x) { return !f(x); }) - 1;
     }
 
