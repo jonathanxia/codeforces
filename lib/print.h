@@ -208,6 +208,27 @@ void dprint(const T &t, const Args &...args)
 #endif
 }
 
+template <typename T>
+void eprint(const T &t)
+{
+#ifndef ONLINE_JUDGE
+#ifdef DEBUG
+    std::cerr << t << std::endl;
+#endif
+#endif
+}
+
+template <typename T, typename... Args>
+void eprint(const T &t, const Args &...args)
+{
+#ifndef ONLINE_JUDGE
+#ifdef DEBUG
+    std::cerr << t << " ";
+    eprint(args...);
+#endif
+#endif
+}
+
 // Fancy variable debugging, stolen from:
 // https://codeforces.com/blog/entry/79024
 #ifndef ONLINE_JUDGE
@@ -225,6 +246,23 @@ int recur_depth = 0;
 #endif
 #else
 #define dbg(x)
+#endif
+
+#ifndef ONLINE_JUDGE
+#ifdef DEBUG
+int recur_depth = 0;
+#define edbg(x)                                                                                                 \
+    {                                                                                                          \
+        ++recur_depth;                                                                                         \
+        auto x_ = x;                                                                                           \
+        --recur_depth;                                                                                         \
+        cerr << string(recur_depth, '\t') << #x << " = " << x_ << endl; \
+    }
+#else
+#define edbg(x)
+#endif
+#else
+#define edbg(x)
 #endif
 
 #define SAY_YES { print("YES"); return; }
