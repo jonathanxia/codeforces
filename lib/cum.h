@@ -70,6 +70,11 @@ struct GenericCum {
             return suffix(idx1);
         return inv(cum_data[idx2], cum_data[idx1 - 1]);
     }
+
+    size_t size() const 
+    {
+        return cum_data.size();
+    }
     
     // Printing
     friend std::ostream& operator<<(std::ostream& os, const GenericCum& cum)
