@@ -250,7 +250,6 @@ int recur_depth = 0;
 
 #ifndef ONLINE_JUDGE
 #ifdef DEBUG
-int recur_depth = 0;
 #define edbg(x)                                                                                                 \
     {                                                                                                          \
         ++recur_depth;                                                                                         \
