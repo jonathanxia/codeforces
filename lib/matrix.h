@@ -198,6 +198,7 @@ struct matrix {
         return output;
     }
 };
+
 namespace linalg {
 template <typename T>
 T sum(const matrix<T>& arr)
@@ -271,7 +272,81 @@ matrix<T> pow(matrix<T> base, ll exp)
         result = mult(result, base);
     return result;
 }
+
+template <typename T>
+matrix<T> block_matrix(const vector<vector<matrix<T>>>& blocks) {
+    // Check if the block structure is non-empty
+    if (blocks.empty() || blocks[0].empty()) {
+        throw std::invalid_argument("block_matrix: Empty block structure provided.");
+    }
+
+    // Determine the number of block rows and columns
+    int block_rows = blocks.size();
+    int block_cols = blocks[0].size();
+
+    // Check if all rows have the same number of columns
+    for (int i = 1; i < block_rows; i++) {
+        if (blocks[i].size() != block_cols) {
+            throw std::invalid_argument("block_matrix: Inconsistent number of columns in block rows.");
+        }
+    }
+
+    // Determine the size of each block row and column
+    vector<int> row_sizes(block_rows, 0);
+    vector<int> col_sizes(block_cols, 0);
+
+    for (int i = 0; i < block_rows; i++) {
+        for (int j = 0; j < block_cols; j++) {
+            if (j == 0) {
+                row_sizes[i] = blocks[i][j].get_n_rows();
+            } else if (row_sizes[i] != blocks[i][j].get_n_rows()) {
+                throw std::invalid_argument("block_matrix: Inconsistent row sizes within a block row.");
+            }
+            if (i == 0) {
+                col_sizes[j] = blocks[i][j].get_n_cols();
+            } else if (col_sizes[j] != blocks[i][j].get_n_cols()) {
+                throw std::invalid_argument("block_matrix: Inconsistent column sizes within a block column.");
+            }
+        }
+    }
+
+    // Calculate the total number of rows and columns
+    int total_rows = 0;
+    int total_cols = 0;
+
+    for (int i = 0; i < block_rows; i++) {
+        total_rows += row_sizes[i];
+    }
+    for (int j = 0; j < block_cols; j++) {
+        total_cols += col_sizes[j];
+    }
+
+    // Initialize the resulting matrix
+    matrix<T> result(total_rows, total_cols);
+
+    // Fill in the result matrix with the block matrices
+    int row_offset = 0;
+    for (int i = 0; i < block_rows; i++) {
+        int col_offset = 0;
+        for (int j = 0; j < block_cols; j++) {
+            const matrix<T>& block = blocks[i][j];
+            int block_n_rows = block.get_n_rows();
+            int block_n_cols = block.get_n_cols();
+
+            for (int r = 0; r < block_n_rows; r++) {
+                for (int c = 0; c < block_n_cols; c++) {
+                    result(row_offset + r, col_offset + c) = block(r, c);
+                }
+            }
+            col_offset += block_n_cols;
+        }
+        row_offset += row_sizes[i];
+    }
+
+    return result;
 }
+
+} // namespace linalg
 typedef matrix<ll> llarray;
 typedef matrix<int> intarray;
 
