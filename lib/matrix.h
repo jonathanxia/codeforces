@@ -294,3 +294,17 @@ template <typename T>
 matrix<T> operator*(const matrix<T>& mat1, const matrix<T>& mat2) {
     return linalg::mult(mat1, mat2);
 }
+
+template <typename T>
+matrix<T> operator+(const matrix<T>& mat1, const matrix<T>& mat2) {
+    if (mat1.get_n_cols() != mat2.get_n_cols() || mat1.get_n_rows() != mat2.get_n_rows())
+        throw std::out_of_range("add: Matrices have mismatching dimensions");
+
+    matrix<T> result(mat1.get_n_rows(), mat1.get_n_cols(), T(0));
+    FOR(i, 0, mat1.get_n_rows() - 1) {
+        FOR(j, 0, mat1.get_n_cols() - 1) {
+            result(i, j) = mat1(i, j) + mat2(i, j);
+        }
+    }
+    return result;
+}
