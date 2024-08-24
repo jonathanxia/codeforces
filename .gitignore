@@ -21,3 +21,5 @@ bad_input
 failed_test
 brute.cpp
 .DS_Store
+
+test_case_cache

@@ -11,38 +11,35 @@ void solve() {
     vl a(n); cin >> a;
     MaxSparseTable<ll> st(a);
     cum::sum<ll> cs(a);
-
-    ll ans = 0;
-    FOR(i, 0, n - 1) {
-        // Can i achieve world domination?
-        bool dominated = false;
-        ll left = i;
-        ll right = i;
-        while (true) {
-            ll s = cs.query(left, right);
-            ll new_left;
-            if (left > 0)
-                new_left = smallest_st(li, st.query(li, left - 1) <= s, 0, left - 1);
-            else new_left = 0;
-
-            ll new_right;
-            if (right < n - 1) new_right = largest_st(ri, st.query(right + 1, ri) <= s, right + 1, n - 1);
-            else new_right = n - 1;
-
-            if (new_left == 0 && new_right == n - 1) {
-                dominated = true;
-                break;
-            }
-            if (new_left == left && new_right == right) {
-                dominated = false;
-                break;
-            }
-            left = new_left;
-            right = new_right;
+ 
+    auto findleft = [&](ll left, ll right) {
+        ll s = cs.query(left, right);
+        ll l = left;
+        while (l > 0) {
+            l = smallest_st(j, st.query(j, l - 1) <= s, 0, l - 1);
+            if (s == cs.query(l, right)) return l;
+            s = cs.query(l, right);
         }
-        if (dominated) ans++;
+        return l;
+    };
+ 
+    vl output;
+    map<ll, ll> intervals;
+    FOR(r, 0, n - 1) {
+        vl to_delete;
+        map<ll, ll> new_intervals;
+        foreachp(l, v, intervals) {
+            if (cs.query(l, r - 1) < a[r]) to_delete.pb(l);
+        }
+        foreach(d, to_delete) intervals.erase(d);
+        intervals[r]++;
+        foreachp(l, v, intervals) {
+            new_intervals[findleft(l, r)] += v;
+        }
+        intervals = new_intervals;
+        output.pb(intervals[0]);
     }
-    print(ans);
+    print(output);
 }
 
 int main() {

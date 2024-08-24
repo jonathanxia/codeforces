@@ -4,9 +4,50 @@ import subprocess
 import tempfile
 import requests
 import argparse
+import hashlib
 from bs4 import BeautifulSoup
 
+def hash_url(url):
+    """Returns a hashed version of the URL."""
+    return hashlib.sha256(url.encode()).hexdigest()
+
+def cache_test_cases(url, inputs, outputs):
+    """Caches the test cases on disk using the hashed URL."""
+    cache_dir = 'test_case_cache'
+    os.makedirs(cache_dir, exist_ok=True)
+    cache_path = os.path.join(cache_dir, f"{hash_url(url)}.txt")
+    
+    with open(cache_path, 'w') as cache_file:
+        for input_data, output_data in zip(inputs, outputs):
+            cache_file.write('INPUT:\n')
+            cache_file.write(input_data)
+            cache_file.write('\nOUTPUT:\n')
+            cache_file.write(output_data)
+            cache_file.write('\n---\n')
+
+def load_cached_test_cases(url):
+    """Loads cached test cases from disk if available."""
+    cache_path = os.path.join('test_case_cache', f"{hash_url(url)}.txt")
+    if not os.path.exists(cache_path):
+        return None
+    
+    inputs = []
+    outputs = []
+    with open(cache_path, 'r') as cache_file:
+        content = cache_file.read().split('\n---\n')
+        for section in content:
+            if section.strip():
+                parts = section.split('\nOUTPUT:\n')
+                inputs.append(parts[0].replace('INPUT:\n', '').strip())
+                outputs.append(parts[1].strip())
+    return inputs, outputs
+
 def extract_test_cases(url):
+    """Extracts test cases, either from the cache or by scraping the URL."""
+    cached = load_cached_test_cases(url)
+    if cached is not None:
+        return cached
+    
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
     
@@ -28,6 +69,7 @@ def extract_test_cases(url):
             elif title.startswith('Sample Output'):
                 outputs.append(test.pre.get_text('\n', strip=True))
     
+    cache_test_cases(url, inputs, outputs)
     return inputs, outputs
 
 def save_failed_test_case(filename, test_case_number, input_data, expected_output, actual_output):
