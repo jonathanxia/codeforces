@@ -269,3 +269,7 @@ int recur_depth = 0;
 #define SAY_Yes { print("Yes"); return; }
 #define SAY_No { print("No"); return; }
 #define SAY_NEG1 { print(-1); return; }
+
+// Use these for writing an interactive server
+#define server_read(x) ({cin >> (x); eprint("Server read:", (x));})
+#define server_write(x) ({print((x)); eprint("Server wrote:", (x));})
