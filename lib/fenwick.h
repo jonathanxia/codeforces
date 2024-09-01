@@ -17,7 +17,7 @@ struct FenwickTree {
         }
     }
 
-    T sum(ll r) {
+    T sum(ll r) const {
         if (r < 0) return T(0);
         if (r >= n) r = n - 1;
         T ret = 0;
@@ -26,7 +26,7 @@ struct FenwickTree {
         return ret;
     }
 
-    T sum(ll l, ll r) {
+    T sum(ll l, ll r) const {
         if (l > r) return T(0);
         return sum(r) - sum(l - 1);
     }
@@ -40,6 +40,10 @@ struct FenwickTree {
     void assign(int idx, T new_val) {
         T val = sum(idx, idx);
         add(idx, new_val - val);
+    }
+
+    vector<T> underlying() const {
+        return RC(sum(i, i), i, 0, n - 1);
     }
 };
 
