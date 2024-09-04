@@ -20,6 +20,8 @@ struct Point {
 
     // Constructors ----
     Point() : x(0), y(0) {}
+    template <typename A>
+    Point(A x_) : x(x_), y(0) {}
     template <typename A, typename B>
     Point(A x_, B y_) : x(x_), y(y_) {}
 
