@@ -31,6 +31,10 @@ struct FenwickTree {
         return sum(r) - sum(l - 1);
     }
 
+    // Aliases to fit rest of the data structures in the library
+    T query(ll r) const { return sum(r); }
+    T query(ll l, ll r) const { return sum(l, r); }
+
     void add(int idx, T delta) {
         for (; idx < n; idx = idx | (idx + 1)) {
             bit[idx] += delta;
