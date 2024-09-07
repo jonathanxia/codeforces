@@ -1,14 +1,8 @@
 // Link: https://codeforces.com/contest/1982/problem/F
-#include<atcoder/segtree>
 #include<lib/common.h>
 #include<lib/mset.h>
-
-using S=ll;
-S op(S a, S b) { return min(a, b); }
-S op2(S a, S b) { return max(a, b); }
-
-S e() { return 1e18; }
-S e2() { return -1e18; }
+#include <lib/datastruct/acsegtree/seg_max.h>
+#include <lib/datastruct/acsegtree/seg_min.h>
 
 void solve() {
     ll n; cin >> n; vl a(n); cin >> a;
@@ -17,8 +11,8 @@ void solve() {
     FOR(i, 0, n - 2) {
         if (a[i] > a[i + 1]) bad_indices.insert(i);
     }
-    atcoder::segtree<S, op, e> seg(a);
-    atcoder::segtree<S, op2, e2> seg2(a);
+    seg_min::SegTree seg(a);
+    seg_max::SegTree seg2(a);
     auto run_query = [&]() {
         if (len(bad_indices) == 0) {
             print(-1, -1); return;

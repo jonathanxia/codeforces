@@ -1,14 +1,9 @@
 // Link: https://codeforces.com/contest/1997/problem/E
 #include <lib/vv/max.h>
-#include <atcoder/segtree>
+#include <lib/datastruct/acsegtree/seg_sum.h>
 #include <lib/mset.h>
 
 using namespace vv;
-using S=ll;
-S op(S a, S b) { return a + b; }
-
-S e() { return 0; }
-
 void solve() {
     ll n, q; cin >> n >> q;
     vl a(n); cin >> a;
@@ -24,7 +19,7 @@ void solve() {
     }
 
     vl monster_idx(n + 1); // Next monster to fight for each k
-    atcoder::segtree<S, op, e> seg(n); FOR(i, 0, n - 1) seg.set(i, 1);
+    seg_sum::SegTree seg(n); FOR(i, 0, n - 1) seg.set(i, 1);
 
     set<ll> active_ks; FOR(i, 1, n) active_ks.insert(i);
     FOR(level, 1, n) {
