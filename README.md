@@ -65,8 +65,9 @@ limit problem, this means C-style can do `1e9` accesses while `ndarray` can do `
 
 ## Graph-related constant factors
 
-* Constructing vvpl with 1mil edges: `80ms`
+* Constructing vvpl with 1mil edges: `135ms`
 * `atcoder::scc`: `350ms`.
+* `graph::topo_sort`: `110ms`
 
 # Local testing of constant factors
 
