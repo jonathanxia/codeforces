@@ -2,45 +2,32 @@
 #include <lib/common.h>
 
 namespace graph {
-    // Returns a topological sort order of a dag
-    // If dag is not actually a dag, this will return a vl that is shorter than dag
-    vl topo_sort(const vvl &dag)
-    {
-        ll n = len(dag);
-        vl order;
-        vb DFS_processed(n, false);
-        vb DFS_processing(n, false);
-        bool found_cycle = false;
-        function<void(ll)> DFS = [&](ll node) -> void
-        {
-            if (found_cycle)
-                return;
-            if (DFS_processed[node])
-                return;
-            DFS_processing[node] = true;
-            foreach (child, dag[node])
-            {
-                if (DFS_processing[child])
-                {
-                    // found cycle!
-                    dprint("Potential error: topo_sort found a cycle in graph");
-                    found_cycle = true;
-                    return;
-                }
-                if (!DFS_processed[child])
-                {
-                    DFS(child);
-                }
-            }
-            DFS_processed[node] = true;
-            DFS_processing[node] = false;
-            order.pb(node);
-        };
-        rep(i, 0, n)
-        {
-            DFS(i);
-        }
-        reverse(order.begin(), order.end());
-        return order;
+bool TOPO_SORT_THROWAWAY_BOOL;
+usetl TOPO_SORT_THROWAWAY_USETL;
+// Returns a topological sort order of a dag
+// If dag is not actually a dag, this will return a vl that is shorter than dag
+inline vl topo_sort(const vvl& dag, bool& has_cycle = TOPO_SORT_THROWAWAY_BOOL, const usetl& exclude = TOPO_SORT_THROWAWAY_USETL)
+{
+    vl indeg(len(dag)), ret;
+    for (int i = 0; i < len(dag); i++) {
+        if (exclude.count(i))
+            continue;
+        auto& li = dag[i];
+        for (int x : li)
+            if (!exclude.count(x))
+                indeg[x]++;
     }
-} // namespace graph 
+    queue<int> q; // use priority_queue for lexic. largest ans.
+    rep(i, 0, len(dag)) if (!exclude.count(i) && indeg[i] == 0) q.push(i);
+    while (!q.empty()) {
+        int i = q.front(); // top() for priority queue
+        ret.push_back(i);
+        q.pop();
+        for (int x : dag[i])
+            if (!exclude.count(x) && --indeg[x] == 0)
+                q.push(x);
+    }
+    has_cycle = len(ret) < len(dag) - len(exclude);
+    return ret;
+}
+} // namespace graph
