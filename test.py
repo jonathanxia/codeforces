@@ -51,7 +51,7 @@ def extract_test_cases(url):
     if cached is not None:
         return cached
     
-    response = requests.get(url)
+    response = requests.get(url, headers = {"User-Agent":"Mozilla/5.0 (X11; Linux x86_64; rv:129.0)"})
     soup = BeautifulSoup(response.content, 'html.parser')
     
     inputs = []
