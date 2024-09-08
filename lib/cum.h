@@ -71,9 +71,10 @@ struct GenericCum {
         return inv(cum_data[idx2], cum_data[idx1 - 1]);
     }
 
-    T all_except(ll idx) const
+    T all_except(ll idx1, ll idx2) const
     {
-        return op(prefix(idx - 1), suffix(idx + 1));
+        if (idx1 > idx2) return all();
+        return op(prefix(idx1 - 1), suffix(idx2 + 1));
     }
 
     T all() const
