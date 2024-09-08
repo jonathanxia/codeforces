@@ -40,6 +40,9 @@ def load_cached_test_cases(url):
                 parts = section.split('\nOUTPUT:\n')
                 inputs.append(parts[0].replace('INPUT:\n', '').strip())
                 outputs.append(parts[1].strip())
+
+    if len(inputs) == 0 or len(outputs) == 0:
+        return None
     return inputs, outputs
 
 def extract_test_cases(url):
@@ -69,7 +72,10 @@ def extract_test_cases(url):
             elif title.startswith('Sample Output'):
                 outputs.append(test.pre.get_text('\n', strip=True))
     
-    cache_test_cases(url, inputs, outputs)
+    if len(inputs) == 0 or len(outputs) == 0:
+        print(f"Couldn't load inputs and outputs for {url}")
+    else:
+        cache_test_cases(url, inputs, outputs)
     return inputs, outputs
 
 def save_failed_test_case(filename, test_case_number, input_data, expected_output, actual_output):
