@@ -20,8 +20,7 @@ int mem_usage(){ //Note: this value is in KB!
             break;
         }
     }
-    fclose(file);
-    return result;
+    fclose(file); return result;
 }
 
 const auto beg_time = std::chrono::high_resolution_clock::now();
@@ -31,4 +30,12 @@ double time_elapsed() {
 	return chrono::duration<double>(std::chrono::high_resolution_clock::now() -
 	                                beg_time)
 	    .count() * 1000;
+}
+
+bool SHOULD_PRINT = false;
+template <typename... Args>
+void mprint(const Args &...args)
+{
+    if (SHOULD_PRINT)
+        print(args...);
 }
