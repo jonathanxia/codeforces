@@ -27,6 +27,16 @@ struct scc_graph {
     internal::scc_graph internal;
 };
 
+std::vector<std::vector<int>> scc(const std::vector<std::vector<std::pair<long long, long long>>>& g) {
+    scc_graph graph(g.size());
+    for (int u = 0; u < g.size(); u++) {
+        for (auto [v, w] : g[u]) {
+            graph.add_edge(u, v);
+        }
+    }
+    return graph.scc();
+}
+
 }  // namespace atcoder
 
 #endif  // ATCODER_SCC_HPP
