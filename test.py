@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 
 def hash_url(url):
     """Returns a hashed version of the URL."""
-    return hashlib.sha256(url.encode()).hexdigest()
+    return url.replace("/", "_").replace(":", "_")
 
 def cache_test_cases(url, inputs, outputs):
     """Caches the test cases on disk using the hashed URL."""
@@ -52,7 +52,7 @@ def extract_test_cases(url):
     if cached is not None:
         return cached
 
-    response = requests.get(url, headers = {"User-Agent":"Mozilla/5.0 (X11; Linux x86_64; rv:129.0)"})
+    response = requests.get(url, headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"})
     soup = BeautifulSoup(response.content, 'html.parser')
 
     inputs = []
