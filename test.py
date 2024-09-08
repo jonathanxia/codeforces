@@ -26,7 +26,7 @@ def cache_test_cases(url, inputs, outputs):
             cache_file.write(input_data)
             cache_file.write('\nOUTPUT:\n')
             cache_file.write(output_data)
-            cache_file.write('\n---\n')
+            cache_file.write('\n```\n')
 
 def load_cached_test_cases(url):
     """Loads cached test cases from disk if available."""
@@ -37,7 +37,7 @@ def load_cached_test_cases(url):
     inputs = []
     outputs = []
     with open(cache_path, 'r') as cache_file:
-        content = cache_file.read().split('\n---\n')
+        content = cache_file.read().split('\n```\n')
         for section in content:
             if section.strip():
                 parts = section.split('\nOUTPUT:\n')

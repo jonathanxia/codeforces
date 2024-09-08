@@ -34,7 +34,7 @@ YES
 YES
 YES
 YES
----
+```
 INPUT:
 7 15
 1 1 2 1 1 1 1
@@ -69,4 +69,4 @@ YES
 YES
 NO
 NO
----
+```

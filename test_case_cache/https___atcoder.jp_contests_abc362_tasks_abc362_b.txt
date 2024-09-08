@@ -4,18 +4,18 @@ INPUT:
 0 3
 OUTPUT:
 Yes
----
+```
 INPUT:
 -4 3
 2 1
 3 4
 OUTPUT:
 Yes
----
+```
 INPUT:
 2 4
 -3 2
 1 -2
 OUTPUT:
 No
----
+```

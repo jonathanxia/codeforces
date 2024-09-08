@@ -20,7 +20,7 @@ No
 Yes
 Yes
 No
----
+```
 INPUT:
 4
 5 3
@@ -57,4 +57,4 @@ Yes
 No
 No
 Yes
----
+```
