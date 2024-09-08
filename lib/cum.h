@@ -71,6 +71,16 @@ struct GenericCum {
         return inv(cum_data[idx2], cum_data[idx1 - 1]);
     }
 
+    T all_except(ll idx) const
+    {
+        return op(prefix(idx - 1), suffix(idx + 1));
+    }
+
+    T all() const
+    {
+        return cum_data.back();
+    }
+
     size_t size() const 
     {
         return cum_data.size();
