@@ -51,13 +51,13 @@ def extract_test_cases(url):
     cached = load_cached_test_cases(url)
     if cached is not None:
         return cached
-    
+
     response = requests.get(url, headers = {"User-Agent":"Mozilla/5.0 (X11; Linux x86_64; rv:129.0)"})
     soup = BeautifulSoup(response.content, 'html.parser')
-    
+
     inputs = []
     outputs = []
-    
+
     if 'codeforces.com' in url:
         input_elements = soup.find_all('div', class_='input')
         output_elements = soup.find_all('div', class_='output')
@@ -74,7 +74,7 @@ def extract_test_cases(url):
                 outputs.append(test.pre.get_text('\n', strip=True))
     
     if len(inputs) == 0 or len(outputs) == 0:
-        print(f"Couldn't load inputs and outputs for {url}")
+        print(f"Couldn't load inputs and outputs for {url}", response)
     else:
         cache_test_cases(url, inputs, outputs)
     return inputs, outputs
@@ -96,28 +96,35 @@ def check_cpp_file(file_path, exit_on_fail):
     with open(file_path, 'r') as file:
         first_line = file.readline().strip()
         match = re.match(r'// Link: (https://(codeforces|atcoder).(com|jp)/[\S]+)', first_line)
-        
+
         if not match:
             print(f"Skipping {file_path}: No valid Link comment found.")
             return True
-        
+
         url = match.group(1)
         filename = os.path.splitext(os.path.basename(file_path))[0]
         inputs, outputs = extract_test_cases(url)
+        if len(inputs) == 0 or len(outputs) == 0:
+            # Something went wrong, try again
+            inputs, outputs = extract_test_cases(url)
         
+        if len(inputs) == 0 or len(outputs) == 0:
+            print("Failed to load test cases from:", file_path)
+            return False
+
         with tempfile.TemporaryDirectory() as tmpdirname:
             exec_path = os.path.join(tmpdirname, 'a.out')
             compile_command = f"g++ -g -Wno-return-type -Wshadow -std=c++17 -D_GLIBCXX_DEBUG -fsanitize=undefined,address -ftrapv -I . {file_path} -o {exec_path}"
             compile_process = subprocess.run(compile_command, shell=True, stderr=subprocess.PIPE, text=True)
-            
+
             if compile_process.returncode != 0:
                 print(f"Error compiling {file_path}:\n{compile_process.stderr}")
                 return False
-            
+
             for i, (input_data, expected_output) in enumerate(zip(inputs, outputs)):
                 result = subprocess.run(exec_path, input=input_data, text=True, capture_output=True)
                 actual_output = result.stdout.strip()
-                
+
                 if normalize_output(actual_output) == normalize_output(expected_output):
                     print(f"{file_path} test case {i+1}: OK")
                 else:
@@ -126,7 +133,7 @@ def check_cpp_file(file_path, exit_on_fail):
                     tests_passed = False
                     if exit_on_fail:
                         return False
-    
+
     return tests_passed
 
 def main():
