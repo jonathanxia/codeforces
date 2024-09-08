@@ -23,4 +23,8 @@ struct VectorAndSum {
     }
 
     T size() const { return values.size(); }
+
+    T& operator[](int idx) {
+        return this->values[idx];
+    }
 };
