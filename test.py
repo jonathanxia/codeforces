@@ -1,4 +1,5 @@
 import os
+from multiprocessing import Pool
 import re
 import subprocess
 import tempfile
@@ -132,18 +133,26 @@ def main():
     parser = argparse.ArgumentParser(description='Check C++ solutions against sample test cases.')
     parser.add_argument('--exit_on_fail', action='store_true', help='Exit on the first failed test case.')
     parser.add_argument('--filename', type=str, help='Run only on files containing this substring in their name.')
+    parser.add_argument('-n', '--num_threads', type=int, default=1, help='Number of threads to use (default 1)')
     
     args = parser.parse_args()
     
     failed_tests = []
+    file_list = []
     for root, _, files in os.walk('solutions'):
         for file in files:
             file_path = os.path.join(root, file)
             if file.endswith('.cpp') and (args.filename is None or args.filename in file_path):
-                tests_passed = check_cpp_file(file_path, args.exit_on_fail)
-                if not tests_passed:
-                    failed_tests.append(file_path)
-                
+                file_list.append([file_path, args.exit_on_fail])
+
+
+    p = Pool(args.num_threads)
+    passed_list = p.starmap(check_cpp_file, file_list)
+    for passed, (file_name, _) in zip(passed_list, file_list):
+        if not passed:
+            failed_tests.append(file_name)
+    
+
     if len(failed_tests) == 0:
         print("All test passed: OK")
     else:
