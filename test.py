@@ -7,6 +7,8 @@ import requests
 import argparse
 import hashlib
 from bs4 import BeautifulSoup
+import sys
+import json
 
 def hash_url(url):
     """Returns a hashed version of the URL."""
@@ -137,14 +139,60 @@ def check_cpp_file(file_path, exit_on_fail):
 
     return tests_passed
 
+def extract_link_input_output_from_cph(filename):
+    # Find the relevant test case in the cph directory
+    inputs = []
+    outputs = []
+    link = ""
+    for root, _, files in os.walk(".cph"):
+        for file in files:
+            if file.endswith('.prob') and (filename in file):
+                cph_filename = os.path.join(root, file)
+                with open(cph_filename, "r") as f:
+                    line = f.readline().strip()
+                    data = json.loads(line)
+                    link = data["url"]
+                    tests = data['tests']
+                    for testcase_number in range(len(tests)):
+                        inputs.append(tests[testcase_number]['input'])
+                        outputs.append(tests[testcase_number]['output'])
+    
+    return link, inputs, outputs
+
+
+
+def install_test_case(source_code, user):
+    os.makedirs(f"solutions/{user}", exist_ok=True)
+    with open(source_code, "r") as f:
+        src_str = f.read()
+    
+    link, inputs, outputs = extract_link_input_output_from_cph(source_code)
+    src_str = f"// Link: {link}\n" + src_str
+    
+    with open(f"solutions/{user}/{source_code}", "w") as f:
+        f.write(src_str)
+    
+    cache_test_cases(link, inputs, outputs)
+
+
 def main():
     parser = argparse.ArgumentParser(description='Check C++ solutions against sample test cases.')
+    parser.add_argument("--install", type=str, help="Install the source code as a test case. Requires .cph directory")
+    parser.add_argument("--user", type=str, help="Install the source code as a test case. Requires .cph directory")
     parser.add_argument('--exit_on_fail', action='store_true', help='Exit on the first failed test case.')
     parser.add_argument('--filename', type=str, help='Run only on files containing this substring in their name.')
     parser.add_argument('-n', '--num_threads', type=int, default=1, help='Number of threads to use (default 1)')
     
     args = parser.parse_args()
     
+    if args.install is not None:
+        if args.user is None:
+            print("--user argument required if using --install. E.g. --user jonathan")
+            sys.exit(1)
+        install_test_case(args.install, args.user)
+        return
+
+
     failed_tests = []
     file_list = []
     for root, _, files in os.walk('solutions'):
