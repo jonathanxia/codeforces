@@ -62,3 +62,12 @@ Comparison of performances
 
 Using `std::array` seems to still have a 20% advantage over `ndarray` in general. For a `2s` time
 limit problem, this means C-style can do `1e9` accesses while `ndarray` can do `8e8`.
+
+## Graph-related constant factors
+
+* Constructing vvpl with 1mil edges: `80ms`
+* `atcoder::scc`: `350ms`.
+
+# Local testing of constant factors
+
+* Jonathan's laptop is about 3x faster than cf servers
