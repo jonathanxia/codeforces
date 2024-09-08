@@ -1,0 +1,25 @@
+INPUT:
+2 2
+OUTPUT:
+1
+---
+INPUT:
+4 3
+OUTPUT:
+3
+---
+INPUT:
+6 2
+OUTPUT:
+20
+---
+INPUT:
+6 5
+OUTPUT:
+3
+---
+INPUT:
+133 7
+OUTPUT:
+336975971
+---
