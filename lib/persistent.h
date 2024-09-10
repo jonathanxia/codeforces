@@ -15,6 +15,7 @@ struct PersistentVector {
     }
 
     T operator[](int idx) { return data[idx]; }
+    T operator[](int idx) const { return data[idx]; }
 
     void set(int idx, T value)
     {
@@ -107,5 +108,9 @@ struct PersistentValue
 
     void commit() { v.commit(); }
     void revert() { v.revert(); }
+
+    // Casting
+    template <typename S>
+    operator S() const { return static_cast<S>(v[0]); };
 };
 

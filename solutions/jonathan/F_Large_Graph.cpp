@@ -34,7 +34,7 @@ void solve() {
             }
         }
     }
-    ll nc = dsu.num_components.value();
+    ll nc = dsu.num_components;
     print(nc - n_new_ones + n_ones * n);
 }
 
