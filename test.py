@@ -82,15 +82,6 @@ def extract_test_cases(url):
         cache_test_cases(url, inputs, outputs)
     return inputs, outputs
 
-def save_failed_test_case(filename, test_case_number, input_data, expected_output, actual_output):
-    os.makedirs('failed_test', exist_ok=True)
-    file_path = os.path.join('failed_test', f'{filename}_test_case_{test_case_number}.txt')
-    with open(file_path, 'w') as file:
-        file.write(f'Input:\n{input_data}\n\n')
-        file.write(f'Expected Output:\n{expected_output}\n\n')
-        file.write(f'Actual Output:\n{actual_output}\n')
-    print(f"Failed test case saved to {file_path}")
-
 def normalize_output(output):
     return '\n'.join(line.rstrip() for line in output.strip().splitlines())
 
@@ -132,7 +123,6 @@ def check_cpp_file(file_path, exit_on_fail):
                     print(f"{file_path} test case {i+1}: OK")
                 else:
                     print(f"{file_path} test case {i+1}: Error\nExpected: {expected_output}\nGot: {actual_output}")
-                    save_failed_test_case(filename, i+1, input_data, expected_output, actual_output)
                     tests_passed = False
                     if exit_on_fail:
                         return False
