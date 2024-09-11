@@ -5,6 +5,7 @@
 #include <lib/vv/argmax.h>
 #include <lib/vv/argmin.h>
 #include <lib/vv/argsort.h>
+#include <lib/vv/concat.h>
 #include <lib/vv/contains.h>
 #include <lib/vv/coord_compress.h>
 #include <lib/vv/counter.h>
