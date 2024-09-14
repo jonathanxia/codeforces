@@ -7,9 +7,11 @@ public:
     vector<vector<T>> table;
     vector<ll> logTable;
     function<T(T, T)> operation;
+    T identity;
 
-    SparseTable(const vector<T>& arr, function<T(T, T)> op)
+    SparseTable(const vector<T>& arr, function<T(T, T)> op, T identity_=T())
     {
+        this->identity = identity_;
         ll n = arr.size();
         ll logn = log2(int(n)) + 1;
 
@@ -37,6 +39,7 @@ public:
 
     T query(int left, int right) const
     {
+        if (left > right) return this->identity;
         ll k = logTable[right - left + 1];
         return operation(table[left][k], table[right - (1 << k) + 1][k]);
     }
@@ -64,7 +67,7 @@ public:
 template <typename T>
 struct MinSparseTable : SparseTable<T> {
     MinSparseTable(const vector<T>& v) : SparseTable<T>(
-        v, [](T x, T y) {return min(x, y);}
+        v, [](T x, T y) {return min(x, y);}, T(1e9)
     )
     {}
 };
@@ -72,7 +75,15 @@ struct MinSparseTable : SparseTable<T> {
 template <typename T>
 struct MaxSparseTable : SparseTable<T> {
     MaxSparseTable(const vector<T>& v) : SparseTable<T>(
-        v, [](T x, T y) {return max(x, y);}
+        v, [](T x, T y) {return max(x, y);}, T(-1e9)
+    )
+    {}
+};
+
+template <typename T>
+struct GcdSparseTable : SparseTable<T> {
+    GcdSparseTable(const vector<T>& v) : SparseTable<T>(
+        v, [](T x, T y) {return gcd(x, y);}, T(0)
     )
     {}
 };
