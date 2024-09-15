@@ -34,6 +34,10 @@ Cache locality can make things about 4x slower
     * Reserving 250K beforehand -> 300ms
 * uset<ll>.find(ll): 1ms
 * uset<ll>.erase(ll): 320ms
+To be determined: a somewhat contradictory timing gave this:
+* `map<ll, ll>.insert()` random keys: 1000ms
+* `set<ll>.insert()` random keys: 650ms
+* `umap<ll, ll>.insert()` random keys: 500ms
 
 Interestingly, uset<> is actually quite slow.
 
