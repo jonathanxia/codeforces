@@ -11,6 +11,7 @@
 #include <lib/vv/counter.h>
 #include <lib/vv/cumcprod.h>
 #include <lib/vv/fill.h>
+#include <lib/vv/gcd.h>
 #include <lib/vv/indexof.h>
 #include <lib/vv/invperm.h>
 #include <lib/vv/max.h>
