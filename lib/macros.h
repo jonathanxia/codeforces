@@ -540,3 +540,7 @@ ll power(int base, T2 exponent,
 ll cpower(ll base, ll exponent) {
     return power<ll, ll>(base, exponent, cmul);
 }
+
+ll sqrt(ll num) {
+    return largest_st(i, i*i <= num, 0, 1e9);
+}
