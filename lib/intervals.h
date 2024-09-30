@@ -8,10 +8,10 @@ namespace intervals {
 
 // Assumes inclusive intervals
 // Returns `[exists, interval]`
-// `exists`: bool on whether `interval` there exists an interval that is included in all intervals
+// `exists`: bool on whether there exists an interval that is included in all intervals
 // `interval`: the interval that is included in all intervals. Can be anything if `exists` is false
 template <class T>
-pair<bool, pair<T, T>> intersection(vector<pair<T, T>> intervals_list)
+pair<bool, pair<T, T>> intersection(const vector<pair<T, T>>& intervals_list)
 {
     auto [l, r] = intervals_list[0];
     walk(i, intervals_list)
@@ -22,6 +22,30 @@ pair<bool, pair<T, T>> intersection(vector<pair<T, T>> intervals_list)
         chkmin(r, intervals_list[i].second);
     }
     return { l <= r, { l, r } };
+}
+
+// Assumes inclusive intervals
+// Makes intervals_list a disjoint set of intervals that covers the same points that it did originally
+// Performs in-place.
+template <class T>
+void unify(vector<pair<T, T>>& intervals_list)
+{
+    if (intervals_list.empty())
+        return;
+    sort(ALL(intervals_list));
+    ll idx_of_back = 0;
+    rep(i, 1, len(intervals_list))
+    {
+        // Interval is disjoint from the previous one
+        if (intervals_list[i].first > intervals_list[idx_of_back].second) {
+            idx_of_back++;
+            intervals_list[idx_of_back] = intervals_list[i];
+        } else {
+            chkmin(intervals_list[idx_of_back].first, intervals_list[i].first);
+            chkmax(intervals_list[idx_of_back].second, intervals_list[i].second);
+        }
+    }
+    intervals_list.resize(idx_of_back + 1);
 }
 
 // Returns the maximum number of intervals
