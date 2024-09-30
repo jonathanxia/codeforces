@@ -185,6 +185,13 @@ struct ModInt {
     // Printing
     friend std::ostream& operator<<(std::ostream& os, const ModInt& rhs)
     {
+        #ifdef DEBUG
+        #ifndef ONLINE_JUDGE
+        #ifdef PRINT_MI_FRAC
+        return os << rhs.as_frac();
+        #endif
+        #endif
+        #endif
         return os << rhs.m_value;
     }
     // Input
@@ -197,7 +204,7 @@ struct ModInt {
 
     #ifdef DEBUG
     #ifndef ONLINE_JUDGE
-    std::string as_frac() {
+    std::string as_frac() const {
         ll denom = 1;
         while (denom * denom <= m_mod) {
             ll numer = mod(denom * m_value, m_mod);
