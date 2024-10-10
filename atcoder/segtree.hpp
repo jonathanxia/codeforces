@@ -12,6 +12,9 @@ namespace atcoder {
 
 #if __cplusplus >= 201703L
 
+// Note about `e()`:
+// If you have `using namespace std;`, then the token `identity` is already taken.
+// So, don't name the `e()` function `identity`.
 template <class S, auto op, auto e> struct segtree {
     static_assert(std::is_convertible_v<decltype(op), std::function<S(S, S)>>,
                   "op must work as S(S, S)");

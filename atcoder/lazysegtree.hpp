@@ -12,6 +12,10 @@ namespace atcoder {
 
 #if __cplusplus >= 201703L
 
+// Note about `e()` and `id()`:
+// If you have `using namespace std;`, then the token `identity` is already taken.
+// Don't name the `e()` function `identity`.
+// Don't name the `id()` function `identity`.
 template <class S,
           auto op,
           auto e,
