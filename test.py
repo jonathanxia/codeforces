@@ -75,6 +75,12 @@ def extract_test_cases(url):
                 inputs.append(test.pre.get_text('\n', strip=True))
             elif title.startswith('Sample Output'):
                 outputs.append(test.pre.get_text('\n', strip=True))
+    elif 'kattis.com' in url:
+        sample_tests = soup.find_all('table', class_='sample')
+        for test in sample_tests:
+            input_output = test.find_all('pre')
+            inputs.append(input_output[0].get_text('\n', strip=True))
+            outputs.append(input_output[1].get_text('\n', strip=True))
     
     if len(inputs) == 0 or len(outputs) == 0:
         print(f"Couldn't load inputs and outputs for {url}", response)
@@ -89,7 +95,7 @@ def check_cpp_file(file_path, exit_on_fail):
     tests_passed = True
     with open(file_path, 'r') as file:
         first_line = file.readline().strip()
-        match = re.match(r'// Link: (https://(codeforces|atcoder).(com|jp)/[\S]+)', first_line)
+        match = re.match(r'// Link: (https://(.*\.)?(codeforces|atcoder|kattis)\.(com|jp)/[\S]+)', first_line)
 
         if not match:
             print(f"Skipping {file_path}: No valid Link comment found.")
