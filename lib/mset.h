@@ -4,6 +4,7 @@
 typedef multiset<ll> msetl;
 namespace mset
 {
+    // deletes element T from S. Throws if T is not in S
     template <typename S, typename T>
     void del(S &ss, T x)
     {
@@ -13,6 +14,18 @@ namespace mset
             throw std::out_of_range("element not found");
         }
         ss.erase(it);
+    }
+
+    // erases element T from S. Returns true if T was erased, false if T is not in S
+    template <typename S, typename T>
+    bool erase(S &ss, T x) {
+        auto it = ss.find(x);
+        if (it != ss.end())
+        {
+            ss.erase(it);
+            return true;
+        }
+        return false;
     }
 
     // Moves x from ss1 to ss2
