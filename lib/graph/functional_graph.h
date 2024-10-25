@@ -3,21 +3,22 @@
 
 namespace graph {
     // Finds cycles for directed graphs where degree of every node is 1
+    // is1idx refers to whether the elements in the array adj start at 0 or at 1.
+    // is1idx = true is equivalent to subtracting 1 from everything in adj, then adding 1 to everything in cycles.
+    // behavior of in_cycle and in_chain does not change when is1idx is set to true.
     // Returns a vvl: vector of the cycles in the graph
     vvl cycles(const vl& adj, vb& in_cycle, vb& in_chain, bool is1idx = false)
     {
         vvl cycles_;
         walk(i, adj)
         {
-            if (is1idx && i == 0)
-                continue;
             ll slow = i;
             ll fast = i;
             do {
                 if (in_chain[slow] || in_cycle[slow] || in_chain[fast] || in_cycle[fast])
                     break;
-                slow = adj[slow];
-                fast = adj[adj[fast]];
+                slow = adj[slow] - is1idx;
+                fast = adj[adj[fast] - is1idx] - is1idx;
             } while (slow != fast);
             if (slow == fast && !in_cycle[slow] && !in_chain[slow]) {
                 vl cycle;
@@ -25,14 +26,14 @@ namespace graph {
                 while (!in_cycle[slow]) {
                     in_cycle[slow] = true;
                     cycle.pb(slow);
-                    slow = adj[slow];
+                    slow = adj[slow] - is1idx;
                 }
                 cycles_.pb(cycle);
             }
             fast = i;
             while (!in_cycle[fast] && !in_chain[fast]) {
                 in_chain[fast] = true;
-                fast = adj[fast];
+                fast = adj[fast] - is1idx;
             }
         }
         return cycles_;
