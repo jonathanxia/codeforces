@@ -25,6 +25,6 @@ struct Chicken_McNugget {
     // returns whether the desired size is possible using sizes
     bool query(ll desired_size) const
     {
-        return desired_size >= dists[desired_size % len(dists)];
+        return !(desired_size >= dists[desired_size % len(dists)]);
     }
 };
