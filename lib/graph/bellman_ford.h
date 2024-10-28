@@ -3,13 +3,15 @@
 
 namespace kactl {
     const ll inf = LLONG_MAX;
+    template <typename T = ll>
     struct Ed {
         int a, b;
-        ll w;
+        T w;
         int s() { return a < b ? a : -a; }
     };
+    template <typename T = ll>
     struct Node {
-        ll dist = inf;
+        T dist = inf;
         int prev = -1;
     };
 }
@@ -22,16 +24,18 @@ namespace kactl {
  * Time: O(VE)
  * Usage: https://atcoder.jp/contests/arc173/submissions/51168857
  */
+template <typename T = ll>
 struct BellmanFord {
-    using Ed=kactl::Ed;
-    using Node=kactl::Node;
+    using Ed=kactl::Ed<T>;
+    using Node=kactl::Node<T>;
+    using vvplT = vector<vector<pair<ll, T>>>;
 
     vector<Node> nodes;
     vector<Ed> edges;
     int start;
     bool has_negative_cycle;
 
-    BellmanFord(const vvpl& graph, int start_) : nodes(len(graph)) {
+    BellmanFord(const vvplT& graph, int start_) : nodes(len(graph)) {
         start = start_;
         walk(u, graph) {
             foreachp(v, w, graph[u]) {
@@ -44,7 +48,7 @@ struct BellmanFord {
 
     void runBellmanFord(vector<Node> &nodes, vector<Ed> &eds, int s)
     {
-        ll inf = kactl::inf;
+        T inf = kactl::inf;
         nodes[s].dist = 0;
         sort(ALL(eds), [](Ed a, Ed b)
              { return a.s() < b.s(); });
@@ -55,7 +59,7 @@ struct BellmanFord {
             Node cur = nodes[ed.a], &dest = nodes[ed.b];
             if (abs(cur.dist) == inf)
                 continue;
-            ll d = cur.dist + ed.w;
+            T d = cur.dist + ed.w;
             if (d < dest.dist)
             {
                 dest.prev = ed.a;
