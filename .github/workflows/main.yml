@@ -1,0 +1,25 @@
+name: run-tests
+
+run-name: ${{ github.actor}} is running correctness tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  check-correctness:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout main branch
+        uses: actions/checkout@main
+
+      - name: setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: run correctness script
+        run: python test.py
