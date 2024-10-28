@@ -211,6 +211,7 @@ def main():
         print(len(failed_tests), "tests failed:")
         for t in failed_tests:
             print(t)
+        exit(1)
 
 if __name__ == "__main__":
     main()
