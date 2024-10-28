@@ -1,0 +1,19 @@
+INPUT:
+2
+3
+6 Paper 3 Book
+6 Book 2 Bookshelf
+1 Bookshelf 8 Paper
+1
+32 Paper 1 Emerald
+OUTPUT:
+yes
+```
+INPUT:
+1
+2
+32 Stick 1 Emerald
+3 Emerald 64 Stick
+OUTPUT:
+no
+```
