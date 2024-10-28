@@ -2,6 +2,7 @@
 
 struct Chicken_McNugget {
     vl dists;
+    ll largest_impossible;
     Chicken_McNugget(const vl& sizes)
         : dists(sizes[0])
     {
@@ -16,6 +17,9 @@ struct Chicken_McNugget {
             }
         }
         graph::dijkstra(residues, dists, 0);
+        walk(i, dists) {
+            chkmax(largest_impossible, dists[i] - sizes[0]);
+        }
     }
 
     // returns whether the desired size is possible using sizes
