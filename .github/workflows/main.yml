@@ -21,5 +21,9 @@ jobs:
           python-version: '3.13'
           cache: 'pip'
 
+      - name: install python packages
+        run:
+          pip install -r requirements.txt
+
       - name: run correctness script
         run: python test.py
