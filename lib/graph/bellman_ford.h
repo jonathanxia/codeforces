@@ -5,7 +5,7 @@ namespace kactl {
     const ll inf = LLONG_MAX;
     template <typename T = ll>
     struct Ed {
-        int a, b;
+        ll a, b;
         T w;
         int s() { return a < b ? a : -a; }
     };
