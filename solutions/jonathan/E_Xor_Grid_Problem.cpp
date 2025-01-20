@@ -1,6 +1,5 @@
 // Link: https://codeforces.com/contest/1993/problem/E
 #include<lib/common.h>
-#include<lib/bitster.h>
 #include<lib/ndarray.h>
 #include <lib/graph/tsp.h>
 

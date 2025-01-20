@@ -3,7 +3,6 @@
 #include <lib/vv/sum.h>
 #include <lib/vv/counter.h>
 #include <lib/vv/sort.h>
-#include <lib/bitster.h>
 #include <lib/cum.h>
 #include <lib/datastruct/binary_lifting.h>
 using namespace vv;
