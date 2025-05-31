@@ -12,6 +12,11 @@ struct VectorAndSum {
         tot += val;
     }
 
+    void pop_back(T val) {
+        tot += values.back();
+        values.pop_back();
+    }
+
     void assign(int idx, T val) {
         tot -= values[idx];
         values[idx] = val;
