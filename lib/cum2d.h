@@ -21,7 +21,11 @@ struct CumSum2d {
         }
     }
 
-    T query(int sx, int gx, int sy, int gy) {
+    // sx: smallest row index in the query
+    // sy: smallest col index in the query
+    // gx: largest row index in the query
+    // gy: largest col index in the query
+    T query(int sx, int sy, int gx, int gy) {
         // Clip all inputs to be in the right range
         if (sx < 0) sx = 0;
         if (sy < 0) sy = 0;

@@ -24,7 +24,7 @@ void solve() {
     CumSum2d<ll> cs(is_snow_);
     set<ll> coeffs;
     FOR(i, 0, n - k) FOR(j, 0, m - k) {
-        coeffs.insert(cs.query(i, i + k - 1, j, j + k - 1));
+        coeffs.insert(cs.query(i, j, i + k - 1, j + k - 1));
     }
     dbg(coeffs);
     ll g = 0;
