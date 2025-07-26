@@ -32,4 +32,9 @@ struct VectorAndSum {
     T& operator[](int idx) {
         return this->values[idx];
     }
+
+    // Printing
+    friend std::ostream& operator<<(std::ostream& os, const VectorAndSum<T>& arr) {
+        return os << "[" << arr.values << "](sum=" << arr.tot << ")";
+    }
 };
