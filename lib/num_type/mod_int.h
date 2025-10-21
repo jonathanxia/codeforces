@@ -4,6 +4,7 @@
 
 template <ll m_mod=MOD>
 struct ModInt {
+    static_assert(m_mod > 0, "m_mod must be positive. You may need to set GLOBAL_MOD");
     ll m_value;
     ModInt(ll init_value = 0LL)
         : m_value { mod(init_value, m_mod) }
