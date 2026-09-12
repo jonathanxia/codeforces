@@ -22,4 +22,6 @@ failed_test
 brute.cpp
 .DS_Store
 
-# test_case_cache
+# test_case_cache__pycache__/
+__pycache__
+scratch.cpp
