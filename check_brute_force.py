@@ -4,8 +4,9 @@ import os
 import argparse
 from subprocess import run, check_output, STDOUT, PIPE
 import subprocess
+from compiler_config import get_compiler
 
-COMPILE_CMD = "g++ -g -Wno-return-type -Wshadow -O3 -std=c++17 -D_GLIBCXX_DEBUG -fsanitize=undefined,address -ftrapv -I ."
+COMPILE_CMD = f"{get_compiler()} -g -Wno-return-type -Wshadow -O3 -std=c++17 -D_GLIBCXX_DEBUG -fsanitize=undefined,address -ftrapv -I ."
 TESTCASE_FILE = "brute_force.input"
 SAVE_TESTCASE_FILE = "bad_input"
 
@@ -130,7 +131,7 @@ if __name__ == "__main__":
     mode     = opts.mode
 
     if opts.mac:
-        COMPILE_CMD = "g++ -g -Wno-return-type -Wshadow -O3 -std=c++17 -I . -Wl,-stack_size,0x20000000 -D_GLIBCXX_DEBUG -fsanitize=undefined,address -ftrapv"
+        COMPILE_CMD = f"{get_compiler()} -g -Wno-return-type -Wshadow -O3 -std=c++17 -I . -Wl,-stack_size,0x20000000 -D_GLIBCXX_DEBUG -fsanitize=undefined,address -ftrapv"
 
     # Compile the source code
     print("Compiling", src_code, "...")

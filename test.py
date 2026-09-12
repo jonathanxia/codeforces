@@ -9,6 +9,7 @@ import hashlib
 from bs4 import BeautifulSoup
 import sys
 import json
+from compiler_config import get_compiler
 
 def hash_url(url):
     """Returns a hashed version of the URL."""
@@ -114,7 +115,7 @@ def check_cpp_file(file_path, exit_on_fail):
 
         with tempfile.TemporaryDirectory() as tmpdirname:
             exec_path = os.path.join(tmpdirname, 'a.out')
-            compile_command = f"g++ -g -Wno-return-type -Wshadow -std=c++17 -D_GLIBCXX_DEBUG -fsanitize=undefined,address -ftrapv -I . {file_path} -o {exec_path}"
+            compile_command = f"{get_compiler()} -g -Wno-return-type -Wshadow -std=c++17 -D_GLIBCXX_DEBUG -fsanitize=undefined,address -ftrapv -I . {file_path} -o {exec_path}"
             compile_process = subprocess.run(compile_command, shell=True, stderr=subprocess.PIPE, text=True)
 
             if compile_process.returncode != 0:
