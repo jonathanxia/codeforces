@@ -6,14 +6,17 @@ struct VectorAndSum {
     vector<T> values;
     T tot;
     VectorAndSum(int n) : values(n, 0), tot(0) {}
+    VectorAndSum(const vector<T>& values) : values(values), tot(0) {
+        for (const T& v : values) tot += v;
+    }
 
     void push_back(T val) {
         values.push_back(val);
         tot += val;
     }
 
-    void pop_back(T val) {
-        tot += values.back();
+    void pop_back() {
+        tot -= values.back();
         values.pop_back();
     }
 
@@ -27,10 +30,11 @@ struct VectorAndSum {
         return tot;
     }
 
-    T size() const { return values.size(); }
+    int size() const { return values.size(); }
 
-    T& operator[](int idx) {
-        return this->values[idx];
+    // Read-only: write through assign() so the sum stays in sync.
+    const T& operator[](int idx) const {
+        return values[idx];
     }
 
     // Printing
