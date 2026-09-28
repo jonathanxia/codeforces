@@ -3,8 +3,26 @@
 The cp library whose primary users are jonathanxia, kxia1729, and WyattWismer.
 
 Project list:
-* Tree shaker to reduce submission sizes
 * Build out more of the lib/geo subpackage
+
+# Tree shaker
+
+`shake.py` deletes lib code that an expanded solution doesn't use (functions,
+classes, methods, typedefs, globals, macros), so submissions stay small and readable.
+
+```
+python3 preprocess.py A.cpp --shake   # expand, then shake
+python3 shake.py A.cpp                # shake an already-expanded file in place
+python3 shake.py A.cpp -c             # print instead of writing
+python3 shake.py A.cpp --why foo      # explain why foo was kept
+```
+
+It uses libclang (the `clang` pip package plus a system libclang; set
+`LIBCLANG_PATH` if it isn't found) to build a reference graph from `main`. Calls
+inside templates that clang can't resolve are kept by name, and those guesses are
+then pruned by trial compiles: a removal is accepted only if the file still compiles
+and emits no symbol the original didn't, so overload resolution can't silently
+change. Shaking assumes `DEBUG` is undefined, so don't debug the shaken file.
 
 # Constant Factors
 
