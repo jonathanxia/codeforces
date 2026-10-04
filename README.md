@@ -22,7 +22,12 @@ It uses libclang (the `clang` pip package plus a system libclang; set
 inside templates that clang can't resolve are kept by name, and those guesses are
 then pruned by trial compiles: a removal is accepted only if the file still compiles
 and emits no symbol the original didn't, so overload resolution can't silently
-change. Shaking assumes `DEBUG` is undefined, so don't debug the shaken file.
+change.
+
+`#if` blocks are first resolved the way the judge compiles (via `unifdef`):
+`ONLINE_JUDGE` is defined, `DEBUG` isn't, and flags like `INTERACTIVE` count as
+defined only if the file `#define`s them. Dead branches are deleted, so don't debug
+the shaken file. The macro lists are at the top of `shake.py`.
 
 # Constant Factors
 

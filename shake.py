@@ -21,14 +21,17 @@ After shaking, the result is syntax-checked. If it doesn't compile, anything
 named in the errors is restored and we retry; if that still fails the file is
 left untouched.
 
-Shaking is done with DEBUG undefined, so `#ifdef DEBUG` code isn't seen: the
-shaken file is meant for submission, not for local debugging.
+Before analysis, #if/#ifdef blocks are resolved the way the judge sees them
+(using unifdef): ONLINE_JUDGE is defined, DEBUG isn't, and flag macros like
+INTERACTIVE count as defined only if the file #defines them. Dead branches are
+deleted, so the shaken file is for submission, not for local debugging.
 """
 
 import argparse
 import os
 import re
 import shlex
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -68,6 +71,13 @@ REF_KINDS = {
 }
 IDENT = re.compile(r"[A-Za-z_]\w*")
 
+# How the judge compiles: these are resolved out of #if blocks before shaking
+JUDGE_DEFINED = ["ONLINE_JUDGE"]
+JUDGE_UNDEFINED = ["DEBUG"]
+# Defined only if the solution itself #defines them
+FILE_FLAGS = ["INTERACTIVE", "PRINT_MI_FRAC", "GLOBAL_MOD"]
+JUDGE_FLAGS = [f"-D{m}" for m in JUDGE_DEFINED]
+
 
 def setup_libclang():
     path = os.environ.get("LIBCLANG_PATH")
@@ -80,7 +90,7 @@ def setup_libclang():
 def clang_args():
     """Flags for libclang, matching the compiler test.py uses."""
     cmd = shlex.split(get_compiler())
-    args = ["-x", "c++", "-std=c++17", "-I", str(REPO)] + cmd[1:]
+    args = ["-x", "c++", "-std=c++17", "-I", str(REPO)] + JUDGE_FLAGS + cmd[1:]
     try:
         rd = subprocess.run(
             [cmd[0], "-print-resource-dir"], capture_output=True, text=True
@@ -505,6 +515,31 @@ def tidy(text):
     return re.sub(r"\n{3,}", "\n\n", text)
 
 
+def resolve_conditionals(text):
+    """Delete #if branches the judge won't compile (see JUDGE_* above)."""
+    if not shutil.which("unifdef"):
+        sys.stderr.write("shake: unifdef not found; leaving #if blocks alone\n")
+        return text
+    args = [f"-D{m}" for m in JUDGE_DEFINED] + [f"-U{m}" for m in JUDGE_UNDEFINED]
+    for m in FILE_FLAGS:
+        d = re.search(rf"^[ \t]*#[ \t]*define[ \t]+{m}\b[ \t]*(.*)$", text, re.M)
+        if d is None:
+            args.append(f"-U{m}")
+        else:
+            val = d.group(1).split("//")[0].strip()
+            args.append(f"-D{m}={val}" if val else f"-D{m}")
+    # unifdef predates C++14 digit separators and reads 400'000 as a char literal
+    sep = "__SHAKE_DIGIT_SEP__"
+    masked = re.sub(r"(?<=\d)'(?=[0-9a-fA-F])", sep, text)
+    if not masked.endswith("\n"):
+        masked += "\n"  # a trailing `// ...` with no newline reads as an open comment
+    r = subprocess.run(["unifdef", *args], input=masked, capture_output=True, text=True)
+    if r.returncode not in (0, 1):  # 1 just means it changed something
+        sys.stderr.write(f"shake: unifdef failed, leaving #if blocks alone:\n{r.stderr}")
+        return text
+    return r.stdout.replace(sep, "'")
+
+
 def symbols(text, suffix):
     """
     Compile to an object file at -O0 and return (C++ symbol names, stderr).
@@ -517,7 +552,8 @@ def symbols(text, suffix):
         src, obj = os.path.join(d, "x" + suffix), os.path.join(d, "x.o")
         with open(src, "w") as f:
             f.write(text)
-        cmd = (f"{get_compiler()} -std=c++17 -O0 -w -c -I {shlex.quote(str(REPO))} "
+        cmd = (f"{get_compiler()} -std=c++17 -O0 -w -c {' '.join(JUDGE_FLAGS)} "
+               f"-I {shlex.quote(str(REPO))} "
                f"{shlex.quote(src)} -o {shlex.quote(obj)}")
         r = subprocess.run(cmd, shell=True, capture_output=True, text=True)
         if r.returncode != 0:
@@ -564,8 +600,9 @@ def main():
 
     setup_libclang()
     path = os.path.abspath(opts.source)
-    text = open(path).read()
+    original = open(path).read()
     suffix = Path(path).suffix
+    text = resolve_conditionals(original)
     log = lambda msg: sys.stderr.write(f"shake: {msg}\n")
 
     sh = Shaker(path, text)
@@ -579,7 +616,8 @@ def main():
         return
 
     # Pass 1: static reachability, restoring names from compile errors
-    verifier = None if opts.no_verify else Verifier(text, suffix)
+    # Baseline is the untouched file, so the unifdef step gets checked too
+    verifier = None if opts.no_verify else Verifier(original, suffix)
     for attempt in range(5):
         keep = sh.reachable(force)
         shaken, removed = sh.render(keep)
@@ -627,8 +665,8 @@ def main():
         log(f"pruned {len(banned)}/{len(cands)} by-name guesses "
             f"({verifier.compiles} compiles)")
 
-    before, after = text.count("\n"), shaken.count("\n")
-    log(f"{before} -> {after} lines ({len(text)} -> {len(shaken)} bytes)")
+    before, after = original.count("\n"), shaken.count("\n")
+    log(f"{before} -> {after} lines ({len(original)} -> {len(shaken)} bytes)")
 
     if opts.console:
         sys.stdout.write(shaken)

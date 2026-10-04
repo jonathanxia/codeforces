@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import sys
 import re
 import subprocess
@@ -76,4 +77,9 @@ if __name__ == "__main__":
     # This SHOULD be a nop if you don't use the atcoder library at all
     if is_cpp:
         run_atcoder_process(fname)
+
+    # Optionally strip out lib code the solution doesn't use (see shake.py)
+    if is_cpp and "--shake" in sys.argv[2:]:
+        shaker = os.path.join(os.path.dirname(os.path.abspath(__file__)), "shake.py")
+        subprocess.run(["python3", shaker, fname])
 
