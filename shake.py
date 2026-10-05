@@ -679,6 +679,10 @@ def main():
         log(f"pruned {len(banned)}/{len(cands)} by-name guesses "
             f"({verifier.compiles} compiles)")
 
+    # preprocess.py's "already included" markers mean nothing once the
+    # headers have been shaken, so drop them
+    shaken = re.sub(r"^//\s*#include\s*<(?:lib|atcoder)/[^>]*>[ \t]*\n", "", shaken, flags=re.M)
+
     before, after = original.count("\n"), shaken.count("\n")
     log(f"{before} -> {after} lines ({len(original)} -> {len(shaken)} bytes)")
 
