@@ -119,10 +119,20 @@ class Unit:
         return self.kind in CLASS_KINDS
 
 
+def byte_to_char_map(text):
+    """libclang offsets are UTF-8 byte offsets; map them to str indices."""
+    m = []
+    for i, ch in enumerate(text):
+        m.extend([i] * len(ch.encode("utf-8")))
+    m.append(len(text))
+    return m
+
+
 class Shaker:
     def __init__(self, path, text):
         self.path = path
         self.text = text
+        self.b2c = byte_to_char_map(text)
         self.units = []
         self.by_key = {}  # decl location offset -> unit id
         self.by_name = {}  # name -> [unit ids]
@@ -157,9 +167,13 @@ class Shaker:
         self.by_name.setdefault(u.name, []).append(u.id)
         return u
 
+    def ext(self, cur):
+        """A cursor's extent as str indices into self.text."""
+        return (self.b2c[cur.extent.start.offset], self.b2c[cur.extent.end.offset])
+
     def add_extent(self, u, cur):
         self.by_key[cur.location.offset] = u.id
-        ext = (cur.extent.start.offset, cur.extent.end.offset)
+        ext = self.ext(cur)
         if ext not in u.extents:
             u.extents.append(ext)
 
@@ -237,8 +251,7 @@ class Shaker:
         for c, _ in self.out_of_line:
             u = self.unit_of_decl(c)
             if u is not None:
-                ext = (c.extent.start.offset, c.extent.end.offset)
-                self.units[u].extents.append(ext)
+                self.units[u].extents.append(self.ext(c))
                 self.by_key[c.location.offset] = u
 
         # Macros
@@ -248,9 +261,10 @@ class Shaker:
                     continue
                 u = self.new_unit(c, None)
                 u.is_macro = True
-                u.extents.append((c.extent.start.offset, c.extent.end.offset))
+                s, e = self.ext(c)
+                u.extents.append((s, e))
                 self.macros.setdefault(c.spelling, []).append(u.id)
-                body = self.text[c.extent.start.offset:c.extent.end.offset]
+                body = self.text[s:e]
                 u.name_edges |= set(IDENT.findall(body)[1:])
 
         # Macros tested by the preprocessor (#ifdef X, #if defined(X), ...)
@@ -360,7 +374,7 @@ class Shaker:
         # Macro expansions: attribute to the innermost enclosing unit
         for c in self.tu.cursor.get_children():
             if c.kind == K.MACRO_INSTANTIATION and self.in_main(c):
-                src = self.enclosing_unit(c.extent.start.offset)
+                src = self.enclosing_unit(self.ext(c)[0])
                 for m in self.macros.get(c.spelling, []):
                     self.add_edge(src, m)
 
