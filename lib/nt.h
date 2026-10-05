@@ -132,7 +132,9 @@ T2 get_digit(T1 n, T2 b, ll i) {
         return ((1LL << i) & n) > 0;
     }
     else {
-        return (n / nt::pow(b, i, -1)) % b;
+        T1 p(1);
+        rep(k, 0, i) p *= b;
+        return (n / p) % b;
     }
 }
 
@@ -185,7 +187,7 @@ ll v_p(T x, S p)
     return res;
 }
 
-template <typename T, typename S>
+template <typename T, typename S=ll>
 T factorial(T x, S m = MOD)
 {
     ll p = 1;
@@ -269,9 +271,12 @@ vl floor_fractions(ll n) {
 // There are 2*sqrt(n) such values
 vl ceil_fractions(ll n) {
     vl ret;
-    for (ll k = 1; k * k <= n; k++) {
-        ret.pb(ceildiv(n, k));
-        if (k != ceildiv(n, k)) ret.pb(k);
+    for (ll k = 1; k <= n;) {
+        ll v = ceildiv(n, k);
+        ret.pb(v);
+        if (v == 1) break;
+        // Jump to the first k with ceil(n / k) < v
+        k = (n - 1) / (v - 1) + 1;
     }
     sort(ALL(ret));
     return ret;

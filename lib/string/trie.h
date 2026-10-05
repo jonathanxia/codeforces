@@ -124,6 +124,12 @@ struct Trie {
             now = tree[now].next[s[i] - baseChar];
         }
 
+        // The last node still has to inherit the old node's subtree
+        if (old != -1) {
+            for (j = 0; j < N; j++)
+                tree[now].next[j] = tree[old].next[j];
+            tree[now].freq = tree[old].freq;
+        }
         tree[now].freq[typ]++;
         tree[now].isEnd = true;
 

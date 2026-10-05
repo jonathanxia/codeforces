@@ -13,7 +13,7 @@ public:
     {
         this->identity = identity_;
         ll n = arr.size();
-        ll logn = log2(int(n)) + 1;
+        ll logn = n > 0 ? 64 - __builtin_clzll(n) : 1; // floor(log2(n)) + 1
 
         table.resize(n, vector<T>(logn));
         logTable.resize(n + 1);

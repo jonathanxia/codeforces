@@ -4,10 +4,10 @@
 template<int ALPHABET_SIZE=26, int ALPHABET_OFFSET='a'>
 struct Trie {
     int cnt = 0;
-    Trie * data[ALPHABET_SIZE];
+    Trie * data[ALPHABET_SIZE] = {};
 
     ~Trie() {
-        rep(i,0,ALPHABET_SIZE-1) delete data[i];
+        rep(i,0,ALPHABET_SIZE) delete data[i];
     }
 
     template<typename Indexable>

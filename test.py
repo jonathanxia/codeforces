@@ -11,6 +11,8 @@ import sys
 import json
 from compiler_config import get_compiler
 
+TEST_TIMEOUT = 10  # seconds per sample test
+
 def hash_url(url):
     """Returns a hashed version of the URL."""
     return url.replace("/", "_").replace(":", "_")
@@ -123,7 +125,15 @@ def check_cpp_file(file_path, exit_on_fail):
                 return False
 
             for i, (input_data, expected_output) in enumerate(zip(inputs, outputs)):
-                result = subprocess.run(exec_path, input=input_data, text=True, capture_output=True)
+                try:
+                    result = subprocess.run(exec_path, input=input_data, text=True,
+                                            capture_output=True, timeout=TEST_TIMEOUT)
+                except subprocess.TimeoutExpired:
+                    print(f"{file_path} test case {i+1}: Timed out after {TEST_TIMEOUT}s")
+                    tests_passed = False
+                    if exit_on_fail:
+                        return False
+                    continue
                 actual_output = result.stdout.strip()
 
                 if normalize_output(actual_output) == normalize_output(expected_output):

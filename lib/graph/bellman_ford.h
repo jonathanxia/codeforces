@@ -75,27 +75,43 @@ struct BellmanFord {
         }
     }
 
+    // Returns a negative cycle reachable from start, in order
     vi extract_negative_cycle() {
         vi output;
         if (!has_negative_cycle) {
             return output;
         }
-        ll p = -1;
+        // The prev pointers from the kactl run need not lead into a cycle
+        // (a node can be -inf only by propagation), so run a classic
+        // n-round Bellman-Ford: anything relaxed in the last round has a
+        // negative cycle on its predecessor chain.
         ll n = len(nodes);
-        for (int i = 0; i < n; i++) {
-            if (nodes[i].dist == -kactl::inf) {
-                p = i;
-                break;
+        vector<T> d(n);
+        vb reached(n, false);
+        vl pred(n, -1);
+        reached[start] = true;
+        ll p = -1;
+        rep(round, 0, n) {
+            p = -1;
+            for (const Ed& e : edges) {
+                if (!reached[e.a]) continue;
+                if (!reached[e.b] || d[e.a] + e.w < d[e.b]) {
+                    d[e.b] = d[e.a] + e.w;
+                    reached[e.b] = true;
+                    pred[e.b] = e.a;
+                    p = e.b;
+                }
             }
         }
+        if (p == -1) return output;
         for (int i = 0; i < n; i++) {
-            p = nodes[p].prev;
+            p = pred[p];
         }
 
         ll q = p;
         while (true) {
             output.pb(q);
-            q = nodes[q].prev;
+            q = pred[q];
             if (q == p) break;
         }
         reverse(ALL(output));

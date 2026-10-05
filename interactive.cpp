@@ -21,6 +21,16 @@ int check_status(int ret_status, char* err_msg)
     return ret_status;
 }
 
+// Close every pipe end; call after dup2 so that when one side exits
+// the other side sees EOF instead of blocking forever
+void close_pipes(int client_fd[2], int server_fd[2])
+{
+    close(client_fd[0]);
+    close(client_fd[1]);
+    close(server_fd[0]);
+    close(server_fd[1]);
+}
+
 void run_command(char* command_name)
 {
     check_status(execlp(command_name, command_name, NULL), command_name);
@@ -45,6 +55,7 @@ int main(int argc, char* argv[])
         // server
         dup2(client_fd[0], STDIN_FILENO);
         dup2(server_fd[1], STDOUT_FILENO);
+        close_pipes(client_fd, server_fd);
         run_command(argv[1]);
     } else {
         eprint("Forking client");
@@ -53,8 +64,11 @@ int main(int argc, char* argv[])
             // client
             dup2(server_fd[0], STDIN_FILENO);
             dup2(client_fd[1], STDOUT_FILENO);
+            close_pipes(client_fd, server_fd);
             run_command(argv[2]);
         } else {
+            // Close our copies too, otherwise nobody ever sees EOF
+            close_pipes(client_fd, server_fd);
             int st;
             waitpid(pid_server, &st, 0);
             waitpid(pid_client, &st, 0);

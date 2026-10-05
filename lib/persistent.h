@@ -50,22 +50,27 @@ struct PersistentMap {
     M data;
     V dflt_value;
 
-    vector<pair<K, V>> snapshots;
+    // (key, old value, whether the key existed before)
+    vector<tuple<K, V, bool>> snapshots;
     vector<int> checkpoints;
 
     PersistentMap(V dflt_value_) : dflt_value(dflt_value_)
     {
     }
 
-    V operator[](K idx) { return data[idx]; }
+    V operator[](K idx) {
+        auto it = data.find(idx);
+        return it == data.end() ? dflt_value : it->second;
+    }
 
     void set(K idx, V value)
     {
-        if (data.count(idx)) {
-            snapshots.push_back(mp(idx, data[idx]));
+        auto it = data.find(idx);
+        if (it != data.end()) {
+            snapshots.emplace_back(idx, it->second, true);
         }
         else {
-            snapshots.push_back(mp(idx, dflt_value));
+            snapshots.emplace_back(idx, dflt_value, false);
         }
         data[idx] = value;
     }
@@ -79,10 +84,11 @@ struct PersistentMap {
     {
         ll snap_len = checkpoints.back();
         while (len(snapshots) > snap_len) {
-            pair<K, V> snap = snapshots.back();
+            auto [key, value, existed] = snapshots.back();
             snapshots.pop_back();
 
-            data[snap.first] = snap.second;
+            if (existed) data[key] = value;
+            else data.erase(key);
         }
 
         checkpoints.pop_back();
@@ -94,7 +100,7 @@ template <typename T>
 struct PersistentValue
 {
     PersistentVector<T> v;
-    PersistentValue(bool persist=false) : v(1, false) {
+    PersistentValue(bool persist=false) : v(1, persist) {
 
     }
 

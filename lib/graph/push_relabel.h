@@ -31,8 +31,8 @@ struct PushRelabel {
     {
         if (s == t)
             return;
-        g[s].push_back({ t, len(g[t]), 0, cap });
-        g[t].push_back({ s, len(g[s]) - 1, 0, rcap });
+        g[s].push_back({ t, int(len(g[t])), 0, cap });
+        g[t].push_back({ s, int(len(g[s])) - 1, 0, rcap });
     }
 
     void addFlow(Edge& e, ll f)

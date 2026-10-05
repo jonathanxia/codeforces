@@ -12,6 +12,7 @@ int parseLine(char* line){
 int mem_usage(){ //Note: this value is in KB!
     FILE* file = fopen("/proc/self/status", "r");
     int result = -1;
+    if (file == NULL) return result; // No /proc (e.g. Windows, macOS)
     char line[128];
 
     while (fgets(line, 128, file) != NULL){

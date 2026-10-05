@@ -50,15 +50,19 @@ namespace graph {
                     parent[v] = u;
                     q.push(v);
                 } else if (color[v] == color[u]) {
-                    // Found an odd-length cycle
+                    // Found an odd-length cycle. u and v have the same
+                    // BFS depth, so walk both up to their common ancestor
+                    // and output u -> ... -> lca -> ... -> v (v-u is an edge)
+                    vector<ll> from_v;
                     int x = u, y = v;
                     while (x != y) {
                         cycle.push_back(x);
-                        cycle.push_back(y);
+                        from_v.push_back(y);
                         x = parent[x];
                         y = parent[y];
                     }
                     cycle.push_back(x); // Add the common ancestor
+                    cycle.insert(cycle.end(), from_v.rbegin(), from_v.rend());
                     return true;
                 }
             }

@@ -14,6 +14,7 @@ struct CumSum2d {
     CumSum2d(int H, int W) : data(H, vector<T>(W, 0)) {}
     CumSum2d() {}
     CumSum2d(const vector<vector<T>>& d) : data(d) {
+        if (data.empty()) return;
         ll h = len(data);
         ll w = len(data[0]);
         FOR(i, 0, h - 1) FOR(j, 0, w - 1) {
@@ -26,13 +27,14 @@ struct CumSum2d {
     // gx: largest row index in the query
     // gy: largest col index in the query
     T query(int sx, int sy, int gx, int gy) {
+        if (data.empty()) return 0;
         // Clip all inputs to be in the right range
         if (sx < 0) sx = 0;
         if (sy < 0) sy = 0;
-        if (gx < sx) return 0;
-        if (gy < sy) return 0;
         if (gx >= len(data)) gx = len(data) - 1;
         if (gy >= len(data[0])) gy = len(data[0]) - 1;
+        if (gx < sx) return 0;
+        if (gy < sy) return 0;
         return access(gx, gy) - access(sx - 1, gy) - access(gx, sy - 1) + access(sx - 1, sy - 1);
     }
 };

@@ -32,7 +32,7 @@ struct OnlineMaxFlow {
     void set_sink(ll node)
     {
         if (sink != -1) {
-            throw std::out_of_range("Source already set");
+            throw std::out_of_range("Sink already set");
         } else if (!is_node(node)) {
             throw std::out_of_range("node out of range");
         }
@@ -86,7 +86,7 @@ struct OnlineMaxFlow {
             if (predecessor[sink] == -1) {
                 break;
             }
-            ll flow = flow_cap;
+            ll flow = flow_cap - total_flow;
             ll node = sink;
             while (node != source) {
                 ll pred = predecessor[node];

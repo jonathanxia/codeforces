@@ -15,27 +15,34 @@ namespace graph {
         vb visited(n);
         vpl output;
 
-        // Smallest descendant of v
+        // Smallest visit time reachable from the subtree of v
+        // using at most one back edge
         vl smallest_desc(n, 1e18);
         vl visit_time(n, 0);
         ll t = 0;
         function<void(ll, ll)> dfs = [&](ll node, ll parent) {
             visited[node] = true;
             visit_time[node] = t++;
-            chkmin(smallest_desc[node], visit_time[node]);
+            smallest_desc[node] = visit_time[node];
 
+            // Skip only one copy of the edge to the parent, so that
+            // parallel edges are not counted as bridges
+            bool skipped_parent = false;
             foreachp(child, w, graph[node]) {
+                if (child == parent && !skipped_parent) {
+                    skipped_parent = true;
+                    continue;
+                }
                 if (!visited[child]) {
                     // In this case, we know that node->child is a dfs tree
                     // edge, so it is a candidate to be a bridge.
                     dfs(child, node);
-                    if (smallest_desc[child] == visit_time[child]) {
+                    chkmin(smallest_desc[node], smallest_desc[child]);
+                    if (smallest_desc[child] > visit_time[node]) {
                         output.push_back({node, child});
                     }
-                }
-
-                if (child != parent) {
-                    chkmin(smallest_desc[node], smallest_desc[child]);
+                } else {
+                    chkmin(smallest_desc[node], visit_time[child]);
                 }
             }
         };

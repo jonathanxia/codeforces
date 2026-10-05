@@ -11,7 +11,7 @@ struct TopKTracker {
 
     TopKTracker() : size(0) {}
     // Fills the array with the dflt value
-    TopKTracker(T dflt) : size(0) { FOR(i, 0, (int) K - 1) addElement(dflt); }
+    TopKTracker(T dflt) : size(int(K)) { topKElements.fill(dflt); }
 
     void addElement(T element) {
         if (DEDUP && containsElement(element)) {
@@ -30,10 +30,10 @@ struct TopKTracker {
 
     void insert(T element) { addElement(element); }
 
-    TopKTracker operator+(const TopKTracker<T, K>& other) const {
+    TopKTracker operator+(const TopKTracker& other) const {
         TopKTracker result = *this;
 
-        for (std::size_t i = 0; i < (int) other.size; ++i) {
+        for (int i = 0; i < other.size; ++i) {
             result.addElement(other.topKElements[i]);
         }
 
@@ -41,7 +41,7 @@ struct TopKTracker {
     }
 
     T operator[](size_t idx) { return topKElements[idx]; }
-    friend std::ostream& operator<<(std::ostream& os, const TopKTracker<T, K>& tkt) {
+    friend std::ostream& operator<<(std::ostream& os, const TopKTracker& tkt) {
         os << "{";
         for (int i = 0; i < tkt.size; i++) {
             os << tkt.topKElements[i];
@@ -79,7 +79,7 @@ struct TopKTrackerWithCounts {
                 return;
             }
         }
-        if (size < K) {
+        if (size < int(K)) {
             topKElements[size++] = mp(element, count);
             manualInsertionSort();
         } else if (element > topKElements[K - 1].first) {
@@ -107,8 +107,8 @@ struct TopKTrackerWithCounts {
     TopKTrackerWithCounts operator+(const TopKTrackerWithCounts& other) const {
         TopKTrackerWithCounts result = *this;
 
-        for (std::size_t i = 0; i < other.size; ++i) {
-            result.addElement(other.topKElements[i]);
+        for (int i = 0; i < other.size; ++i) {
+            result.addElement(other.topKElements[i].first, other.topKElements[i].second);
         }
 
         return result;

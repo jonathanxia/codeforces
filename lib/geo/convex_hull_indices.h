@@ -34,9 +34,9 @@ namespace geo
 
         auto check = [&](ll i, ll j, ll k) -> bool
         {
-            auto xi = XY[i].fi, yi = XY[i].se;
-            auto xj = XY[j].fi, yj = XY[j].se;
-            auto xk = XY[k].fi, yk = XY[k].se;
+            auto xi = XY[i].first, yi = XY[i].second;
+            auto xj = XY[j].first, yj = XY[j].second;
+            auto xk = XY[k].first, yk = XY[k].second;
             auto dx1 = xj - xi, dy1 = yj - yi;
             auto dx2 = xk - xj, dy2 = yk - yj;
             T det = dx1 * dy2 - dy1 * dx2;

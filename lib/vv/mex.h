@@ -8,7 +8,7 @@ ll mex(const vector<T>& a, bool positive=false) {
     ll start = int(positive);
     vb exists(start + n);
     FOR(i, 0, n - 1) {
-        if (a[i] >= n + start) continue;
+        if (a[i] < 0 || a[i] >= n + start) continue;
         exists[a[i]] = true;
     }
     FOR(i, start, n - 1 + start) {

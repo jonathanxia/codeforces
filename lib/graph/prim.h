@@ -1,4 +1,4 @@
-#pragma onca
+#pragma once
 #include <lib/common.h>
 
 namespace graph {

@@ -34,7 +34,7 @@ struct ZD {
     // Division operator
     ZD<F, D> operator/(const ZD<F, D>& other) const {
         F divisor = other.a * other.a - other.b * other.b * D;
-        F resultA = (a * other.a + b * other.b * D) / divisor;
+        F resultA = (a * other.a - b * other.b * D) / divisor;
         F resultB = (b * other.a - a * other.b) / divisor;
         return {resultA, resultB};
     }
@@ -65,7 +65,7 @@ struct ZD {
     // Division assignment operator
     ZD<F, D>& operator/=(const ZD<F, D>& other) {
         F divisor = other.a * other.a - other.b * other.b * D;
-        F resultA = (a * other.a + b * other.b * D) / divisor;
+        F resultA = (a * other.a - b * other.b * D) / divisor;
         F resultB = (b * other.a - a * other.b) / divisor;
         a = resultA;
         b = resultB;

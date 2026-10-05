@@ -150,6 +150,9 @@ struct ModInt {
     bool operator<(const T& rhs) const {
         return this->m_value < rhs;
     }
+    bool operator<(const ModInt& rhs) const {
+        return m_value < rhs.m_value;
+    }
     // Comparison operators
     template <typename T>
     bool operator==(const T& rhs) const

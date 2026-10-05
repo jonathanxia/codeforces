@@ -38,8 +38,8 @@ struct Point {
     P operator-() const { return {-x, -y}; }
     void operator+=(P p) { x += p.x; y += p.y; }
     void operator-=(P p) { x -= p.x; y -= p.y; }
-    void operator*=(T d) const { x *= d; y *= d; } 
-    void operator/=(T d) const { x /= d; y /= d; } 
+    void operator*=(T d) { x *= d; y *= d; }
+    void operator/=(T d) { x /= d; y /= d; }
 
     // Comparison operators -----
     bool operator==(Point p) const { return x == p.x && y == p.y; }

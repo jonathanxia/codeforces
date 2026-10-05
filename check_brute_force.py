@@ -136,7 +136,8 @@ if __name__ == "__main__":
     # Compile the source code
     print("Compiling", src_code, "...")
     print("Compile cmd:", COMPILE_CMD)
-    os.system(f"{COMPILE_CMD} {src_code} -o a.out")
+    if os.system(f"{COMPILE_CMD} {src_code} -o a.out") != 0:
+        sys.exit(f"Failed to compile {src_code}")
 
     # The second file depends on the mode that we are running
     if mode == "check" or mode == "validate":
@@ -147,6 +148,7 @@ if __name__ == "__main__":
         raise ValueError(f"Unknown mode: {mode}")
 
     print("Compiling", truth_code, "...")
-    os.system(f"{COMPILE_CMD} {truth_code} -o b.out")
+    if os.system(f"{COMPILE_CMD} {truth_code} -o b.out") != 0:
+        sys.exit(f"Failed to compile {truth_code}")
 
     generate_test_cases(mode, opts.generate_script)

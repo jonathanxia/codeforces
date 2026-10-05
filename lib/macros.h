@@ -177,7 +177,7 @@ struct custom_hash {
     template <long unsigned int T>
     size_t operator()(const bitset<T>& b) const
     {
-        return do_hash(to_string(b));
+        return (*this)(b.to_string());
     }
 
     template <typename T, size_t N>
@@ -472,23 +472,10 @@ void chkmod(T& a, S m = MOD)
 */
 ll cmul(ll a, ll b)
 {
-    if (b == 0)
-        return 0;
-    if (b > 0) {
-        if (a >= LLONG_MAX / b) {
-            return LLONG_MAX;
-        } else if (a <= LLONG_MIN / b) {
-            return LLONG_MIN;
-        }
-        return a * b;
-    }
-    // b is negative
-    if (a <= LLONG_MAX / b) {
-        return LLONG_MAX;
-    } else if (a >= LLONG_MIN / b) {
-        return LLONG_MIN;
-    }
-    return a * b;
+    ll res;
+    if (!__builtin_mul_overflow(a, b, &res))
+        return res;
+    return ((a < 0) != (b < 0)) ? LLONG_MIN : LLONG_MAX;
 }
 
 #define ITERATE_BORDER(arr, i_var, j_var, expr) \
@@ -496,11 +483,11 @@ ll cmul(ll a, ll b)
     ll j_var = 0; \
     IFOR(i_var, 0, len(arr) - 1) expr \
     j_var = len(arr[0]) - 1; \
-    IFOR(i_var, 0, len(arr) - 1) expr \
+    if (j_var > 0) IFOR(i_var, 0, len(arr) - 1) expr \
     i_var = 0; \
     IFOR(j_var, 1, len(arr[0]) - 2) expr \
     i_var = len(arr) - 1; \
-    IFOR(j_var, 1, len(arr[0]) - 2) expr
+    if (i_var > 0) IFOR(j_var, 1, len(arr[0]) - 2) expr
 
 
 // Function to calculate (base^exponent) using repeated squaring
@@ -541,6 +528,11 @@ ll cpower(ll base, ll exponent) {
     return power<ll, ll>(base, exponent, cmul);
 }
 
+// floor(sqrt(num)), or -1 if num is negative
 ll sqrt(ll num) {
-    return largest_st(i, i*i <= num, 0, 1e9);
+    if (num < 0) return -1;
+    ll r = ll(sqrtl((long double) num));
+    while (r > 0 && r > num / r) r--;
+    while (r + 1 <= num / (r + 1)) r++;
+    return r;
 }

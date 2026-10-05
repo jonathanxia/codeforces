@@ -40,7 +40,7 @@ def last_st(func, lo, hi):
     return lo - 1
 
 def lcm(x, y):
-    return x * y / gcd(x, y)
+    return x * y // gcd(x, y)
 
 def list_to_str(a):
     return [str(x) for x in a]
@@ -86,7 +86,7 @@ def cummax(a, reverse=False):
         for i in range(n - 2, -1, -1):
             ret[i] = max(ret[i + 1], ret[i])
     else:
-        for i in range(1, n - 1):
+        for i in range(1, n):
             ret[i] = max(ret[i], ret[i - 1])
     
     return ret
@@ -98,7 +98,7 @@ def cummin(a, reverse=False):
         for i in range(n - 2, -1, -1):
             ret[i] = min(ret[i + 1], ret[i])
     else:
-        for i in range(1, n - 1):
+        for i in range(1, n):
             ret[i] = min(ret[i], ret[i - 1])
     
     return ret

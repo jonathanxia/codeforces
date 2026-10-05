@@ -193,16 +193,17 @@ struct SuffixAutomaton
 
         ll n = len(length);
 
-        // First establish the main path
-        is_main_path.resize(len(length));
-        main_path_idx.resize(len(length), -1);
-        endpos_size.resize(len(length), 0);
-        endpos_min.resize(n, n + 3);
+        // First establish the main path. Use assign (not resize) so that
+        // calling finalize() again starts from scratch
+        is_main_path.assign(n, false);
+        main_path_idx.assign(n, -1);
+        endpos_size.assign(n, 0);
+        endpos_min.assign(n, n + 3);
 
-        uniq_count.resize(n, 1);
-        tot_count.resize(n, 0);
+        uniq_count.assign(n, 1);
+        tot_count.assign(n, 0);
 
-        is_end.resize(n, false);
+        is_end.assign(n, false);
 
         ll p = 0;
         is_main_path[p] = true;
@@ -226,15 +227,15 @@ struct SuffixAutomaton
             }
         }
 
-        inv_link.resize(len(length));
-        // Setup the inverse links
-        FOR(i, 0, n - 1) inv_link[link[i]].pb(i);
+        inv_link.assign(n, {});
+        // Setup the inverse links (the root links to itself, skip it)
+        FOR(i, 1, n - 1) inv_link[link[i]].pb(i);
 
         // Calculate endpos size properly, by performing dfs
-        _eps_visited.resize(n, false);
+        _eps_visited.assign(n, false);
         _endpos_size_dfs(0);
 
-        _count_visited.resize(n, false);
+        _count_visited.assign(n, false);
         _count_dfs(0);
     }
 

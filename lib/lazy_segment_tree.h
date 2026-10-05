@@ -130,7 +130,7 @@ public:
         apply = applyop;
         lazymerge = lazyop;
         n = a.size();
-        init(0, n - 1, 0);
+        if (n > 0) init(0, n - 1, 0);
     }
 
     void update(int qL, int qR, ll val, int l, int r, int idx)

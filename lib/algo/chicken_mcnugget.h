@@ -1,3 +1,4 @@
+#pragma once
 #include <lib/graph/dijkstra.h>
 
 struct Chicken_McNugget {
@@ -5,6 +6,7 @@ struct Chicken_McNugget {
     ll largest_impossible;
     Chicken_McNugget(const vl& sizes)
         : dists(sizes[0])
+        , largest_impossible(LLONG_MIN)
     {
         vvpl residues(sizes[0]);
         ll n = len(sizes);
@@ -25,6 +27,7 @@ struct Chicken_McNugget {
     // returns whether the desired size is possible using sizes
     bool query(ll desired_size) const
     {
+        if (desired_size < 0) return false;
         return desired_size >= dists[desired_size % len(dists)];
     }
 };

@@ -115,7 +115,7 @@ struct matrix {
     void set_col(int col, const vector<T>& ret, int rstart = 0, int rend = -1)
     {
         if (rend == -1) {
-            rend = n_cols - 1;
+            rend = n_rows - 1;
         }
         FOR(i, rstart, rend)
         {

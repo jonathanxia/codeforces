@@ -57,9 +57,10 @@ namespace geo
         bool is_parallel(Line other) const { return a * other.b - b * other.a == 0; }
         bool is_orthogonal(Line other) const { return a * other.a + b * other.b == 0; }
         bool operator==(Line other) const {
-            // Two lines are the same if their ratios are the same
+            // Two lines are the same if (a, b, c) are proportional
             return (
                 (a * other.b - b * other.a == 0) &&
+                (a * other.c - c * other.a == 0) &&
                 (b * other.c - c * other.b == 0)
             );
         }
@@ -74,8 +75,8 @@ namespace geo
         // If infinitely many, returns {-1, (0, 0)}
         // If unique, returns {1, intersection}
         pair<int, Point<T>> intersect(Line<T> other) const {
-            if (*this == other) return {0, Point<T>(0, 0)};
-            if (is_parallel(other)) return {-1, {0, 0}};
+            if (*this == other) return {-1, Point<T>(0, 0)};
+            if (is_parallel(other)) return {0, Point<T>(0, 0)};
             return {
                 1,
                 Point<T>((-other.b * c + b * other.c) / (a * other.b - other.a * b),
@@ -85,12 +86,12 @@ namespace geo
 
         // Returns the signed distance from p to this line
         REAL dist(const Point<T>& p) {
-            return REAL(eval(p)) / sqrtl(a * a + b * b + c * c);
+            return REAL(eval(p)) / sqrtl(a * a + b * b);
         }
 
         // Returns the squared distance from p to this line
         T dist2(const Point<T>& p) {
-            return eval(p) * eval(p) / (a * a + b * b + c * c);
+            return eval(p) * eval(p) / (a * a + b * b);
         }
 
         friend ostream &operator<<(ostream &os, Line line)

@@ -15,7 +15,9 @@ struct GenericCum {
     ll n;
     // The operation to perform cumulatively
     cumfunc_t op;
-    // The inverse operation used for subarray queries
+    // The inverse operation used for subarray queries. Leave it empty
+    // (nullptr) if op has no inverse, e.g. min/max: then only
+    // prefix/suffix queries are supported.
     cumfunc_t inv;
     T identity;
 
@@ -68,6 +70,7 @@ struct GenericCum {
             return prefix(idx2);
         if (idx2 >= n - 1)
             return suffix(idx1);
+        assert(inv && "this op has no inverse; only prefix/suffix queries work");
         return inv(cum_data[idx2], cum_data[idx1 - 1]);
     }
 
@@ -135,7 +138,7 @@ public:
     min() = default;
     min(vector<T> raw_data)
         : GenericCum<T>(
-            raw_data, [](T a, T b) { return ::min(a, b); }, [](T a, T b) { return numeric_limits<T>::max(); }, numeric_limits<T>::max())
+            raw_data, [](T a, T b) { return ::min(a, b); }, nullptr, numeric_limits<T>::max())
     {
     }
 };
@@ -146,7 +149,7 @@ public:
     max() = default;
     max(vector<T> raw_data)
         : GenericCum<T>(
-            raw_data, [](T a, T b) { return ::max(a, b); }, [](T a, T b) { return numeric_limits<T>::min(); }, numeric_limits<T>::min())
+            raw_data, [](T a, T b) { return ::max(a, b); }, nullptr, numeric_limits<T>::lowest())
     {
     }
 };

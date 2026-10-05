@@ -10,8 +10,9 @@ namespace nt {
      */
     template <int N=1'000'000>
     struct SmallestPrimeDiv {
-        array<ll, N + 1> smallest_div;
-        SmallestPrimeDiv() {
+        // A vector (zero-initialized, on the heap) so this is safe as a local
+        vector<int> smallest_div;
+        SmallestPrimeDiv() : smallest_div(N + 1, 0) {
             FOR(p, 2, N) {
                 if (smallest_div[p] > 0) continue;
                 // p is prime at this point

@@ -5,7 +5,7 @@ namespace graph {
     // Finds cycles for directed graphs where degree of every node is 1
     // is1idx refers to whether the elements in the array adj start at 0 or at 1.
     // is1idx = true is equivalent to subtracting 1 from everything in adj, then adding 1 to everything in cycles.
-    // behavior of in_cycle and in_chain does not change when is1idx is set to true.
+    // in_cycle and in_chain are always indexed by the 0-indexed node.
     // Returns a vvl: vector of the cycles in the graph
     vvl cycles(const vl& adj, vb& in_cycle, vb& in_chain, bool is1idx = false)
     {
@@ -25,7 +25,7 @@ namespace graph {
                 // now slow and fast are equal, they must be in a cycle
                 while (!in_cycle[slow]) {
                     in_cycle[slow] = true;
-                    cycle.pb(slow);
+                    cycle.pb(slow + is1idx);
                     slow = adj[slow] - is1idx;
                 }
                 cycles_.pb(cycle);
@@ -40,10 +40,12 @@ namespace graph {
     }
 
     // Finds cycles for directed graphs where degree of every node is 1
+    // is1idx means the values in adj_ are 1-indexed (adj_ still has n entries).
+    // Everything stored in the struct (adj, cycs, children, ...) is 0-indexed.
     struct FunctionalGraph {
         vb in_cycle;
         vb in_chain;
-        const vl& adj;
+        vl adj;
         vvl cycs;
 
         vvl children; // Each node in the cycle has a tree, this defines it
@@ -59,18 +61,19 @@ namespace graph {
             cycle_number(len(adj_), -1),
             dist_from_cycle(len(adj_))
         {
-            cycs = cycles(adj, in_cycle, in_chain, is1idx);
+            if (is1idx) foreach(x, adj) x--;
+            cycs = cycles(adj, in_cycle, in_chain, false);
 
             walk(i, cycs) {
                 foreach(v, cycs[i]) cycle_number[v] = i;
             }
 
             ll n = len(adj);
-            FOR(i, (int) is1idx, n - 1) {
+            FOR(i, 0, n - 1) {
                 dfs(i);
             }
 
-            FOR(i, (int) is1idx, n - 1) {
+            FOR(i, 0, n - 1) {
                 if (in_chain[i]) children[adj[i]].pb(i);
             }
         }

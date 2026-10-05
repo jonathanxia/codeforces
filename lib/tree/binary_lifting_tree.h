@@ -4,6 +4,8 @@
 // Data structure for efficient range queries on the tree.
 template <typename T>
 struct BinaryLiftingTree {
+    // Only set when we build our own AncestorTree; keeps it alive
+    shared_ptr<AncestorTree> owned_ast;
     const AncestorTree& ast;
     vector<vector<T>> cumulative;
 
@@ -12,6 +14,16 @@ struct BinaryLiftingTree {
     BinaryLiftingTree(const DfsTree& tree, const AncestorTree& ast_, const vector<T>& values, function<T(T, T)> merge_func_)
         : ast(ast_), merge_func(merge_func_)
     {
+        build(tree, values);
+    }
+
+    BinaryLiftingTree(const DfsTree& tree, const vector<T>& values, function<T(T, T)> merge_func_)
+        : owned_ast(make_shared<AncestorTree>(tree)), ast(*owned_ast), merge_func(merge_func_)
+    {
+        build(tree, values);
+    }
+
+    void build(const DfsTree& tree, const vector<T>& values) {
         ll log_depth = ast.log_depth;
         ll n = tree.n;
 
@@ -27,12 +39,6 @@ struct BinaryLiftingTree {
                 cumulative[i][vert] = merge_func(cumulative[i - 1][vert], cumulative[i - 1][kp]);
             }
         }
-    }
-
-    BinaryLiftingTree(const DfsTree& tree, const vector<T>& values, function<T(T, T)> merge_func_) :
-        BinaryLiftingTree(tree, AncestorTree(tree), values, merge_func_)
-    {
-
     }
 
     // query(k, v) returns the merge func applied

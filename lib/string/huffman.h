@@ -61,10 +61,14 @@ namespace huffman {
                     freq_.pb(freq[i]);
                 }
             }
-            root = buildHuffmanTree(freq_, ids);
             depth.resize(n);
-            computeDepths(root, 0);
+            root = freq_.empty() ? nullptr : buildHuffmanTree(freq_, ids);
+            if (root != nullptr) computeDepths(root, 0);
         }
+
+        // Owns root, so copying would double free
+        HuffmanTree(const HuffmanTree&) = delete;
+        HuffmanTree& operator=(const HuffmanTree&) = delete;
 
         HuffmanNode* buildHuffmanTree(const vector<double>& freq, const vl& ids) {
             priority_queue<HuffmanNode*, vector<HuffmanNode*>, compare> minHeap;
